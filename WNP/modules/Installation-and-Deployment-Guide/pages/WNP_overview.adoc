@@ -1,0 +1,123 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= What is Wholesale Network Portal solution?
+
+The {app-full-name} ({app-short-name}) operates on top of {main-base-app}, acting as a proxy for {main-base-app}’s Intent-Based Networking (IBN), alarms, and metrics interfaces.
+The purpose of the application is to allow an Internet Service Provider ({vno-initials}) to access information related only to its network elements.
+{app-short-name} can be configured by an Infrastructure Network Provider (INP) user to deny or allow operations based on specific values configured per {vno-initials}.
+
+To separate information between {vno-initials}s, {app-short-name} needs to identify which elements belong to which {vno-initials}.
+A transparent suffix scheme is used for this identification. When {app-short-name} is installed on top of the {main-base-app} solution, the call flow is summarized as follows:
+
+image::GeneralContextDiagram_RevA.png[align="center"]
+
+== Solution components
+
+{app-short-name} offers a configuration interface that allows the {inp-initials} to configure the application,
+and different proxies for the {vno-initials} user to interact with {main-base-app}, applying the configured rules.
+These components include:
+
+* {app-full-name} Configuration Interface for {inp-initials}:
+** {app-short-name} REST API
+** {app-short-name} Web UI
+* {app-full-name} Proxies for {vno-initials}:
+** Intent Based Networking Proxy
+** Alarms Proxy
+** Performance Monitoring Proxy
+** SW Management Proxy
+* Kafka Filtering Module
+* Kafka Brokers with filtered events per ISP
+* {app-full-name} WebUI for {vno-initials}, which uses the application proxies to connect to {main-base-app}
+
+For more information about the interfaces exposed by {app-short-name}, refer to the
+xref:Installation-and-Deployment-Guide:appendices/WNP_Exposed_Interfaces.adoc[{app-short-name} Exposed Interfaces] section.
+
+=== {app-full-name} Configuration Interface for {inp-initials}
+
+To configure the application, {app-short-name} offers a REST API and a WebUI to the {inp-initials}.
+
+To apply multi-tenancy features and other configurations/restrictions, the {vno-initials}s must be created by the {inp-initials} on {app-short-name}.
+The {vno-initials} information consists of a name and an identifier.
+This identifier is used in the transparent suffix scheme to ensure that {vno-initials}s only act on their own elements.
+
+For more details on configuring {app-short-name}, see the xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}] section.
+
+=== {app-full-name} Proxies
+
+==== Intent Based Networking Proxy
+
+{app-short-name} acts as a proxy for intents sent to the Altiplano IBN interface, allowing the application to apply any configuration restrictions based on the {vno-initials} sending the request.
+For detailed information on this proxy, refer to the xref:User_Guide:How_to_use_WNP_as_VNO.adoc[User Guide - How to Use IBN as {vno-initials}] section.
+{app-short-name} can be configured by the INP to deny or allow specific intent-type operations based on the values per intent and per {vno-initials}.
+See the xref:User_Guide:How_to_configure_intents_as_VNO.adoc[User Guide - How to configure intents as {vno-initials}] section for more details.
+
+==== Alarms Proxy
+
+{app-short-name} acts as a proxy to the {main-base-app} OpenSearch alarms interface, filtering the alarms that the {vno-initials} is allowed to see.
+For detailed information on this proxy, refer to the xref:User_Guide:How_to_get_opensearch_alarms_as_VNO.adoc[User Guide - How to Retrieve Alarms {vno-initials}] section.
+{app-short-name} can be configured by the INP to deny or allow specific alarm types per {vno-initials}. See the xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}] section for more details.
+
+==== Performance Monitoring Proxy
+
+{main-base-app} offers two ways of retrieving metrics: through OpenTSDB REST queries and Kafka notifications.
+For detailed information on this proxy, refer to the xref:User_Guide:How_to_get_opentsdb_metrics_as_VNO.adoc[User Guide - How to Retrieve Metrics] section.
+{app-short-name} acts as a proxy for REST queries, filtering the metrics that the {vno-initials} is allowed to see.
+For Kafka notifications, {app-short-name} subscribes to {main-base-app}’s Kafka topics, filters the metrics, and writes them to a new topic on {main-base-app} per {vno-initials}.
+The {vno-initials} then subscribes to its topic to receive the filtered metrics. See the xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}] section for more details.
+
+==== SW Management Proxy
+
+{app-short-name} acts as a proxy that allows {vno-initials}s to act through {app-short-name} to {main-base-app}’s Software Management API.
+This proxy will inject some fixed values that won’t be allowed to be setted by the {vno-initials}s and enforces validation checks on campaigns and activities.
+These include ensuring that activity timeouts do not exceed the campaign’s time slot and preventing the creation of campaigns in slots already occupied by others {vno-initials}s.
+See the xref:User_Guide:How_to_use_software_management_as_VNO.adoc[User Guide - How to use software management as {vno-initials}] section for more details.
+
+==== Kafka Brokers with filtered events per ISP
+
+For Kafka alarm notifications, {app-short-name} subscribes to {main-base-app}’s general alarm topic, filters the alarms, and writes them to a new topic on {app-short-name} Kafka per {vno-initials}.
+The {vno-initials} then subscribes to its topic to receive the filtered alarms.
+
+For Kafka metrics notifications, {app-short-name} subscribes to {main-base-app}’s Kafka metric topics, filters the data, and writes them to a new topic on {app-short-name} Kafka per {vno-initials}.
+The {vno-initials} subscribes to its topic to receive the filtered metrics.
+
+See the xref:User_Guide:How_to_consume_Kafka_events_as_VNO.adoc[How to consume Kafka events as {vno-initials}] section to understand how an ISP can subscribe to its topics and receive the filtered events.
+
+==== {app-full-name} WebUI for {vno-initials}
+
+{main-base-app} offers a WebUI that allows the {vno-initials} to use the proxies in a graphical way.
+This WebUI acts through the defined application proxies to retrieve information only for the logged-in {vno-initials}.
+For more information on this interface, see the xref:User_Guide:How_to_use_WNP_as_VNO.adoc[How to Use {app-short-name} as {vno-initials}] section.
+
+== Features
+
+The following table describes the main features provided by {app-full-name}
+
+[width="99%",cols="30%,39%,30%,options="header"]
+|===
+|*Feature/Enhancement* |*Description* |*See Section*
+|Multi tenant capabilities|{app-short-name} offers proxies for IBN, alarms and metrics from {main-base-app} adding the multi-tenant capability for all the operations.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Intent types allow list|{app-short-name} can be configured by the {inp-initials} to deny/allow specific intent types and versions per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|ONU activations|{app-short-name} offers a way to configure a different ONU Activation options for each {vno-initials}. This feature consists of checking different actions over ONTs that must be allowed or denied per {vno-initials}. Actually 3 different options are available to be configured.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Data constraint list|{app-short-name} can be configured by the INP to add extra constraint checks at the level of intent attributes. These checks can be configured per {vno-initials} or globally. |xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Intent type default version|{app-short-name} can be configured by the {inp-initials} to set intent type default version per {vno-initials} or globally. If default version was configured for an intent type, and the request arrives without intent type version, {app-short-name} adds the default version configured. |xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Intent Input Injections|{app-short-name} can be configured by the {inp-initials} to set default values to intent fields per {vno-initials} or globally. Also, the intent fields can be hidden to the {vno-initials}. |xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Alarm configuration|{app-short-name} can be configured by the {inp-initials} to deny/allow specific alarm types per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Kafka Alarms and Kafka Metrics|{app-short-name} offers secured topics by {vno-initials} to consume alarms and metrics.|xref:User_Guide:How_to_consume_Kafka_events_as_VNO.adoc[How to consume Kafka events as {vno-initials}]
+|Intent Allowed Actions|{app-short-name} can be configured by the {inp-initials} to allow actions by intent types and versions per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Readable Intent type list|{app-short-name} can be configured by the {inp-initials} to allow the {vno-initials}s to read intents of configured intent types from IndexSearch. Also the allowed intent attributes for each readable intent type can be configured|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Network Assign Resources|{app-short-name} can be configured by the {inp-initials} to allow the {vno-initials}s to access only assigned devices and fibers. This allows also to retrieve device and fiber alarms and metrics through kafka events of the assigned elements.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|Set Aliases to Assigned Resources|{app-short-name} allows the {inp-initials} and the {vno-initials}s to set aliases for device and fiber intent targets of the assigned network resources. When this configuration is applied {app-short-name} replaces all the target occurrences with the aliases set to the {vno-initials}|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|SNMP Trap Destinations|{app-short-name} can be configured by the {inp-initials} to allow to the {vno-initials}s to receive alarms via SNMP traps.|xref:User_Guide:How_to_configure_a_VNO.adoc#_configure_snmp_trap_destinations_to_isp[User Guide - How to Use {app-short-name} as {inp-initials}]
+|{vno-initials} Portal|{app-short-name} offers an {vno-initials} portal from where an {vno-initials} can manage {ont-initials}s, Services, Software Management, Alarms and Metrics. Also, a troubleshooting view is offered|xref:User_Guide:How_to_use_WNP_as_VNO.adoc[User Guide - How to Use {app-short-name} as {vno-initials}]
+|Live Collections Control|{app-short-name} can be configured by the {inp-initials} to deny/allow the live collections execution per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|{vno-initials} ONU Software Management|{app-short-name} can be configured by the {inp-initials} to enable/disable the Software Management feature to {vno-initials}s.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
+|===
+
+[IMPORTANT]
+====
+With the proper Workflow Manager configuration, the {inp-initials} is able to offer the ZTP workflow to the {vno-initials}s handled through the {app-short-name}. In this case, only the pre-provisioned ONT intents (whitelist strategy) with pre-provisioned L2-user intents scenario is supported.
+====
+
+include::ROOT:go-back-component.adoc[Back]
+
+

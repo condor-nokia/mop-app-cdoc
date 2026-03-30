@@ -1,0 +1,59 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Migration/Upgrade procedure
+
+This section details the upgrade scenarios for {app-short-name} (Wholesale Network Platform)
+and Altiplano (AP), as well as how data integrity is managed during migration.
+
+== Upgrade Scenarios
+
+There are three main cases for upgrading {app-short-name} and the access platform components (Altiplano/AAC).
+The process is defined based on which components require the update:
+
+[width="99%",cols="40%,59%,options="header"]
+|===
+|*Scenario*|*Procedure*
+|Upgrade {app-short-name} only| Direct upgrade of the {app-short-name} platform is performed.
+|Upgrade Altiplano/AAC only|If {app-short-name} "assigned network resources" feature is enabled then the open search duplicated intents must
+be updated. Please refer to the "Recovery" step of "2. Assigned network resources feature enabled" scenario in the xref:_data_synchronization_and_protection_mechanisms[Data Synchronization and Protection Mechanisms] section.
+{app-short-name} must be redeployed only if Altiplano's certificates change after the upgrade.
+Additionally, Keycloak secrets must be reconfigured on {app-short-name} if the {app-short-name} Keycloak secrets have changed.
+|Upgrade {app-short-name} and Altiplano/AAC|- Step 1: Upgrade the AAC (Altiplano Access Controller).
+
+- Step 2: Upgrade {app-short-name}.
+|===
+
+=== Compatibility and Timing Considerations
+- Compatibility: Please check the xref:Solution_planning_guidelines_for_WNP_application.adoc#_compatibility[{app-short-name} Compatibility] section.
+Upgrades of {app-short-name} and/or Altiplano must remain within this AAC compatibility range.
+- Maintenance Window: The {app-short-name} upgrade is done typically in the order of minutes (around 5 minutes).
+This makes it possible to sequentially upgrade AAC first, then {app-short-name}, within the same maintenance window.
+
+
+=== Data Synchronization and Protection Mechanisms
+
+Data integrity and synchronization are managed differently based on whether the "Assigned network resources" feature is enabled.
+This feature controls whether specific resources (Devices and fibers) are asigned to {vno-initials}s. The two possible scenarios are described below:
+
+- 1. "Assigned network resources" feature disabled
+* **Condition:** The **"Assigned network resources"** feature is **disabled**.
+* **Mechanism:** In this scenario, only ont and service intents are available to the {vno-initials}.
+* **Data Flow:** There is **no replication** of Altiplano data into {app-short-name} because {app-short-name} does not need to track individual assignments.
+
+- 2. "Assigned network resources" feature enabled
+* **Condition:** The **"Assigned network resources"** feature is **enabled**.
+* **Mechanism:** {app-short-name} plays an active role in maintaining a consistent view of resource assignments.
+* **Synchronization:**
+** {app-short-name} **subscribes** to **intent lifecycle notifications** (events indicating resource changes) from Altiplano.
+** It uses these notifications to maintain a local, replicated copy of critical search indices, specifically the **`device-xx`** and **`fiber`** search indices.
+* **Protection (During Restarts/Upgrades):**
+** **Kafka Retention:** Since event data is persisted in **Kafka**, any events that occurred while {app-short-name} was offline will be re-processed upon its restart, preventing data misalignment.
+* **Recovery (After Extended Outage):**
+** If {app-short-name} is down for an extended period (the duration is **configurable**), the operator must manually trigger a **full resource refresh** for the affected ISP.
+** This is done by calling a dedicated **REST endpoint**: `GET /assigned-resources/<ISP ID>/refresh`
+
+
+[NOTE]
+====
+If the ONT/Services intent type versions are changed, WNP configuration needs to be reviewed in order to adjust the "intent type version" and "intent type default version" configuration for each ISP.
+====

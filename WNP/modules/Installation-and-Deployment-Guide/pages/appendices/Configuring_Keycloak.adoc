@@ -1,0 +1,58 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Keycloak
+
+== Introduction
+
+The {app-full-name} relies on Keycloak to authenticate its own users.
+Keycloak must be configured to support {inp-initials} and {vno-initials} users.
+
+== How to configure keycloak for {app-short-name}
+To configure the Keycloak for the {app-short-name} the following files must be imported:
+
+. *wnp_master-clients-keycloak.json:* Configuration to be loaded on the master realm of Altiplano's keycloak for the portal and proxy clients used by {app-short-name} to authenticate {inp-initials}/{vno-initials} users.
+. *wnp_system-clients-keycloak.json:* Configuration to be loaded on the system realm of Altiplano's keycloak for the wnp_services client used by {app-short-name} to authenticate {inp-initials}/{vno-initials} users allowing Direct Access Grants.
+
+This files can be found inside the WNP helm chart, in a folder named "keycloak".
+To import them successfully follow the two steps described below.
+
+. Import the wnp_master-clients-keycloak.json file to the Keycloak and configure the needed clients, following the next steps:
+
+.. Login to Altiplano's keycloak using admin credentials. For example if Altiplano is available at IP {ip-host-example}, the keycloak URL is "https://{ip-host-example}/altiplano-sso"
+.. Import *wnp_master-clients-keycloak.json* file to the master realm of {main-base-app}’s Keycloak following the next steps:
+... Select "master" in realm combo.
+... Locate and use the button to import configurations to keycloak. In case of {main-base-app} {screenshot-altiplano-release-number} Keycloak the import button is located inside the "Realm settings" menu, in the combo of actions available at the top right as shown in the next image:
++
+image::KeycloakImportButton.png[align="center"]
+... Inside the import menu, browse and import the mentioned file. In case of {main-base-app} {screenshot-altiplano-release-number} Keycloak the following window must be shown and all the resources must be selected:
++
+image::KeycloakImportWindow.png[align="center"]
+.. Within 'Clients' section, locate 'wnp_portal' and modify the root URL to match the {app-short-name} portal's public hostname or IP. For example if Altiplano is available at IP {ip-host-example} the "Root URL"
+must be "https://{ip-host-example}".
+.. To allow an existent admin to access the {app-short-name} and act as {inp-initials} user, add the wnp_inp group to it:
+... Go to "Users" section.
+... Select the desired admin.
+... Go to the "Group" section.
+... Add the "wnp_inp" group to the "Group Membership" list.
+.. *If {app-short-name} is installed on a slicing deployment, the following step is required:* +
+... Import *wnp_master-clients-keycloak.json* file  into the {main-base-app}’s master realm of the {inp-initials} cluster
+
+. Import the wnp_system-clients-keycloak.json file to the Keycloak following the next steps:
+
+.. Login to Altiplano's keycloak using admin credentials. For example if Altiplano is available at IP {ip-host-example}, the keycloak URL is "https://{ip-host-example}/altiplano-sso"
+.. Import *wnp_system-clients-keycloak.json* file to the system realm of {main-base-app}’s Keycloak following the next steps:
+... Select "system" in realm combo.
+... Locate and use the button to import configurations to keycloak. In case of {main-base-app} {screenshot-altiplano-release-number} Keycloak the import button is located inside the "Realm settings" menu, in the combo of actions available at the top right as shown in the next image:
++
+image::KeycloakImportButtonSystem.png[align="center"]
+... Inside the import menu, browse and import the mentioned file. In case of {main-base-app} {screenshot-altiplano-release-number} Keycloak the following window must be shown and all the resources must be selected:
++
+image::KeycloakImportWindowSystem.png[align="center"]
+
+
+[NOTE]
+====
+The values of the secrets of "wnp_portal" and "wnp_proxy" clients loaded in the master realm must be configured in the *values.yaml* in the xref:Installation-and-Deployment-Guide:How_to_install_and_configure_WNP_application.adoc#_configuring_helm_chart[Configuring Helm chart].
+====
+
+include::ROOT:go-back-component.adoc[Back]

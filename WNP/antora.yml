@@ -1,0 +1,6 @@
+name: WNP
+title: Nokia Altiplano Wholesale Network Portal Installation, Deployment and User Guide
+version: master
+nav:
+- modules/Installation-and-Deployment-Guide/nav.adoc
+- modules/User_Guide/nav.adoc

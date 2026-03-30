@@ -1,0 +1,59 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= HA Deployment Models
+
+The WNP, as a proxy of Altiplano interfaces, depends on Altiplano’s availability to offer its services. Therefore, WNP high availability needs to be evaluated in the context of Altiplano high availability.
+
+WNP supports the implementation of the following six deployment models defined by Altiplano: Single Node Cluster, Partial Local HA, Full Local HA, Geo-redundancy with Single Node Clusters, Geo-redundancy with Full+Partial Local HA, Geo-redundancy with Full Local HA.
+
+In order to implement its service continuity and disaster recovery, WNP relays on the following external mechanism:
+
+* Kubernetes redundancy and pods restart mechanism: To keep WNP modules up and running
+* Altiplano's MariaDB high availability: To keep the persistent information (WNP configurations and WNP user credentials).
+* Altiplano's Backup mechanism: To keep an external backup of WNP configurations and user credentials.
+* Altiplano's database inter-site synchronization: To keep a georedundant site with updated configurations.
+* Altiplano’s Geo-redundant switchover mechanism: To start/stop WNP application in the event of an Altiplano's switchover.
+
+The following sections describe the general considerations for the implementation in the different deployment models:
+
+* Local Redundancy
+* Geographic Redundancy
+* Configuration persistence (for backups and site synchronization)
+
+
+== Local Redundancy Considerations
+
+* Following Altiplano criteria, WNP stateless pods rely on the redundancy mechanism implemented at infrastructure level by Kubernetes. Redundancy at application level (multiples replicas) is not applied for these pods.
+
+* Following Altiplano criteria, WNP stateful pods (kafka Brokers) implements a 3 replicas approach. With kubernetes in charge of distributing these replicas in different nodes (if available).
+
+== Geo Redundancy Considerations
+
+* WNP needs to be installed on both sites, but will be active only on one site at a time.
+
+* WNP Geo-redundancy needs to be handled together with Altiplano Geo-redundancy. Meaning that WNP needs to be active on the same site Altiplano is active.
+
+* WNP offers a one line script to startup or shut down the application. These scripts should be integrated with the activation/deactivation solution implemented by Altiplano for geo-redundant switchovers.
+
+== Persistent Configuration Considerations
+
+* WNP delegates user authentication to Altiplano's keycloak. Therefore, all information related with user credentials are stored on keycloak, and expected to be included on Altiplano's backup and DB synchronization between sites.
+
+* WNP configurations (VNO profiles) are stored on Altiplano's MariaDB (app_wnp database). Therefore, it's expected to be included on Altiplano's backup and DB synchronization between sites.
+
+* WNP does not handle any additional persistent information (kafka events are considered dispensable).
+
+
+== HA Implementation
+
+Following these considerations, implementing the WNP in single site environment implies:
+
+.  Installing the WNP application
+.  Verify that WNP persistent configurations are properly included in Altiplano DB backup.
+
+Following these considerations, implementing the WNP in a georedundant environment implies:
+
+.  Installing the WNP application on both sites (without changes on helm chart).
+.  Shutting down WNP on the passive site.
+.  Integrate the WNP pod-ctl.sh script with the stop/start parameter to Altiplano switchover mechanism.
+.  Verify that WNP persistent configurations are properly backed-up and synchronized between sites.

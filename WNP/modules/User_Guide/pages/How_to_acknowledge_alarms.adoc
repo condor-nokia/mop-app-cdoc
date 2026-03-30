@@ -1,0 +1,239 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to Acknowledge alarms as {vno-initials}
+
+== Introduction
+
+This section describes how to use the {app-short-name} to acknowledge alarms as an {vno-initials}.
+
+When {app-short-name} is installed over Altiplano, the {vno-initials} can acknowledge alarms
+through the WebUI and the application proxy(using REST queries).
+
+Instead of using the Altiplano's IBN URL:
+https://{altiplano-host}/nokia-altiplano-ac/.
+The {vno-initials}s must point to {app-short-name} IBN proxy URL:
+https://{altiplano-host}/{wnp-ibn-context}/
+
+[NOTE]
+====
+Before using {app-short-name} as an {vno-initials} you must be authenticated as {vno-initials} user.
+Refer to xref:User_Guide:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section to know the required steps.
+====
+
+== Acknowledge active alarms
+
+When an {vno-initials} wants to acknowledge active alarms it must use the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy directly.
+
+=== Using the {app-short-name} WebUI
+
+To manage Acknowledge Notes over the active alarms using the WebUI, execute the following steps:
+
+. Click the "Alarms" option on the menu bar displayed on top of the screen.
++
+image::vno_portal/Alarms_menu.png[align="center"]
+
+. All Active Alarms will be listed:
++
+image::vno_portal/AlarmsSection_listActiveAlarms.png[align="center"]
+
+==== To add an acknowledgement note
+
+. Click the *Acknowledge alarms* icon in alarm identifier row.
++
+image::vno_portal/AlarmsSection_AcknowledgeBtn.png[align="center"]
+
+. Enter the Acknowledgement Note in the popup window.
++
+image::vno_portal/AlarmsSection_AcknowledgePopup.png[align="center"]
+
+. Click the *APPLY* button.
+
+==== To delete an acknowledgement note
+
+. Click the *Unacknowledge alarms* icon in alarm identifier row.
++
+image::vno_portal/AlarmsSection_UnacknowledgeBtn.png[align="center"]
+
+. A confirmation popup is opened:
++
+image::vno_portal/AlarmsSection_UnacknowledgePopup.png[align="center"]
+
+. Click the *YES* button.
+
+=== Using the REST Proxy
+To manage Acknowledge Notes over the active alarms using the {app-short-name} IBN proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/alarm/alarms/acknowledge
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+==== Example to add an acknowledgement note
+If an {vno-initials} wants to add a note on an active alarm, a POST request must be sent to the url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/alarm/alarms/acknowledge including the following body:
+
+[source, json]
+----
+{
+    "localTime": "{localTime}",
+    "alarms": [
+        "{alarmId1}", "{alarmId2}", ...., "{alarmIdX}"
+    ],
+    "ack": "true",
+    "note": "{NewNote}"
+}
+----
+
+For example::
++
+[source, json]
+----
+{
+    "localTime": "2025-08-25T14:00:02.755Z",
+    "alarms": [
+        "xz0X05gBLYR2zAQulp0E"
+    ],
+    "ack": "true",
+    "note": "Acknowledge Note 1"
+}
+----
+
+==== Example to delete an acknowledgement note
+If an {vno-initials} wants to delete a note of an active alarm, a POST request
+must be sent to the url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/alarm/alarms/acknowledge including the following body:
+
+[source, json]
+----
+{
+    "localTime": "{localTime}",
+    "alarms": [
+        "{alarmId1}", "{alarmId2}", ...., "{alarmIdX}"
+    ],
+    "ack": "false"
+}
+----
+
+For example::
++
+[source, json]
+----
+{
+    "localTime": "2025-08-25T14:00:02.755Z",
+    "alarms": [
+        "xz0X05gBLYR2zAQulp0E"
+    ],
+    "ack": "false"
+}
+----
+
+== Acknowledge historical alarms
+
+When an {vno-initials} wants to acknowledge historical alarms it must use the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy directly.
+
+=== Using the {app-short-name} WebUI
+
+To manage Acknowledge Notes over the historical alarms using the WebUI, execute the following steps:
+
+. Click the "Alarms" option on the menu bar displayed on top of the screen and then the "HISTORIC" tab inside the page.
++
+image::vno_portal/Alarms_menu.png[align="center"]
+
+. All Historic Alarms will be listed:
++
+image::vno_portal/AlarmsSection_listHistoricAlarms.png[align="center"]
+
+==== To add an acknowledgement note
+
+. Click the *Acknowledge alarms* icon in alarm identifier row.
++
+image::vno_portal/AlarmsSection_AcknowledgeBtn.png[align="center"]
+
+. Enter the Acknowledgement Note in the popup window.
++
+image::vno_portal/AlarmsSection_AcknowledgePopup.png[align="center"]
+
+. Click the *APPLY* button.
+
+==== To delete an acknowledgement note
+
+. Click the *Unacknowledge alarms* icon in alarm identifier row.
++
+image::vno_portal/AlarmsSection_UnacknowledgeBtn.png[align="center"]
+
+. A confirmation popup is opened:
++
+image::vno_portal/AlarmsSection_UnacknowledgePopup.png[align="center"]
+
+. Click the *YES* button.
+
+=== Using the REST Proxy
+To manage Acknowledge Notes over the historical alarms using the {app-short-name} IBN proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/alarm/alarms/acknowledge
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+==== Example to add an acknowledgement note
+If an {vno-initials} wants to add a note on an historical alarm, a POST request must be sent to the url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/alarm/alarms/acknowledge including the following body:
+
+[source, json]
+----
+{
+    "localTime": "{localTime}",
+    "alarms": [
+        "{alarmId1}", "{alarmId2}", ...., "{alarmIdX}"
+    ],
+    "ack": "true",
+    "note": "{NewNote}"
+}
+----
+
+For example::
++
+[source, json]
+----
+{
+  "localTime": "2025-08-25T17:05:00.701Z",
+  "alarms": [
+    "Hy-EPJgBLYR2zAQu7TqF"
+  ],
+  "ack": "true",
+  "note": "Acknowledge Note 1"
+}
+----
+
+==== Example to delete an acknowledgement note
+If an {vno-initials} wants to delete a note of an historical alarm, a POST request
+must be sent to the url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/alarm/alarms/acknowledge including the following body:
+
+[source, json]
+----
+{
+    "localTime": "{localTime}",
+    "alarms": [
+        "{alarmId1}", "{alarmId2}", ...., "{alarmIdX}"
+    ],
+    "ack": "false"
+}
+----
+
+For example::
++
+[source, json]
+----
+{
+  "localTime": "2025-08-25T17:07:21.114Z",
+  "alarms": [
+    "PS-GPJgBLYR2zAQu_DrW"
+  ],
+  "ack": "false"
+}
+----

@@ -1,0 +1,51 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to navigate between {main-base-app} and {app-short-name} Apps
+
+== Introduction
+
+This section provides the steps required to return to {main-base-app} from {app-short-name} and vice versa.
+
+== Access to {main-base-app} from {app-short-name} WebUI
+
+To return to {main-base-app} from {app-short-name} WebUI, execute the following steps:
+
+. Two options can be used:
+.. Click over the *Nokia* icon on the menu bar displayed on left top of the screen.
++
+image::howReturnAltiplanoNokiaIcon_option1.png[align="left"]
+
+.. Click over the *Apps* icon on the menu bar displayed on right top of the screen.
++
+image::howReturnAltiplanoNokiaIcon_option2.png[align="left"]
+
+. Will be redirected to {main-base-app} Access Controller Home page.
++
+image::altiplanoHome.png[align="left"]
+
+== Access to {app-short-name} from {main-base-app} WebUI
+
+To return to {app-short-name} from {main-base-app} WebUI, execute the following steps:
+
+. The {main-base-app} home App.
++
+image::altiplanoHome.png[align="left"]
+
+. Two options can be used:
+.. All available Apps are displayed on the screen. Click over the *{app-full-name}* icon.
++
+image::WNP_option1.png[align="left"]
+
+.. Click over the on the *Application menu* displayed on right top of the screen.
++
+image::altiplanoAppsMenu.png[align="left"]
+
+... Then, select *{app-full-name}* menu option.
++
+image::altiplanoAppsMenuAll.png[align="left"]
+
+. Will be redirected to {app-short-name} Home page.
++
+image::wnpHome.png[align="left"]
+
+include::ROOT:go-back-component.adoc[Back]

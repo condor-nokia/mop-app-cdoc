@@ -1,0 +1,51 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to use {app-short-name} as {vno-initials}
+
+When the {app-short-name} is installed on top of an Altiplano solution, the {vno-initials}s must act through the proxies
+and the WebUI which the application offers.
+These proxies and WebUI applies all the rules configured in {app-short-name}.
+Refer to xref:How_to_use_WNP_as_INP.adoc[How to Use {app-short-name} as {inp-initials}] section to know the
+available configurations.
+
+The following procedures explains how to use the {app-short-name} as an {vno-initials}:
+
+. xref:How_to_configure_intents_as_VNO.adoc[How to Configure Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_create_intents[Create Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_search_intents[Search Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_edit_intents[Edit Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_delete_an_intent[Delete Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_launch_actions_over_intents[Launch actions over Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_suspendactivate_intents[Suspend/Activate Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_synchronize_intents[Synchronize Intents]
+.. xref:How_to_configure_intents_as_VNO.adoc#_audit_intents[Audit Intents]
+
+. xref:How_to_set_alias_as_VNO.adoc[How to Configure Aliases of the Assigned Network Resources]
+
+. xref:How_to_get_opensearch_intents_as_VNO.adoc[How to Retrieve Readable Intents]
+
+. xref:How_to_get_opensearch_alarms_as_VNO.adoc[How to Retrieve Alarms]
+.. xref:How_to_get_opensearch_alarms_as_VNO.adoc#_retrieve_active_alarms[Retrieve Active Alarms]
+.. xref:How_to_get_opensearch_alarms_as_VNO.adoc#_retrieve_historical_alarms[Retrieve Historical Alarms]
+
+. xref:How_to_acknowledge_alarms.adoc[How to Acknowledge Alarms]
+
+. xref:How_to_get_opentsdb_metrics_as_VNO.adoc[How to Retrieve Metrics]
+
+. xref:How_to_get_opentsdb_intent_health_as_VNO.adoc[How to Retrieve Intent Health]
+
+. xref:How_to_get_opensearch_intents_as_VNO.adoc[How to Retrieve Intents from Indexsearch]
+
+. xref:How_to_use_software_management_as_VNO.adoc[How to Use Software Management]
+
+. xref:How_to_consume_Kafka_events_as_VNO.adoc[How to Consume Kafka Events]
+.. xref:How_to_consume_Kafka_events_as_VNO.adoc#_alarms_topic[Subscribe to ALARMS Topic]
+.. xref:How_to_consume_Kafka_events_as_VNO.adoc#_intent_health_topic[Subscribe to INTENT_HEALTH Topic]
+.. xref:How_to_consume_Kafka_events_as_VNO.adoc#_ipfix_xpon_topic[Subscribe to IPFIX XPON Topic]
+.. xref:How_to_consume_Kafka_events_as_VNO.adoc#_nclive_xpon_topic[Subscribe to NCLIVE XPON Topic]
+
+. xref:How_to_receive_alarms_via_snmp_traps.adoc[How to Receive Alarms via SNMP Traps]
+
+. xref:How_to_use_Troubleshooting_view.adoc[How to Use Troubleshooting View]
+
+include::ROOT:go-back-component.adoc[Back]

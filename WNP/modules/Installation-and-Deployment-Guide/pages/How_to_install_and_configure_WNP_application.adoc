@@ -1,0 +1,1032 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+:source-language: bash
+
+= How to Install and Configure the {app-short-name} on Altiplano
+
+== Overview
+
+Ensure that you have the required hardware and software resources on your Kubernetes host as explained in the
+"Getting started with Installation" section of the _Installation and Deployment Guide for Nokia Altiplano Access Controller and FastMile Controller Guide_.
+Also, check the xref:Solution_planning_guidelines_for_WNP_application.adoc[Solution Planning Guidelines for {app-short-name} Application] to know the
+dimensioning needed to run {app-short-name} over {main-base-app}.
+
+[NOTE]
+====
+. This documentation assumes that you are aware of the usage of Helm charts and therefore does not provide details on Helm commands.
+
+. To perform the installation following skill set is required:
+.. Knowledge of Kubernetes (K8s)
+.. Container runtimes
+.. Helm commands
+.. Unix commands
+====
+
+== Prerequisites
+
+. A database called {wnp-dbname}, created on {main-base-app}’s MariaDB with the correct credentials. +
+With the {main-base-app}’s installations, the {wnp-dbname} database and user should have been created.
+If the database or mariadb user does not exist refer to the xref:appendices/Configuring_Database.adoc[Configuring Database] section to know the steps needed.
+
+. A Helm chart must be downloaded. +
+Refer to the xref:_wnp_helm_chart[{app-short-name} Helm chart] section to know the steps needed.
+
+. Keycloak must be configured with the clients and accounts needed by the application. +
+Refer to the xref:appendices/Configuring_Keycloak.adoc[Configuring Keycloak] to execute the steps needed.
+
+== {app-short-name} Helm chart
+
+You can download the sample Helm charts from the *Nokia Software repository* or *Software Delivery platform (SWDP)* (requires internet access to your host).
+
+The procedure to download the helm charts is given below.
+
+=== Download the helm charts from the Nokia Software repository
+
+====
+When executing the *NokiaSWRepoAccessProvider* binary file, enter *Altiplano Applications* as an input when prompted for *Product to access*.
+
+For non-docker environment, execute the script with argument --nodocker
+[source]
+----
+./NokiaSWRepoAccessProvider --nodocker
+----
+
+*The following procedure is applicable for Kubernetes environment with containerd
+runtime.*
+
+*config.toml* (/etc/containerd/config.toml) must be configured for authentication on every Kubernetes node where you want to download the WNP image for Kubernetes environment with containerd runtime.
+
+For example::
+
+. Take a backup of config.toml
+. Edit config.toml.
+.. sudo vi /etc/containerd/config.toml.
+.. Substitute the values for <USERNAME> with output of echo $NOKIALOGIN.
+.. Substitute the values for <PASSWORD> with output of echo $NOKIAPWD.
+.. Substitute the values for <AUTH> with output of echo -n '$NOKIALOGIN:$NOKIAPWD' |
+base64.
++
+[source]
+----
+[plugins]
+  [plugins.cri]
+    sandbox_image = "artifactory.net.nokia.com/pause:3.9"
+    [plugins.cri.registry]
+        [plugins.cri.registry.mirrors]
+            [plugins.cri.registry.mirrors."docker.io"]
+                endpoint = ["https://registry-1.docker.io"]
+            [plugins.cri.registry.mirrors."artifactory.net.nokia.com"]
+                endpoint = ["https://artifactory.net.nokia.com"]
+        [plugins.cri.registry.configs]
+            [plugins.cri.registry.configs."artifactory.net.nokia.com".auth]
+                username = "<USERNAME>"
+                password = "<PASSWORD>"
+                auth = "<AUTH>"
+----
+
+. Restart containerd
+.. sudo systemctl restart containerd
+
+. Check status of containerd.
+.. sudo systemctl status containerd.
+
+*The following procedure is applicable for Kubernetes environment with crio runtime.*
+
+*crio.conf* (/etc/crio/crio.conf) must be configured for authentication on every Kubernetes node where you want to download the WNP image for Kubernetes environment with crio runtime.
+
+For example::
+
+. Take a backup of crio.conf.
+. Create a config.json file.
+.. sudo vi config.json
+.. Substitute the values for <AUTH> with output of echo -n '$NOKIALOGIN:$NOKIAPWD' | base64.
++
+[source, json]
+----
+{
+  "auths": {
+          "artifactory.net.nokia.com": {
+          "auth": "<AUTH>"
+          }
+  }
+}
+----
+
+. Edit crio.conf.
+.. sudo vi /etc/crio/crio.conf
+.. Subtitute the path for <PATH_TO_CONFIG.JSON>
++
+Example:
++
+[source]
+----
+# The path to a file containing credentials necessary for pulling
+images from
+
+  # secure registries. The file is similar to that of
+/var/lib/kubelet/config.json
+
+  global_auth_file = "<PATH_TO_CONFIG.JSON>"
+----
+
+. Restart crio.
+.. sudo systemctl restart crio.
+
+. Check status of crio.
+.. sudo systemctl status crio.
+====
+
+. Add the *NOKIA software repository* to your Kubernetes host using the following command. The values of "NOKIALOGIN" and "NOKIAPWD" are automatically set when you execute the NokiaSWRepoAccessProvider binary file. Run the following command every time after you execute NokiaSWRepoAccessProvider binary file. Run the following command every time after you
+execute NokiaSWRepoAccessProvider binary file and when you want to check for updates from the Nokia software repository.
++
+.Add helm repository
+[source]
+----
+helm repo add NOKIA https://artifactory.net.nokia.com/artifactory/fnpc_helm_virtual --username "$NOKIALOGIN" --password "$NOKIAPWD" --pass-credentials
+----
++
+If you are running the above command on helm version {helm-version}, you will need to include the additional argument '--pass-credentials'. See https://github.com/helm/helm/issues/9851 for more details.
+"NOKIA" is added to your repositories.
+
+. Check for updates from the Nokia software repository.
++
+.Update helm repository
+[source]
+----
+helm repo update
+----
++
+The following message displays:
++
+----
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "NOKIA" chart repository
+Update Complete. Happy Helming!
+----
+
+. Search for the latest helm charts or a specific chart version.
++
+
+Use the following command.
++
+[source, bash, subs=attributes]
+----
+helm search repo --devel {helm-chart-name}
+----
++
+OR
++
+[source, bash, subs=attributes]
+----
+helm search repo {helm-chart-name} --version {chart-version}-NNNN
+----
++
+
+. Download the *{helm-chart-name}* chart to your local directory.
++
+Use the following command:
++
+.Download helm charts
+[source, bash, subs=attributes]
+----
+helm pull NOKIA/{helm-chart-name} --version {chart-version}-NNNN
+----
++
+The downloaded files are available in the local directory of your Kubernetes host.
+
+. Extract the *{helm-chart-name}* chart
++
+.Extract helm chart
+[source, bash, subs=attributes]
+----
+tar -xvf {helm-chart-name}-{chart-version}-NNNN.tgz
+----
+
+. Look for the contents extracted from the zip file inside {helm-chart-name} directory.
++
+[source, subs=attributes]
+----
+host:~/{helm-chart-name}$ ls
+----
++
+.Sample output of the command
+[source]
+----
+Chart.yaml keycloak/ templates/ tools/ values-23_12.yaml values.yaml
+----
++
+When the altiplano-solution chart is deployed, make sure the relevant variables are added to
+enable {app-short-name} functionality and then deploy the {app-short-name} chart.
+
+=== Download the helm charts from Nokia SWDP
+
+You can download the sample Helm chart files from the *Nokia SWDP* (requires internet access to your host). You must have valid login credentials for the Support Portal.
+
+Before proceeding with the procedure, verify that your Support Portal account is valid and works as expected by going to https://customer.nokia.com/support and using your Nokia support account to log in.
+
+Nokia SWDP uses token-based authentication. The generated token is valid for a period of 90 days.
+
+In the commands used for SWDP access, the login name must be extended with the following parameters:
+
+* Email Address: The email address of the user who is performing the download
+* COUNTRYCODE (Applicable only for Nokia users): The country code must be used in situations where the downloader is not downloading from the same country as the legal address of the customer. Country codes are the standard country abbreviations, such as GB, US, BE, DE.
+* End Customer Id: The End customer Id is to be used in case the person who is performing the download does this on behalf of another customer. You can view the Customer Id in the Service Portal (link:https://services.support.nokia.com/services/company_mapping[Service Portal]).
+
+The format of the login name is: '<email address>, <COUNTRYCODE>, <end customer id>'.
+
+. Identify which server to use.
++
+[source]
+----
+$ curl -X POST -s -u <user email address> https://swdpfi.support.nokia.com/api/v1/token/create | cut -f12 -d\"
+----
++
+Here, https://swdp-fi.support.nokia.com = SWDP_URL
++
+The following message displays:
++
+[source]
+----
+Enter host password for user <user email address>:
+----
++
+Enter the Nokia provided password.
+The following is returned:
+
+* FIN Pull Cluster
+* US Pull Cluster
++
+If the return value is FIN, continue with SWDP_URL= https://swdp-fi.support.nokia.com
++
+If the return value is US, continue with SWDP_URL= https://swdp-us.support.nokia.com
+
+. Generate the token
++
+[source]
+----
+SWDPTOKEN=`curl -X POST -s -u <user email address>,,<endcustomerid>
+SWDP_URL/api/v1/token/create | cut -f 4 –d\"`
+----
++
+The following message displays:
++
+[source]
+----
+Enter host password for user <user email address>:
+----
++
+Enter the Nokia provided password.
++
+The SWDPTOKEN is generated.
+
+[NOTE]
+====
+In the commands used for SWDP access, enter the login details as follows:
+
+* username: PAT
+* password: $SWDPTOKEN
+====
+
+====
+*The following procedure is applicable for Kubernetes environment with containerd
+runtime.*
+
+*config.toml* (/etc/containerd/config.toml) must be configured for authentication on every Kubernetes node where you want to download the WNP image for Kubernetes environment with containerd runtime.
+
+For example::
+. Generate SWDP Token and export SWDPTOKEN=<SUBSTITUTE TOKEN VALUE>
+. Take a backup of config.toml.
+. Edit config.toml.
+.. sudo vi /etc/containerd/config.toml.
+..  Substitute the value for <SWDP_PRODUCT_DOCKER_URL>.
++
+where,
++
+... altiplano-wnp-product-docker.swdp-fi.support.nokia.com.
+... altiplano-wnp-product-docker.swdp-us.support.nokia.com.
+
+.. Substitute the value PAT for <USERNAME>.
+.. Substitute the value SWDPTOKEN for <PASSWORD>.
+.. Substitute the values for <AUTH> with output of echo -n 'PAT:$SWDPTOKEN' | base64.
++
+[source]
+----
+[plugins]
+  [plugins.cri]
+  sandbox_image = "<SWDP_PRODUCT_DOCKER_URL>/pause:3.9"
+  [plugins.cri.registry]
+  [plugins.cri.registry.mirrors]
+  [plugins.cri.registry.mirrors."docker.io"]
+  endpoint = ["https://registry-1.docker.io"]
+  [plugins.cri.registry.mirrors."<SWDP_PRODUCT_DOCKER_URL>"]
+  endpoint = ["https://<SWDP_PRODUCT_DOCKER_URL>"]
+  [plugins.cri.registry.configs]
+  [plugins.cri.registry.configs."<SWDP_PRODUCT_DOCKER_URL>".auth]
+  username = "PAT"
+  password = "<PASSWORD>"
+  auth = "<AUTH>"
+----
+
+. Restart containerd.
+.. sudo systemctl restart containerd.
+
+. Check status of containerd.
+.. sudo systemctl status containerd.
+
+*The following procedure is applicable for Kubernetes environment with crio runtime.*
+
+*crio.conf* (/etc/crio/crio.conf) must be configured for authentication on every Kubernetes node where you want to download the {app-short-name} image for Kubernetes environment with crio runtime.
+
+For example::
+. Generate SWDP Token and export SWDPTOKEN=<SUBSTITUTE TOKEN VALUE>.
+
+. Take a backup of crio.conf.
+
+. Create a config.json file.
+
+.. sudo vi config.json.
+.. Substitute the value for <SWDP_PRODUCT_DOCKER_URL>.
++
+where,
++
+... altiplano-wnp-product-docker.swdp-fi.support.nokia.com.
+... altiplano-wnp-product-docker.swdp-us.support.nokia.com.
+
+.. Substitute the values for <AUTH> with output of echo -n 'PAT:$SWDPTOKEN' | base64.
++
+[source,json]
+----
+{
+  "auths": {
+      "<SWDP_PRODUCT_DOCKER_URL>": {
+      "auth": "<AUTH>"
+      }
+  }
+}
+----
+
+. Edit crio.conf.
+.. sudo vi /etc/crio/crio.conf.
+.. Subtitute the path for <PATH_TO_CONFIG.JSON>.
++
+Example:
++
+[source]
+----
+# The path to a file containing credentials necessary for pulling
+images from
++
+# secure registries. The file is similar to that of
+/var/lib/kubelet/config.json
++
+global_auth_file = "<PATH_TO_CONFIG.JSON>"
+----
+
+. Restart crio.
+.. sudo systemctl restart crio.
+
+. Check status of crio.
+.. sudo systemctl status crio.
+====
+
+. Use the following command to add the NOKIA helm repository to your Kubernetes host. The
+values in the username and password are referring to your support portal login and support
+portal password.
+
++
+.Add helm repo
+[source, subs=attributes]
+----
+helm repo add NOKIA https://swdp-fi.support.nokia.com/artifactory/Altiplano-WNP-Product-Helm --username PAT --password $SWDPTOKEN --pass-credentials
+"NOKIA" is added to your repositories.
+
+If you are running the above command on helm version {helm-version}, you will need include
+to additional argument '--pass-credentials'. See
+https://github.com/helm/helm/issues/9851 for more details.
+----
+
+. Check for the updates from the Nokia helm repository.
++
+.Update helm repo
+[source]
+----
+helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "NOKIA" chart repository
+Update Complete. Happy Helming!
+----
+
+. Search for the latest helm charts or a specific chart version.
++
+[source, bash, subs=attributes]
+----
+helm search --devel NOKIA/{helm-chart-name}
+NAME CHART VERSION APP VERSION DESCRIPTION
+NOKIA/{helm-chart-name} {chart-version}-NNNN {chart-version}_NNNN A Helm chart for {main-base-app} {app-short-name}
+----
++
+Use one of the following commands:
++
+[source, subs=attributes]
+----
+helm search repo --devel {helm-chart-name}
+----
++
+or
++
+[source, bash, subs=attributes]
+----
+helm search repo NOKIA/{helm-chart-name} --version {chart-version}-NNNN
+----
+
+. Download the {helm-chart-name} chart to your local directory.
++
+Use the following command.
++
+[source, subs=attributes]
+----
+helm pull NOKIA/{helm-chart-name} --version {chart-version}-NNNN
+----
++
+The downloaded files are available in the local directory of your Kubernetes host.
+
+. Extract the {helm-chart-name} chart.
++
+Extract helm chart
++
+[source, bash, subs=attributes]
+----
+tar -xvf {helm-chart-name}-{chart-version}-NNNN.tgz
+----
++
+Look for the contents extracted from the zip file inside {helm-chart-name} directory.
++
+[source, subs=attributes]
+----
+host:~/{helm-chart-name}$ ls
+----
++
+.Sample output of command
+[source]
+----
+Chart.yaml keycloak/ templates/ tools/ values-23_12.yaml values.yaml
+----
+
+[NOTE]
+====
+If a customer is successfully onboarded, but unable to access the WNP software
+correctly, it is recommended to create a support ticket to SWDP using the Support
+Portal (https://customer.nokia.com/support/s/). Make sure to verify the complete
+command before opening a support ticket to understand the issue. Add the
+timestamp when the error occurred so the FN support team can search for the error
+in the platform logs.
+====
+
+=== Configuring Helm chart
+
+When installing the {app-short-name}, configuration from the *values.yaml* file inside the chart release is used.
+This file allows setting configurations needed by the {app-full-name} to function properly.
+
+The different available configuration sections are explained below:
+
+==== imagePullSecrets
+
+Configuration is required only if the images registry is not public and requires login.
+In case enabled=true, the “config” attribute must contain the proper login credentials that allows connection to the registry.
+
+==== {app-short-name} Configuration
+
+This section allows setting specific {app-short-name} configuration used by the {app-short-name} services.
+
+//TODO: no toma el ancho definido. Parece ser por algunas valores de ciertas filas
+[width="100%",cols="20%,50%,10%,10%,10%",options="header"]
+|===
+|*Name* |*Description* |*Mandatory (Yes/No)* |*Default Value* |*Allowed Values*
+
+|ALTIPLANO_SERVER
+|{main-base-app} IP or Hostname that the {app-short-name} uses to call the Altiplano's available services. This value must be also used to access {app-short-name}
+|Yes
+|None
+|IP Address
+
+|ALTIPLANO_PUBLIC_IP_LIST
+|In NAT scenarios configure this variable with the list of IPs/hostnames
+that will be used to access {app-short-name}. Refer to xref:Installation-and-Deployment-Guide:appendices/WNP_Exposed_Interfaces.adoc[{app-short-name} Exposed Interfaces] section to know how each value impact the exposed interfaces.
+|No
+|""
+|String (Each IP must be separated with “;” character)
+
+|ALTIPLANO_MODE
+|{main-base-app}'s mode. {main-base-app} currently only supports two modes: ISAM and Lightspan. This value must be "ISAM" or "LS".
+|No
+|"LS"
+|String
+
+|KEYCLOAK_PORTAL_ID
+|Client ID from the Keycloak client used for {app-short-name} portal login. This value must be the same ID that was configured in the Keycloak for the client "wnp_portal".
+|No
+|"wnp_portal"
+|String
+
+|KEYCLOAK_PORTAL_SECRET
+|Client Secret from portal client. This value must be copied from "Credentials" section of the client "wnp_portal".
+|Yes
+|None
+|Keycloak client secret
+
+|KEYCLOAK_PROXY_ID
+|Client ID from the Keycloak client used for {app-short-name} queries against {main-base-app}. This value must be the same ID that is configured in the Keycloak for the client "wnp_proxy".
+|No
+|"wnp_proxy"
+|String
+
+|KEYCLOAK_PROXY_SECRET
+|Client Secret from proxy client. This value must be copied from "Credentials" section of the client "wnp_proxy".
+|Yes
+|None
+|Keycloak client secret
+
+|KEYCLOAK_KAFKA_ID
+|Client ID from the Keycloak client used for {app-short-name} Kafka login.
+|No
+|"wnp_kafka"
+|String
+
+ifdef::isamSupport[]
+|ONT_OWNER_CACHE_ENABLED
+|It indicates when {app-short-name} is working with a cache for maintaining info about ONTs when the {main-base-app}’s in "ISAM" mode. (Change this value to true if {main-base-app} is working in ISAM mode)
+|No
+|true
+|Boolean
+
+|ONT_OWNER_CACHE_LOGGING_LISTENER_CACHE
+|It indicates if the events in the ONT Owner cache will be logged.
+|No
+|true
+|Boolean
+
+|ONT_OWNER_CACHE_UPDATER_JOB_INTERVAL_MILLISECONDS
+|It indicates the milliseconds interval at which an ONT Owner cache maintenance thread will execute.
+|No
+|"10000"
+|Unsigned Integer
+
+|ONT_OWNER_CACHE_DEFINITELY_REMOVE_DB_SECONDS
+|It indicates the seconds to definitively delete an element from the DB. This handling is used to maintain the ONT Owner cache.
+|No
+|"86400"
+|Unsigned Integer
+
+|ONT_OWNER_CACHE_EXPIRED_TTL_SECONDS
+|It indicates the seconds that an element will expire of the ONT Owner cache.
+|No
+|"7200"
+|Unsigned Integer
+
+|ONT_OWNER_CACHE_HEAP_ENTRIES
+|It indicates the elements' count that will be saved in the main memory (heap entries).
+|No
+|"3000000"
+|Unsigned Integer
+
+|ONT_OWNER_CACHE_SLEEP_FOR_DELETING_FROM_CACHE
+|It indicates the seconds that an element will be delayed to definitely be delete of ONT Owner cache.
+|No
+|"5"
+|Unsigned Integer
+endif::isamSupport[]
+
+|SHARED_MODE
+|It indicates when {app-short-name} is working with {main-base-app}’s slicing feature. (Change this value to true if {main-base-app} is working in slice mode)
+|No
+|false
+|Boolean
+
+|ALTIPLANO_SHARED_MODE_SERVER
+|{main-base-app} INP Access Controller’s public IP or Hostname when working with slicing feature.
+|Yes (Only if SHARED_MODE is true)
+|""
+|String
+
+|SHARED_MODE_SLICE_OWNER
+|It indicates {main-base-app}'s slice owner name to be used by {app-short-name} when creating ont-connections.
+|Yes (Only if SHARED_MODE is true)
+|""
+|String
+
+|SHARED_MODE_AUTH_CLIENT_ID
+|Client ID from the Keycloak running on {main-base-app} {app-short-name} Access Controller’s Keycloak used for proxy queries from {app-short-name}
+|No
+|"wnp_proxy"
+|String
+
+|SHARED_MODE_AUTH_SECRET
+|Client Secret from the Keycloak client running on {main-base-app} INP Access Controller.
+|Yes (Only if SHARED_MODE is true)
+|""
+|Keycloak client secret
+
+|ALTIPLANO_SHARED_MODE_AUTH_BASE_PATH_UR
+|{main-base-app} INP AC’s keycloak REST API path. (There is no need to change default value except {main-base-app} changes keycloak configuration of the realms)
+|No
+|"/altiplano-sso"
+|String
+
+|ALTIPLANO_SHARED_MODE_AUTH_DEFAULT_REALM
+|{main-base-app} INP AC’s keycloak default realm.
+|No
+|"master"
+|String
+
+|ALTIPLANO_SHARED_MODE_AC_PATH_URL
+|{main-base-app} INP Access Controller's (Global) REST API path part. (There is no need to change default value except {main-base-app} changes AC endpoint)
+|No
+|"/nokia-altiplano-ac"
+|String
+
+|ALTIPLANO_AC_PATH_URL
+|{main-base-app} REST API path. (There is no need to change default value except {main-base-app} changes AC endpoint)
+|No
+|"/nokia-altiplano-ac"
+|String
+
+|ALTIPLANO_OPENSEARCH_PATH_URL
+|{main-base-app} IndexSearch REST API path. (There is no need to change default value except {main-base-app} changes OpenSearch endpoint)
+|No
+|"/altiplano-indexsearch"
+|String
+
+|ALTIPLANO_OPENTSDB_PATH_URL
+|{main-base-app} OpenTSDB REST API path. (There is no need to change default value except {main-base-app} changes OpenTSDB endpoint)
+|No
+|"/altiplano-opentsdb"
+|String
+
+|ALTIPLANO_AUTH_BASE_PATH_URL
+|{main-base-app}’s keycloak REST API path. (There is no need to change default value except {main-base-app} changes the keycloak REST API path)
+|No
+|"/altiplano-sso"
+|String
+
+|ALTIPLANO_AUTH_DEFAULT_REALM
+|{main-base-app}’s keycloak default realm. (There is no need to change default value except {main-base-app} changes the keycloak default realm)
+|No
+|"master"
+|String
+
+|ALTIPLANO_AUTH_EXTRA_REALMS
+|Extra {main-base-app}’s keycloak realms.
+|No
+|"system"
+|String (Each realm name must be separated with “;” character)
+
+|VNO_IDENTIFIER_REGEXP
+|The regular expression that defines the format of the {vno-initials} Identifier. The id is used to prefix/suffix the information to apply multi tenancy feature.
+|No
+|"^[a-zA-Z]{3,3}$"
+|RegExp
+
+|USERNAME_REGEXP
+|The regular expression that defines the format of the {vno-initials} username. (There is no need to change default value except of special requirement)
+|No
+|"^[a-zA-Z_]{1,10}[a-zA-Z_\\\\d]{0,10}$"
+|RegExp
+
+ifdef::isamSupport[]
+|ONT_ISAM_REGEXP
+|The regular expression that defines the format of the ONT when the {main-base-app}’s in "ISAM" mode.
+|No
+|"R\\\\d+\\\\.S\\\\d+\\\\.LT\\\\d+\\\\.PON\\\\d+\\\\.ONT\\\\d+"
+|String
+
+|OLT_ISAM_REGEXP
+|The regular expression that defines the format of the OLT when the {main-base-app}’s in "ISAM" mode.
+|No
+|"ne=([^/]+)"
+|String
+endif::isamSupport[]
+
+|PREFIXED_INTENT_TYPES
+|The intent types that {app-short-name} will prefixed/suffixed with the {vno-initials} Identifier to apply the multi tenancy filters and controls.
+|No
+|"ont;l2-user;mcast-user;standard-voip-sip-agent;standard-voip-sip-user;legacy-voip-sip-agent;legacy-voip-sip-user"
+|String (Each intent type must be separated with “;” character)
+
+|UI_ONT_CREATION_ALTIPLANO_WORKAROUND_ENABLED
+|This flag allows to apply a workaround to {main-base-app}'s 24.12 bug that does not accept the geocoordinates in ont creation. If this flag is setted to true, then when creating an ONT using the UI the geocoordinates data is not sent.
+|No
+|true
+|Boolean
+
+|SERVICE_INTENT_TYPES
+|The intent types that {app-short-name} will manage as services. These services will be listed under the Services section on the {vno-initials} WebUI.
+|No
+|"l2-user,mcast-user,standard-voip-sip-user"
+|String (Each intent type must be separated with “,” character)
+
+|USE_IDENTIFIER_AS_SUFFIX
+|It indicates if {app-short-name} as suffix instead of prefix.
+|No
+|true
+|Boolean
+
+|PREFIXED_INTENT_TYPES_FIELDS
+|The attributes inside the intents that {app-short-name} will prefix with the {vno-initials} Identifier to apply the multi tenancy filters and controls. Each attribute must contain the intent type and the key. Also each element of the list must be separated with “;”
+|No
+|"l2-user.user-device-name;standard-voip-sip-user.user-device-name;legacy-voip-sip-user.user-device-name"
+|String (Each element must be separated with “;” character)
+
+|FLUENTD_LOG_HOST
+|The {main-base-app} Fluentd service that {app-short-name} uses to write logs. (There is no need to change default value except if {main-base-app} Fluentd service name changes)
+|No
+|"altiplano-fluentd"
+|String
+
+|FLUENTD_LOG_LEVEL
+|Fluentd log level.
+|No
+|"info"
+|String
+
+|FLUENTD_LOG_TIMEOUT
+|Timeout in milliseconds for the Fluentd requests.
+|No
+|"10000"
+|Unsigned Integer
+
+|POD_LOG_LEVEL
+|Pod log level.
+|No
+|"debug"
+|String
+
+|LIVE_COLLECTIONS_ENDPOINT
+|Live Collection REST Endpoint.
+|No
+|"/wnp-ibn/rest/ibn/livecollection"
+|String
+
+|KAFKA_CONSUMER_SERVER
+|The {main-base-app} Kafka service that {app-short-name} uses to consume the {main-base-app} alarms. (There is no need to change default value except if {main-base-app} Kafka service name changes)
+|No
+|"altiplano-kafka-0-broker-external"
+|String
+
+|KAFKA_CONSUMER_PORT
+|The {main-base-app} Kafka service port that {app-short-name} used to consume the {main-base-app} alarms. (There is no need to change default value except if {main-base-app} Kafka service port changes)
+|No
+|"9093"
+|Unsigned Integer Port number
+
+|KAFKA_CONSUMER_GROUP_ID
+|The group ID used by {app-short-name} to consume the alarms. (There is no need to change default value except of special requirement)
+|No
+|"wholesale_kafka_group"
+|String
+
+|KAFKA_CONSUMER_PM_TOPICS
+|The topics that {app-short-name} used to consume the {main-base-app} metrics that need to be filtered per {vno-initials}. (There is no need to change default value except if {main-base-app} topic name change)
+|No
+ifdef::isamSupport[]
+|"IPFIX-XPON;INTENT_HEALTH;NCLIVE-XPON;SDCbulk-ISAM;SNMPLive-ISAM"
+endif::isamSupport[]
+ifndef::isamSupport[]
+|"IPFIX-XPON;INTENT_HEALTH;NCLIVE-XPON"
+endif::isamSupport[]
+|String
+
+|KAFKA_CONSUMER_ALARM_TOPIC
+|The topic that {app-short-name} used to consume the {main-base-app} alarms that needs to be filtered per {vno-initials}. (There is no need to change default value except if {main-base-app} topic name changes)
+|No
+|"nokia-altiplano-alarm"
+|String
+
+|KAFKA_PM_CONCURRENCY_LISTENER
+|The number of threads that will use the {app-short-name} to listen to the {main-base-app} PM kafka events (IPFIX-XPON and NCLIVE-XPON topics).
+|No
+|"1"
+|Unsigned Integer
+
+|KAFKA_ALARMS_CONCURRENCY_LISTENER
+|The number of threads that will use the {app-short-name} to listen to the {main-base-app} Alarm kafka events.
+|No
+|"1"
+|Unsigned Integer
+
+|KAFKA_EVENTS_CONCURRENCY_LISTENER
+|The number of threads that will use the {app-short-name} to listen to the {main-base-app} intent changes kafka events.
+|No
+|"1"
+|Unsigned Integer
+
+|SNMP_SIMULTANEOUS_THREADS_BY_VNO
+|The number of threads that will use the {app-short-name} to send SNMP traps with the alarms filtered per {vno-initials}.
+|No
+|"1"
+|Unsigned Integer
+
+
+|VNO_TOPIC_SYNC_CRON
+|Expression to set how often a service runs to create a VNO topic. (It is not recommended to change this value)
+|No
+|"0 0/3 * * * ?"
+|CRON expression
+
+ifdef::isamSupport[]
+|EVENTWRITER_CONSUMER_TOPICS
+|KAFKA topic used by WNP-Event-Writer to read the metrics and alarms.
+|No
+|"nokia-altiplano-alarm;SDCbulk-ISAM"
+|String
+
+|EVENTWRITER_UPDATER_CRON
+|Expression to set time in which topics to consume are refreshed.
+|No
+|"0 0/1 * * * ?"
+|CRON expression
+endif::isamSupport[]
+
+|===
+
+==== Database Configuration
+
+This section allows configuring the image that must be downloaded to install the Database on {main-base-app}’s MariaDB.
+
+Database installation mode supports, normal mode, clean (deletes all tables before installing) or disabled. Default mode is: clean.
+
+Database upgrade mode supports, normal mode, clean (deletes all tables before upgrading) or disabled. Default mode is: normal
+
+At the end of this section we can find the MariaDB information, where to install the Metadata and data. Also, the credentials needed to connect to MariaDB. Default values are:
+
+* *host:* {wnp-dbhost}
+* *name:* {wnp-dbname}
+* *user:* {wnp-dbuser}
+* *password:* {wnp-dbpassword}
+
+==== {app-short-name} Ingress controller Configuration
+
+This section allows configuring the Kubernetes ingress controller to redirect the request to the correct services.
+There is no need to change this configuration except for specific requirements.
+
+The {app-short-name} exposes different interfaces. Default path values for those url interfaces are:
+
+* */wnp-ac:* It is the url used to access the REST API that allows to configure the {app-short-name}.
+* */wnp-webapp:* It is the url used to access the Web UI.
+* */wnp-indexsearch:* It is the url to access the {app-short-name} service that acts as a proxy for {vno-initials}s to query {main-base-app}’s Open Search in order to get alarms.
+* */wnp-opentsdb:* It is the url to access the {app-short-name} service that acts as a proxy for {vno-initials}s to query {main-base-app}’s opentsdb in order to get alarms.
+* */wnp-ibn:* It is the url used to access the {app-short-name} service that acts as proxy to {main-base-app}’s Intent Based Networking interface.
+
+To get more information about the interfaces exposed by {app-short-name}, refer to
+xref:Installation-and-Deployment-Guide:appendices/WNP_Exposed_Interfaces.adoc[{app-short-name} Exposed Interfaces] section.
+
+==== {app-short-name} Provisioning (Web + Controller) module Configuration
+
+This section allows configuring the image that must be downloaded to install the {app-short-name} REST API and the UI module in Kubernetes.
+
+==== {app-short-name} IBN Proxy module Configuration
+
+This section allows configuring the image that must be downloaded to install the {app-short-name} IBN Proxy module in Kubernetes.
+
+==== {app-short-name} Alarms and PM Proxy module Configuration
+
+This section allows configuring the image that must be downloaded to install the {app-short-name} PM and alarms proxy module in Kubernetes.
+
+==== {app-short-name} Kafka PM and Alarms module Configuration
+
+This section allows configuring the image that must be downloaded to install the {app-short-name} PM and alarms kafka module in Kubernetes.
+
+==== {app-short-name} Kafka Brokers Configuration
+
+This section allows configuring the image that must be downloaded to install the {app-short-name} Kafka Brokers module in Kubernetes.
+
+ifdef::isamSupport[]
+==== {app-short-name} Kafka Event Writer module Configuration
+This section allows configuring the image that must be downloaded to install the {app-short-name} Kafka Event Writer module in Kubernetes.
+endif::isamSupport[]
+
+=== Installing Helm chart
+
+Before executing the installation command make sure that
+
+- All the prerequisites were met. Refer to the xref:_prerequisites[Prerequisites] section.
+- The correct values were configured at the *values.yaml* file. To know more details about this configuration, refer to the xref:_configuring_helm_chart[Configuring Helm chart] section.
+- At least the following values have been configured:
+* *ALTIPLANO_SERVER:* {main-base-app} IP or Hostname that the {app-short-name} uses to call the Altiplano's available services. This value must be also used to access {app-short-name}
+* *ALTIPLANO_PUBLIC_IP_LIST (Optional):* List of IPs/Hostnames apart from the configured in the ALTIPLANO_SERVER variable that will be used to access WNP (For example in NAT scenarios). Refer to xref:Installation-and-Deployment-Guide:appendices/WNP_Exposed_Interfaces.adoc[{app-short-name} Exposed Interfaces] section to know how each value impact the exposed interfaces.
+* *KEYCLOAK_PORTAL_SECRET:* Client Secret of portal client. This value must be copied from "Credentials" section of the client "wnp_portal" in Keycloak.
+* *KEYCLOAK_PROXY_SECRET:* Client Secret of proxy client. This value must be copied from "Credentials" section of the client "wnp_proxy" in Keycloak.
+
+To install the application follow the next steps:
+
+. Execute the following commands using the tools included in the chart package:
++
+[IMPORTANT]
+====
+The {APP-SHORT-NAME} must be installed in the same cluster where Altiplano is running and in the same namespace.
+====
++
+.. Assign execution permissions to the tools:
++
+[source, bash, subs=attributes]
+----
+cd {helm-chart-name}/tools/
+
+tools$ sudo chmod 744 maintenance/*
+
+tools$ sudo chmod 744 monitoring/*
+----
++
+.. Configure the namespace in the tools.conf file (it must be the same where Altiplano is running):
++
+[source, bash]
+----
+tools$ vi config/tools.conf
+----
++
+.. Execute the installation tool:
++
+[IMPORTANT]
+This installation steps are the same whether performing a fresh installation or an upgrade. However, it is recommended to create a backup before proceeding with an upgrade.
+Refer to the xref:Troubleshooting.adoc#_Backup_and_restore_DB[Backup and restore DB] section to know
+the needed steps to backup the DB.
++
+.Usage
+[source, bash]
+----
+./maintenance/deploy-wnp.sh CHART_DEPLOYMENT_NAME
+----
++
+.Example
+[source, bash]
+----
+tools$ ./maintenance/deploy-wnp.sh wnp
+----
+
+. Wait for the installation of the helm chart to be completed.
+To check all the required {app-short-name} pods and services are up and running, execute the following command using the tools included in the chart package:
++
+.Usage
+[source, bash]
+----
+./monitoring/status-wnp.sh
+----
++
+.Example
+[source, bash]
+----
+tools$ ./monitoring/status-wnp.sh
+----
++
+.Sample output of the command(it must show the following pods and services in "Running" state)
+[source, bash, subs=attributes]
+----
+Command: helm ls -a -f wnp --namespace default
+NAME	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART                         	APP VERSION
+wnp 	default  	1       	2025-03-27 00:40:40.736424626 +0000 UTC	deployed	altiplano-wnp-24.12.1-REL-0025	24.12.1-REL-0025
+Command: kubectl get deployments -l app.kubernetes.io/instance=wnp --namespace default
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+altiplano-wnp-kafka-pm-and-alarms   1/1     1            1           22h
+altiplano-wnp-provisioning          1/1     1            1           22h
+altiplano-wnp-proxy-ibn             1/1     1            1           22h
+altiplano-wnp-proxy-pm-alarms       1/1     1            1           22h
+Command: kubectl get statefulset -l app.kubernetes.io/instance=wnp --namespace default
+NAME                         READY   AGE
+altiplano-wnp-kafka-broker   3/3     22h
+Command: kubectl get pods -l app.kubernetes.io/instance=wnp --namespace default
+NAME                                                READY   STATUS    RESTARTS      AGE
+altiplano-wnp-kafka-broker-0                        1/1     Running   2 (22h ago)   22h
+altiplano-wnp-kafka-broker-1                        1/1     Running   2 (22h ago)   22h
+altiplano-wnp-kafka-broker-2                        1/1     Running   0             22h
+altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-xxk4g   1/1     Running   0             22h
+altiplano-wnp-provisioning-7bf48f49b6-5pxv7         1/1     Running   0             22h
+altiplano-wnp-proxy-ibn-76688cfb69-ddrf9            1/1     Running   0             22h
+altiplano-wnp-proxy-pm-alarms-8499bc9dcb-wbjqp      1/1     Running   0             22h
+Command: kubectl get services -l app.kubernetes.io/instance=wnp --namespace default
+NAME                                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
+altiplano-wnp-kafka-broker-0-external   ClusterIP   10.99.108.220    <none>        19093/TCP,19094/TCP,19095/TCP   22h
+altiplano-wnp-kafka-broker-1-external   ClusterIP   10.108.52.178    <none>        19093/TCP,19094/TCP,19095/TCP   22h
+altiplano-wnp-kafka-broker-2-external   ClusterIP   10.111.63.132    <none>        19093/TCP,19094/TCP,19095/TCP   22h
+altiplano-wnp-kafka-internal-headless   ClusterIP   None             <none>        19092/TCP,9092/TCP,9093/TCP     22h
+altiplano-wnp-provisioning              ClusterIP   10.104.254.75    <none>        8080/TCP,8443/TCP               22h
+altiplano-wnp-proxy-ibn                 ClusterIP   10.108.131.241   <none>        8080/TCP,8443/TCP               22h
+altiplano-wnp-proxy-pm-alarms           ClusterIP   10.111.200.81    <none>        8080/TCP,8443/TCP               22h
+
+----
+
+=== Installation Verification
+
+Open a browser and go to link:https://{altiplano-host}/{wnp-web-context}[https://{altiplano-host}/{wnp-web-context},window=_blank], where {altiplano-host} must be replaced with the public IP or the hostname where {main-base-app} is installed.
+
+If the {app-short-name} is successfully installed, the following page is displayed:
+
+image::wnpLogin.png[align="center"]
+
+[NOTE]
+====
+If you have created an INP user on {main-base-app} keycloak, then you can login to the system using username and password.
+====
+
+
+include::ROOT:go-back-component.adoc[Back]

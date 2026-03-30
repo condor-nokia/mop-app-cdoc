@@ -1,0 +1,37 @@
+antora:
+  extensions:
+   - require: '@antora/lunr-extension'
+     index_latest_only: true
+     languages: [en]
+site:
+  title: Wholesale Network Portal Documentation
+  start_page: WNP:ROOT:index.adoc
+  url: https://www.nokia.com/
+git:
+  ensure_git_suffix: false
+content:
+  sources:
+  - url: . 
+    start_path: WNP
+#    branches: HEAD # <--- para usar cambios locales
+    branches: main  # <--- para usar lo subido al repo
+    edit_url: false
+asciidoc:
+  extensions:
+    - asciidoctor-kroki
+  attributes:
+#    page-pagination: false
+    hide-uri-scheme@: true
+    kroki-fetch-diagram: true
+    allow-uri-read: true
+    experimental: true
+    kroki-default-format@: svg@
+    kroki-server-url: http://localhost:8000
+    isamSupport: false
+
+ui:
+  bundle:
+    url: antora-config.zip
+    snapshot: true
+    
+    

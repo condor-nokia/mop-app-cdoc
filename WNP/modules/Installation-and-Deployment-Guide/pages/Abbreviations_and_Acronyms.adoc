@@ -1,0 +1,43 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Abbreviations and Acronyms
+
+The following table lists the acronyms used in this guide. Note that some of these acronyms might have alternate definitions.
+
+[width="100%",cols="27%,73%",options="header"]
+|===
+|*Acronym* |*Definition*
+|AAC |Altiplano Access Controller
+|API |Application Programming Interface
+|AV |Altiplano Virtualizer
+|CIR |Committed Information Rate
+|CLA |Closed Loop Automation
+|CPE |Customer Premises Equipment
+|CPU |Central Processing Unit
+|CSP |Customer Service Provider: used with the same meaning as VNO and ISP in this context
+|FN |Fixed Networks
+|FANS | Fixed Access Network Sharing
+|GPON |Gigabit Passive Optical Network
+|HSI |High-Speed Internet
+|IBN |Intent-Based Networking
+|INP |Infrastructure Network Provider: used with the same meaning as OAP, neutral host, FANS infrastructure provider, and CSP offering wholesale in this context
+|IPFIX |Internet Protocol Flow Information Export
+|ISP |Internet Service Provider: used with the same meaning as VNO and CSP in this context
+|LS |Lightspan
+|LT |Line Termination
+|NBI |Northbound Interface
+|OLT |Optical Line Termination
+|ONT |Optical Network Termination
+|ONU |Optical Network Unit
+|OpenTSDB |It is a scalable time series database that simplifies the process of storing and analyzing large amount of data.
+|OSS |Operations Support System
+|OAP |Open Access Provider: used with the same meaning as INP, neutral host, FANS infrastructure provider, and CSP offering wholesale in this context
+|PM |Performance Monitoring
+|UI |User Interface
+|URL |Uniform Resource Locator
+|VNO |Virtual Network Provider: used with the same meaning as ISP and CSP in this context
+|WebUI |Web User Interface
+|WNP |Wholesale Network Portal
+|===
+
+include::ROOT:go-back-component.adoc[Back]

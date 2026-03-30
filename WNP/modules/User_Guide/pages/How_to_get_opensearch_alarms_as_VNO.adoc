@@ -1,0 +1,1035 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to retrieve alarms as {vno-initials}
+
+== Introduction
+
+This section describes how to use the {app-short-name} to retrieve alarms as an {vno-initials}.
+
+When {app-short-name} is installed over Altiplano, the {vno-initials} can retrieve all the alarms
+through the WebUI and the application proxy(using REST queries).
+
+When the {vno-initials} wants to execute REST queries to index search,
+instead of using the Altiplano's URL:
+https://{altiplano-host}/altiplano-indexsearch/
+it must point to {app-short-name} proxy URL:
+https://{altiplano-host}/{wnp-alarm-context}/
+
+{app-short-name} is capable of returning the alarms that belongs to the {vno-initials} discarding
+the alarm types that are set in the blocked list configured by the {inp-initials} user.
+Refer to xref:User_Guide:How_to_use_WNP_as_INP.adoc[How to Use {app-short-name} as {inp-initials}] section to
+know how to configure blocked alarm types globally and per {vno-initials}.
+
+[NOTE]
+====
+Before using {app-short-name} as an {vno-initials} you must be authenticated as {vno-initials} user.
+Refer to xref:User_Guide:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section to know the required steps.
+====
+
+== Retrieve active alarms
+When an {vno-initials} wants to retrieve active alarms from Index Search
+it must use the {app-short-name} WebUI or the {app-short-name} Index Search REST Proxy directly.
+
+=== Using the {app-short-name} WebUI
+
+To view the active alarms using the WebUI, execute the following steps:
+
+. Click the "Alarms" option on the menu bar displayed on top of the screen.
++
+image::vno_portal/Alarms_menu.png[align="center"]
+
+. All Active Alarms will be listed:
++
+image::vno_portal/AlarmsSection_listActiveAlarms.png[align="center"]
+
+. Click the filter button displayed on left of the screen.
++
+image::gridFilter.png[align="center"]
+
+. The filter options are shown:
++
+image::vno_portal/AlarmsSection_listActiveAlarms_search.png[align="center"]
+
+. Enter all filters. Click the *Apply filter* button.
++
+image::vno_portal/AlarmsAndMetricsSection_applyFilter.png[align="center"]
+
+=== Using the REST Proxy
+To retrieve active alarms using the {app-short-name} alarms proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-alarm-context}/alarms-active/_search
+
+[NOTE]
+====
+The url is the same as offered by Altiplano Index Search but the difference is that instead of pointing to
+altiplano-indexsearch context the URL points to {app-short-name} proxy context (*{wnp-alarm-context}*).
+====
+
+==== Example to retrieve all the alarms
+If an {vno-initials} wants to retrieve all the alarms a POST request to the url:
+https://{ip-host-example}/{wnp-alarm-context}/alarms-active/_search must be sent
+including an empty body or with the next one:
+
+[source, json]
+----
+{
+   "query": {
+      "match_all": {}
+    }
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 5,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 1.0,
+        "hits": [
+            {
+                "_index": "alarms-active",
+                "_id": "YrfAlJQBcvmtSi4Yzrcv",
+                "_score": 1.0,
+                "_source": {
+                    "raisedTime": "2025-01-23T17:00:45.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1:nokia-onu-alarm-types:lan-los",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T17:00:45.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1/ENET_LAN1",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-onu-alarm-types:lan-los",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "lan-los",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Active",
+                    "alarmText": "LAN-LOS (No carrier at the Ethernet UNI)",
+                    "proposedRepairAction": "Check the Ethernet link",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            }
+        ]
+    }
+}
+----
+
+[IMPORTANT]
+====
+By default, Open Search returns the first 10 elements if the page's size isn't passed.
+====
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Example to retrieve alarms by alarm type
+If an {vno-initials} wants to retrieve the alarms that contains "lan-los" in the "alarmType"
+field, a POST request must be sent to URL:
+https://{ip-host-example}/{wnp-alarm-context}/alarms-active/_search
+Including the following body:
+
+[source, json]
+----
+{
+    "query": {
+        "match_phrase": {
+            "alarmType": "lan-los"
+        }
+    }
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 6,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 6.3323026,
+        "hits": [
+            {
+                "_index": "alarms-active",
+                "_id": "YrfAlJQBcvmtSi4Yzrcv",
+                "_score": 6.3323026,
+                "_source": {
+                    "raisedTime": "2025-01-23T17:00:45.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1:nokia-onu-alarm-types:lan-los",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T17:00:45.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1/ENET_LAN1",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-onu-alarm-types:lan-los",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "lan-los",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Active",
+                    "alarmText": "LAN-LOS (No carrier at the Ethernet UNI)",
+                    "proposedRepairAction": "Check the Ethernet link",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            }
+        ]
+    }
+}
+----
+
+[IMPORTANT]
+====
+By default, Open Search returns the first 10 elements if the page's size isn't passed.
+====
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Example to retrieve the first 5 alarms searching by alarm resource
+If an {vno-initials} wants to retrieve the first 5 alarms that contains "L1.P1.NOK1" in the "alarmResource"
+field sorted by "raisedTime", a POST request must be sent to the following URL:
+https://{ip-host-example}/{wnp-alarm-context}/alarms-active/_search
+including the following body:
+
+[source, json]
+----
+{
+  "size": 5,
+  "from": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "bool": {
+            "should": [
+              {
+                "wildcard": {
+                    "alarmResource.raw": {
+                      "value": "*L1.P1.NOK1*"
+                    }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "raisedTime": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 11,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": null,
+        "hits": [
+            {
+                "_index": "alarms-active",
+                "_id": "YrfAlJQBcvmtSi4Yzrcv",
+                "_score": null,
+                "_source": {
+                    "raisedTime": "2025-01-23T17:00:45.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1:nokia-onu-alarm-types:lan-los",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T17:00:45.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1/ENET_LAN1",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-onu-alarm-types:lan-los",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "lan-los",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Active",
+                    "alarmText": "LAN-LOS (No carrier at the Ethernet UNI)",
+                    "proposedRepairAction": "Check the Ethernet link",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                },
+                "sort": [
+                    1737662445000
+                ]
+            }
+        ]
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Retrieve historical alarms
+When an {vno-initials} wants to retrieve historical alarms from Index Search
+it must use the {app-short-name} WebUI or the {app-short-name} Index Search REST Proxy directly.
+
+=== Using the {app-short-name} WebUI
+
+To view the historical alarms using the WebUI, execute the following steps:
+
+. Click the "Alarms" option on the menu bar displayed on top of the screen and then the "HISTORIC" tab inside the page.
++
+image::vno_portal/Alarms_menu.png[align="center"]
+
+. All Historic Alarms will be listed:
++
+image::vno_portal/AlarmsSection_listHistoricAlarms.png[align="center"]
+
+. Click the filter button displayed on left of the screen.
++
+image::gridFilter.png[align="center"]
+
+. The filter options are shown:
++
+image::vno_portal/AlarmsSection_listHistoricAlarms_search.png[align="center"]
+
+. Enter all filters. Click the *Apply filter* button.
++
+image::vno_portal/AlarmsAndMetricsSection_applyFilter.png[align="center"]
+
+=== Using the REST Proxy
+To retrieve historical alarms using the {app-short-name} alarms proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-alarm-context}/alarms-history-*/_search
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Index Search but the difference is that instead of pointing to
+altiplano-indexsearch context the URL points to {app-short-name} proxy context (*{wnp-alarm-context}*).
+====
+
+==== Example to retrieve all the historic alarms
+If an {vno-initials} wants to retrieve all the alarms that were cleared, a POST request
+must be sent to the url:
+https://{ip-host-example}/{wnp-alarm-context}/alarms-history-*/_search must be sent
+including an empty body or with the next one:
+
+[source, json]
+----
+{
+   "query": {
+      "match_all": {}
+    }
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 29,
+    "timed_out": false,
+    "_shards": {
+        "total": 19,
+        "successful": 19,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 113,
+            "relation": "eq"
+        },
+        "max_score": 2.0,
+        "hits": [
+            {
+                "_index": "alarms-history-2025.01.10",
+                "_id": "frGWUZQBcvmtSi4YeEUv",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-10T15:59:57.000-03:00",
+                    "clearedTime": "2025-01-10T16:00:08.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-10T15:59:57.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT3",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.10",
+                "_id": "x7GQUZQBcvmtSi4Yp0Tp",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-10T15:53:37.000-03:00",
+                    "clearedTime": "2025-01-10T15:53:48.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=ATP:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-10T15:53:37.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=ATP",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:ATP",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.10",
+                "_id": "VrG3UZQBcvmtSi4YVkk-",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-10T16:35:51.000-03:00",
+                    "clearedTime": "2025-01-10T16:36:59.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3:nokia-OnuMgntOlt-alarm-types:onu-dying-gasp",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-10T16:35:51.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT3",
+                    "durationOpen": "1-3 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-dying-gasp",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-dying-gasp",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Restore power to ONU. Dying gasp indication is due to loss of power input to ONU.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.13",
+                "_id": "fLKCX5QBcvmtSi4YzD72",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-13T08:53:07.000-03:00",
+                    "clearedTime": "2025-01-13T08:53:18.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-13T08:53:07.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.13",
+                "_id": "ObInYZQBcvmtSi4YWYUX",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-13T16:32:31.000-03:00",
+                    "clearedTime": "2025-01-13T16:32:38.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-13T16:32:31.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.13",
+                "_id": "LrImYZQBcvmtSi4Y-4VV",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-13T16:32:05.000-03:00",
+                    "clearedTime": "2025-01-13T16:32:31.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT1:nokia-OnuMgntOlt-alarm-types:absence-of-phy",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-13T16:32:05.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:absence-of-phy",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "absence-of-phy",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.13",
+                "_id": "-bJ5YZQBcvmtSi4Y1o5F",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-13T18:02:35.000-03:00",
+                    "clearedTime": "2025-01-13T18:04:35.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3:nokia-OnuMgntOlt-alarm-types:onu-disabled",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-13T18:02:35.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT3",
+                    "durationOpen": "1-3 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-disabled",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-disabled",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "N.A",
+                    "proposedRepairAction": "Reset ONU by administratively putting it out of service and then in service. If alarm occurs again, then ONU must likely be physically repaired or swapped. ",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.13",
+                "_id": "XrJ8YZQBcvmtSi4Y24-7",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-13T18:05:53.000-03:00",
+                    "clearedTime": "2025-01-13T18:06:58.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-13T18:05:53.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.ONT3",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.ONT3",
+                    "durationOpen": "1-3 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to missing bursts (LOFi/LOSi or LOBi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.14",
+                "_id": "7bInZZQBcvmtSi4YAM8j",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-14T11:10:37.000-03:00",
+                    "clearedTime": "2025-01-14T11:10:48.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-14T11:10:37.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.14",
+                "_id": "ObIoZZQBcvmtSi4YjtAy",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-14T11:12:17.000-03:00",
+                    "clearedTime": "2025-01-14T11:12:28.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-14T11:12:17.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFE937, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            }
+        ]
+    }
+}
+----
+
+[IMPORTANT]
+====
+By default, Open Search returns the first 10 elements if the page's size isn't passed.
+====
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Example to retrieve all the historic alarms cleared in specific date
+If an {vno-initials} wants to retrieve all the alarms that were cleared in 2025-01-22, a POST request
+must be sent to the url:
+https://{ip-host-example}/{wnp-alarm-context}/alarms-history-2025.01.22/_search must be sent
+including an empty body or with the next one:
+
+[source, json]
+----
+{
+   "query": {
+      "match_all": {}
+    }
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 4,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 3,
+            "relation": "eq"
+        },
+        "max_score": 2.0,
+        "hits": [
+            {
+                "_index": "alarms-history-2025.01.22",
+                "_id": "ebYAjpQBcvmtSi4Yp4Ps",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-22T09:33:08.000-03:00",
+                    "clearedTime": "2025-01-22T09:33:18.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-startup-failure",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-22T09:33:08.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-startup-failure",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-startup-failure",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "N.A",
+                    "proposedRepairAction": "Re-range the ONU. ",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.22",
+                "_id": "bbb_jZQBcvmtSi4YpoOA",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-22T09:32:04.000-03:00",
+                    "clearedTime": "2025-01-22T09:33:18.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-22T09:32:04.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "1-3 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to missing bursts (LOFi/LOSi or LOBi), Serial-Number=ALCLB2BFDD0A, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            },
+            {
+                "_index": "alarms-history-2025.01.22",
+                "_id": "YLZ0jpQBcvmtSi4Ys5Jb",
+                "_score": 2.0,
+                "_source": {
+                    "raisedTime": "2025-01-22T11:39:55.000-03:00",
+                    "clearedTime": "2025-01-22T14:26:26.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-disabled",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-22T11:39:55.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "More than 2h",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-disabled",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-disabled",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "N.A",
+                    "proposedRepairAction": "Reset ONU by administratively putting it out of service and then in service. If alarm occurs again, then ONU must likely be physically repaired or swapped. ",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                }
+            }
+        ]
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Example to retrieve the first 5 alarms searching by alarm resource
+If an {vno-initials} wants to retrieve the first 5 cleared alarms that contains "L1.P1.NOK1" in the
+ "alarmResource" field sorted by "raisedTime" a POST request must be sent to the following URL:
+https://{ip-host-example}/{wnp-alarm-context}/alarms-history-*/_search
+including the following body:
+
+[source, json]
+----
+{
+  "size": 5,
+  "from": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "bool": {
+            "should": [
+              {
+                "wildcard": {
+                    "alarmResource.raw": {
+                      "value": "*L1.P1.NOK1*"
+                    }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "raisedTime": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 54,
+    "timed_out": false,
+    "_shards": {
+        "total": 19,
+        "successful": 19,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 37,
+            "relation": "eq"
+        },
+        "max_score": null,
+        "hits": [
+            {
+                "_index": "alarms-history-2025.01.23",
+                "_id": "ZbfAlJQBcvmtSi4Y8bdW",
+                "_score": null,
+                "_source": {
+                    "raisedTime": "2025-01-23T17:00:56.000-03:00",
+                    "clearedTime": "2025-01-23T17:01:16.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-disabled",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T17:00:56.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-disabled",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-disabled",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "N.A",
+                    "proposedRepairAction": "Reset ONU by administratively putting it out of service and then in service. If alarm occurs again, then ONU must likely be physically repaired or swapped. ",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                },
+                "sort": [
+                    1737662456000
+                ]
+            },
+            {
+                "_index": "alarms-history-2025.01.23",
+                "_id": "Ere_lJQBcvmtSi4YYrfl",
+                "_score": null,
+                "_source": {
+                    "raisedTime": "2025-01-23T16:59:14.000-03:00",
+                    "clearedTime": "2025-01-23T17:00:28.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T16:59:14.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "1-3 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to missing bursts (LOFi/LOSi or LOBi), Serial-Number=ALCLB2BFDD0A, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                },
+                "sort": [
+                    1737662354000
+                ]
+            },
+            {
+                "_index": "alarms-history-2025.01.23",
+                "_id": "9be3lJQBcvmtSi4YPLTy",
+                "_score": null,
+                "_source": {
+                    "raisedTime": "2025-01-23T16:50:18.000-03:00",
+                    "clearedTime": "2025-01-23T16:51:28.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T16:50:18.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "1-3 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to missing bursts (LOFi/LOSi or LOBi), Serial-Number=ALCLB2BFDD0A, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                },
+                "sort": [
+                    1737661818000
+                ]
+            },
+            {
+                "_index": "alarms-history-2025.01.23",
+                "_id": "JbcClJQBcvmtSi4Y1Ztf",
+                "_score": null,
+                "_source": {
+                    "raisedTime": "2025-01-23T13:33:16.000-03:00",
+                    "clearedTime": "2025-01-23T16:44:36.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1:nokia-onu-alarm-types:lan-los",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T13:33:16.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/bbf-fiber-onu-emulated-mount:onus/onu=L1.P1.NOK1/root/ietf-interfaces-mounted:interfaces/interface=ENET_LAN1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1/ENET_LAN1",
+                    "durationOpen": "More than 2h",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-onu-alarm-types:lan-los",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "lan-los",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "LAN-LOS (No carrier at the Ethernet UNI)",
+                    "proposedRepairAction": "Check the Ethernet link",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                },
+                "sort": [
+                    1737649996000
+                ]
+            },
+            {
+                "_index": "alarms-history-2025.01.23",
+                "_id": "3bcBlJQBcvmtSi4YI5rE",
+                "_score": null,
+                "_source": {
+                    "raisedTime": "2025-01-23T13:31:18.000-03:00",
+                    "clearedTime": "2025-01-23T13:31:28.000-03:00",
+                    "objectId": "nokia-altiplano-av_ALARM:/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1:nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "alarmNotificationOrigin": "nokia-altiplano-av_ALARM",
+                    "lastStatusChangeTime": "2025-01-23T13:31:18.000-03:00",
+                    "alarmResource": "/anv:device-manager/anv-device-holders:device=Condor-LS.LT1/device-specific-data/ietf-interfaces:interfaces/interface=L1.P1.NOK1",
+                    "alarmResourceUiName": "interface:Condor-LS.LT1:L1.P1.NOK1",
+                    "durationOpen": "0-1 min",
+                    "deviceRefId": "Condor-LS.LT1",
+                    "alarmTypeId": "nokia-OnuMgntOlt-alarm-types:onu-loss-of-phy-layer",
+                    "serviceAffecting": "SA_SERVICE_AFFECTING",
+                    "alarmType": "onu-loss-of-phy-layer",
+                    "alarmSeverity": "major",
+                    "alarmStatus": "Cleared",
+                    "alarmText": "Event=loss of PHY connectivity with ONU due to loss-of-PLOAM-channel (LOPCi, LOAi, LOAMi), Serial-Number=ALCLB2BFDD0A, Reg-ID=, CT-Name=CT_Condor-LS.L1.P1_1_GPON, LOID=",
+                    "proposedRepairAction": "Check physical connectivity between ONU and OLT.",
+                    "acknowledged": "false",
+                    "acknowledgementNote": "",
+                    "PAP": "PublicPAP",
+                    "labels": [],
+                    "mainDeviceRefId": "Condor-LS"
+                },
+                "sort": [
+                    1737649878000
+                ]
+            }
+        ]
+    }
+}
+----
+
+include::ROOT:go-back-component.adoc[Back]

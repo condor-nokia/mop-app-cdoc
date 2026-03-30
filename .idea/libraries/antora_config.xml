@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="antora-config">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/antora-config.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

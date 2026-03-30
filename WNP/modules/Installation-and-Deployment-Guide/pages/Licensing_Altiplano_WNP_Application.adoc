@@ -1,0 +1,34 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Licensing Altiplano {app-short-name} Application
+
+== Overview
+
+After the successful installation of the Nokia {main-base-app} {app-short-name} application, you must add a valid license to use the application. This section gives the details of license management in the {main-base-app} {app-short-name} application. For more details refer to the section "Licensing Altiplano application" in the _Installation and Deployment Guide for Nokia Altiplano Access Controller and FastMile Controller_.
+
+== How to obtain a valid license?
+
+To order a valid license, contact the Nokia sales organization with your requirements for {main-base-app} usage. You can opt for any of these two types of licenses:
+
+* Full commercial license - License rights determined by different RTUs (Right To Use) opted as per End User License Agreement, does not have an expiry date.
+* Evaluation/Trial license - This license is valid only for a limited number of days, and gives access to Altiplano {app-short-name} App functionality during the trial period.
+The user and the organization are completely responsible for the use of this license. This license should not be used in a commercial or production environment.
+
+
+== What are the different license keys offering different license rights?
+
+Various features of the Altiplano application are controlled by different license keys. Depending on the required license rights, you can opt for the necessary license keys. Each license key corresponds to a Product Name, Product Variant, and License Component, and is applicable to a particular release version. Each license key has associated license attributes that enable or disable certain rights in your Access Controller installation.
+
+Currently, the below license keys are available:
+[width="100%",cols="15%,20%,30%,35%",options="header"]
+|===
+|*Product Name* |*Product Variant* |*License component* | *App Specific component*
+|Access Controller |Altiplano Access Controller (AAC) |Altiplano Core |Number of {app-short-name} Controlled Subscriber Ports
+|===
+
+
+== Subscriber license mechanism in Altiplano Access Controller
+
+The subscriber licenses in your {main-base-app} license key control the number of subscribers that can be managed by your {main-base-app} {app-short-name} setup.
+
+include::ROOT:go-back-component.adoc[Back]

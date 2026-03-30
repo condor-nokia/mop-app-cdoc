@@ -1,0 +1,342 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to retrieve intents from index search as {vno-initials}
+
+== Introduction
+
+This section describes how to retrieve intents as an {vno-initials} from index search.
+
+When {app-short-name} is installed over Altiplano, the {vno-initials} can retrieve the intents
+from the inventory (index search) that belongs to them and also the intents
+configured as readable intent types.
+
+[IMPORTANT]
+====
+Refer to xref:How_to_configure_a_VNO.adoc#_configure_readable_intent_types_to_isp[Configure Readable Intent Types to {vno-initials}] section for more details on
+configuring the readable intent types.
+====
+
+When the {vno-initials} wants to execute REST queries to indexsearch, instead of using the Altiplano's URL:
+https://{altiplano-host}/altiplano-indexsearch/
+it must point to {app-short-name} proxy URL:
+https://{altiplano-host}/{wnp-alarm-context}/
+
+[NOTE]
+====
+Before using {app-short-name} as an {vno-initials} you must be authenticated as {vno-initials} user.
+Refer to xref:User_Guide:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section to know the steps needed.
+====
+
+== Using the REST Proxy
+To retrieve intents using the {app-short-name} index search proxy a POST or GET request must be sent to the URL:
+https://{altiplano-host}/{wnp-alarm-context}/intents/_search
+
+=== Example to retrieve all the ont intents
+If an {vno-initials} wants to retrieve the ont intents a POST or GET request to the url:
+https://{ip-host-example}/{wnp-alarm-context}/intents/_search must be sent
+including the next body:
+
+[source, json]
+----
+{
+    "query": {
+        "bool": {
+            "filter": {
+                "term": {
+                    "intent-type": "ont"
+                }
+            }
+        }
+    },
+    "_source": [
+        "target.device-name",
+        "configuration"
+    ]
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 38,
+    "timed_out": false,
+    "_shards": {
+        "total": 40,
+        "successful": 40,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 1.0,
+        "hits": [
+            {
+                "_index": "intents-ont-v10",
+                "_id": "ont_$$_L1.P1.ONT1",
+                "_score": 1.0,
+                "_source": {
+                    "configuration": {
+                        "ont-type": [
+                            "condor-type"
+                        ],
+                        "service-profile": [
+                            "default"
+                        ],
+                        "onu-service-profile": [
+                            "ont_default"
+                        ],
+                        "pon-type": [
+                            "gpon"
+                        ],
+                        "expected-serial-number": [
+                            "ALCLB2BFE937"
+                        ],
+                        "uni-id": [
+                            "LAN1",
+                            "VEIP"
+                        ],
+                        "uni-description": [
+                            ""
+                        ],
+                        "fiber-name": [
+                            "Condor-LS.L1.P1"
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+
+=== Example to retrieve all the l2-user intents
+If an {vno-initials} wants to retrieve the l2-user intents a POST or GET request to the url:
+https://{ip-host-example}/{wnp-alarm-context}/intents/_search must be sent
+including the next body:
+
+[source, json]
+----
+{
+    "query": {
+        "bool": {
+            "filter": {
+                "term": {
+                    "intent-type": "l2-user"
+                }
+            }
+        }
+    },
+    "_source": [
+        "target.device-name",
+        "configuration"
+    ]
+}
+----
+
+[source, json]
+----
+{
+    "took": 30,
+    "timed_out": false,
+    "_shards": {
+        "total": 40,
+        "successful": 40,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 2,
+            "relation": "eq"
+        },
+        "max_score": 1.0,
+        "hits": [
+            {
+                "_index": "intents-l2-user-v13",
+                "_id": "l2-user_$$_HSI_$_L1.P1.ONT1",
+                "_score": 1.0,
+                "_source": {
+                    "configuration": {
+                        "l2-infra": [
+                            "HSI"
+                        ],
+                        "service-profile": [
+                            "HSI-100M-10M"
+                        ],
+                        "user-device-name": [
+                            "L1.P1.ONT1"
+                        ],
+                        "q-vlan-id": [
+                            65
+                        ],
+                        "uni-id": [
+                            "VEIP"
+                        ]
+                    }
+                }
+            },
+            {
+                "_index": "intents-l2-user-v13",
+                "_id": "l2-user_$$_IPTV_$_L1.P1.ONT1",
+                "_score": 1.0,
+                "_source": {
+                    "configuration": {
+                        "l2-infra": [
+                            "IPTV"
+                        ],
+                        "service-profile": [
+                            "IPTV_Single_VLAN"
+                        ],
+                        "user-device-name": [
+                            "L1.P1.ONT1"
+                        ],
+                        "q-vlan-id": [
+                            66
+                        ],
+                        "uni-id": [
+                            "LAN1"
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Example to retrieve fiber intents when is configured as a readable intent type
+
+The {vno-initials} can retrieve the intents configured as readable intent types.
+Refer to xref:How_to_configure_a_VNO.adoc#_configure_readable_intent_types_to_isp[Configure Readable Intent Types to {vno-initials}] section to
+know how to configure the readable intent types.
+
+If an {vno-initials} wants to retrieve the fiber intents a POST or GET request to the url:
+https://{ip-host-example}/{wnp-alarm-context}/intents/_search must be sent
+including the next body:
+
+[source, json]
+----
+{
+    "query": {
+        "bool": {
+            "filter": {
+                "term": {
+                    "intent-type": "fiber"
+                }
+            }
+        }
+    },
+    "_source": [
+        "target.device-name",
+        "configuration"
+    ]
+}
+----
+
+Response example:
+[source, json]
+----
+{
+    "took": 42,
+    "timed_out": false,
+    "_shards": {
+        "total": 40,
+        "successful": 40,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 2,
+            "relation": "eq"
+        },
+        "max_score": 0.0,
+        "hits": [
+            {
+                "_index": "intents-fiber-v9",
+                "_id": "fiber_$$_Condor-LS.L1.P1",
+                "_score": 0.0,
+                "_source": {
+                    "configuration": {
+                        "xpon-type": [
+                            "gpon"
+                        ],
+                        "device-name": [
+                            "Condor-LS"
+                        ],
+                        "pon-id": [
+                            "LT1.PON1"
+                        ],
+                        "cage-mode": [
+                            "auto"
+                        ],
+                        "wavelength-profile": [
+                            "auto"
+                        ],
+                        "line-rate": [
+                            "auto"
+                        ],
+                        "model-name": [
+                            "GPON SFP C+ (C-temp) OLT (3FE53441BA)"
+                        ]
+                    }
+                }
+            },
+            {
+                "_index": "intents-fiber-v9",
+                "_id": "fiber_$$_Condor-LS.L2.P1",
+                "_score": 0.0,
+                "_source": {
+                    "configuration": {
+                        "xpon-type": [
+                            "gpon"
+                        ],
+                        "device-name": [
+                            "Condor-LS"
+                        ],
+                        "pon-id": [
+                            "LT2.PON1"
+                        ],
+                        "cage-mode": [
+                            "auto"
+                        ],
+                        "wavelength-profile": [
+                            "auto"
+                        ],
+                        "line-rate": [
+                            "auto"
+                        ],
+                        "model-name": [
+                            "XGS/GPON SFP-DD C+ (C-temp) OLT MPM GEN2 (3FE47581BB)"
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+

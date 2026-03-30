@@ -1,0 +1,109 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= {app-short-name} Exposed Interfaces
+
+When {app-short-name} is successfully installed, the following interfaces are exposed:
+
+== {app-short-name} Web UI
+
+The WebUI allows an INP user to configure the {app-short-name} and the {vno-initials}s to interact only with its elements.
+To access it you must enter the following in a web browser: +
+link:https://{altiplano-host}/{wnp-web-context}[https://{altiplano-host}/{wnp-web-context},window=_blank]
+
+For example if {main-base-app}’s public IP is {ip-host-example} the {app-short-name} WEB UI is available at: +
+https://{ip-host-example}/{wnp-web-context}[https://{ip-host-example}/{wnp-web-context},window=_blank]
+
+If additional IPs/hostnames were configured in chart variable ALTIPLANO_PUBLIC_IP_LIST then
+this interface will be accessible also using each of them
+
+== {app-short-name} AC (REST API)
+
+The {app-short-name} AC REST API allows an INP user to configure the {app-short-name} sending HTTP REST REQUEST.
+To access it you must use the following URL: +
+link:https://{altiplano-host}/{wnp-ac-context}[https://{altiplano-host}/{wnp-ac-context},window=_blank]
+
+For example if {main-base-app}’s public IP is: {ip-host-example} the {app-short-name} AC is available at: +
+link:https://{ip-host-example}/{wnp-ac-context}[https://{ip-host-example}/{wnp-ac-context},window=_blank]
+
+If additional IPs/hostnames were configured in chart variable ALTIPLANO_PUBLIC_IP_LIST then
+this interface will be accessible also using each of them
+
+== {app-short-name} Proxies
+
+As {app-short-name} acts as a proxy for {main-base-app}’s IBN, PM and alarms interfaces, the next interfaces are exposed:
+
+=== IBN
+
+To use the {app-short-name} interface that acts as a proxy for {main-base-app}’s REST IBN the following URL is exposed: +
+link:https://{altiplano-host}/{wnp-ibn-context}[https://{altiplano-host}/{wnp-ibn-context},window=_blank]
+
+For example if {main-base-app}’s public IP is: {ip-host-example} the {app-short-name} IBN Proxy is available at: +
+link:https://{ip-host-example}/{wnp-ibn-context}[https://{ip-host-example}/{wnp-ibn-context},window=_blank]
+
+If additional IPs/hostnames were configured in chart variable ALTIPLANO_PUBLIC_IP_LIST then
+this interface will be accessible also using each of them
+
+=== PM
+
+To use the {app-short-name} interface that acts as a proxy for {main-base-app}’s REST PM the following URL is exposed: +
+link:https://{altiplano-host}/{wnp-pm-context}[https://{altiplano-host}/{wnp-pm-context},window=_blank]
+
+For example if {main-base-app}’s public IP is: {ip-host-example} the {app-short-name} IBN Proxy is available at: +
+link:https://{ip-host-example}/{wnp-pm-context}[https://{ip-host-example}/{wnp-pm-context},window=_blank]
+
+If additional IPs/hostnames were configured in chart variable ALTIPLANO_PUBLIC_IP_LIST then
+this interface will be accessible also using each of them
+
+=== Alarms
+
+To use the {app-short-name} interface that acts as a proxy for {main-base-app}’s REST Alarms interface the following URL is exposed: +
+link:https://{altiplano-host}/{wnp-alarm-context}[https://{altiplano-host}/{wnp-alarm-context},window=_blank]
+
+For example if {main-base-app}’s public IP is: {ip-host-example} the {app-short-name} IBN Proxy is available at: +
+link:https://{ip-host-example}/{wnp-alarm-context}[https://{ip-host-example}/{wnp-alarm-context},window=_blank]
+
+If additional IPs/hostnames were configured in chart variable ALTIPLANO_PUBLIC_IP_LIST then
+this interface will be accessible also using each of them
+
+== {app-short-name} Kafka Brokers
+
+The {app-short-name} includes a dedicated kafka service that allows the ISPs to connect in order to obtain alarms, PM data and intent health notifications.
+This kafka is secured using SSL and SASL mechanism.
+
+The exposed ports for the ALTIPLANO_SERVER ip or hostname configured when installing
+are: 19093/19094/19095 (depending on the number of brokers configured when installing the application)
+
+If IPs or hostnames are configured in the ALTIPLANO_PUBLIC_IP_LIST variable of the chart, additional ports will be opened starting from 19096. One port will be assigned per broker in sequential order for each configured IP or hostname.
+
+For example, if ALTIPLANO_SERVER is set to "{ip-host-example}" and
+ALTIPLANO_PUBLIC_IP_LIST is set to "181.64.26.13;wnp-public" then the following
+ports will be opened and assigned:
+
+* When WNP installation was done configuring 3 brokers(wnp-kafka-broker replicas):
+** For access via IP {ip-host-example}: ports 19093/19094/19095.
+** For access via IP 181.64.26.13: ports 19096/19097/19098.
+** For access via hostname wnp-public: ports 19099/19100/19101.
+
+* When WNP installation was done configuring 1 broker(wnp-kafka-broker replica):
+** For access via IP {ip-host-example}: port 19093.
+** For access via IP 181.64.26.13: port 19094.
+** For access via hostname wnp-public: port 19095.
+
+To connect to these brokers and receive notifications see the xref:User_Guide:How_to_consume_Kafka_events_as_VNO.adoc[How to Consume Kafka events as {vno-initials}] section.
+
+== Interfaces, ports and protocols used
+
+The following table describes ports and url exposed by the interfaces listed above:
+
+[width="99%",cols="30%,30%,40%,options="header"]
+|===
+|*Interface* |*Protocol* |*{app-short-name} Service Port/Altiplano Ingress Port*
+|WebUI | HTTPS |  8443 / 443
+|Configuration REST API | HTTPS | 8443 / 443
+|IBN REST Proxy | HTTPS | 8443 / 443
+|Alarms  REST Proxy | HTTPS | 8443 / 443
+|PM REST Proxy | HTTPS | 8443 / 443
+|KAFKA Brokers | TCP/SSL+SASL | 19093/19094/19095...19XXX (The number of ports opened depends on replicas and public IPs configured when installing WNP as explained above)
+|===
+
+include::ROOT:go-back-component.adoc[Back]

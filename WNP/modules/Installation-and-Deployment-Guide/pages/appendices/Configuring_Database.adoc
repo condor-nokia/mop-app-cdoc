@@ -1,0 +1,49 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Configuring Database
+
+For creating the database, the following steps must be followed:
+
+. Connect to Pod
++
+[source, bash]
+----
+kubectl exec -it ALTIPLANO_MARIADB_POD_NAME -c mariadb -n NAMESPACE -- bash
+----
++
+For example::
++
+[source, bash]
+----
+kubectl exec -it nokiainfra-altiplano-mariadb-mariadb-0 -c mariadb -n nokia -- bash
+----
+
+. Connect to the mysql:
++
+[source, bash]
+----
+mysql -u root -p
+----
+
+. Check if the database already exists.
+
+. If the database has not been created, the following step can be executed to create it:
++
+[source, bash]
+----
+. CREATE DATABASE app_wnp;
+----
+
+. Check if the user already exists.
+
+. If the user has not been created, the following steps can be executed to create it and give it privileges:
++
+[source, bash]
+----
+. CREATE USER 'app_wnp'@'%' IDENTIFIED BY 'appWnp@1234';
+
+. GRANT ALL PRIVILEGES ON app_wnp.* TO 'app_wnp'@'%';
+----
+
+
+include::ROOT:go-back-component.adoc[Back]

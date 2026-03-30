@@ -1,0 +1,540 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to manage {ont-initials}s as {inp-initials}
+
+== Introduction
+
+There are restrictions (ONU Activation Options) which an {vno-initials} cannot create {ont-initials}s, cannot modify ONT fiber information and/or cannot
+modify the ONT serial number/registration ID.
+
+This section describes how to create {ont-initials}s being an {inp-initials}.
+
+[NOTE]
+====
+Before using {app-short-name} as an {inp-initials} you must be authenticated as {inp-initials} user.
+Refer to xref:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section to know the steps needed.
+====
+
+== Create {ont-initials}
+The {inp-initials} can create an {ont-initials} intent using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+To create a new ont using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+. Click the *Add {ont-initials}* button.
++
+image::ONTsSection_newButton.png[align="center"]
+
+. Enter the required data in the popup window.
++
+image::ONTsSection_createONT.png[align="left"]
+
+. Enter all required values:
++
+[NOTE]
+====
+There are two options to configure: *BASIC OPTIONS* and *ADVANCED OPTIONS*. Only is shown the BASIC OPTIONS as example
+====
+
+- *Version:* It is the intent type yang model version.
+- *Required network state:* It is the network's state. Can be selected between: Active, Suspended or Not present.
+- *{vno-initials} Name:* It is the name of the {vno-initials}.
+- *{ont-initials} Name:* It is the {ont-initials}'s name.
+- *Fiber Name*: It is the PON port.
+- *PON Type*: It is the PON port type. Example: gpon.
+- *ONT Type*: It is the ONT model.
+- *Expected Serial Number*: It is the ONT serial number.
+- *ONT Service Profile*: It is the service profile for the ONT.
+- *UNI Service Configuration*: An UNI service profile must be added.
+
+. Click the *SAVE* button.
+
+=== Using the REST Proxy
+To create an {ont-initials} using the {app-short-name} IBN proxy a POST request must be sent to the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn
+including in the HTTP headers the "VNO-Prefix" header with the identifier of the {vno-initials}.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-ibn-context}*).
+====
+
+For example:: If an {inp-initials} wants to create an ont for an {vno-initials} called *{vno-name-example}* with the *{vno-identifier-example}*
+identifier it must send a POST request to https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn including the "VNO-Prefix"
+ http header with value *{vno-identifier-example}* and a body with the desired data as in the following example:
+
+[source, json]
+----
+{
+	"ibn:intent": {
+		"target": "FX-41.L1.P1-1",
+		"intent-type": "ont",
+		"required-network-state": "active",
+		"intent-specific-data": {
+			"ont:ont": {
+				"ont-type": "G-010G-A",
+				"fiber-name": "FX-41.LT1.PON1",
+				"expected-serial-number": "ALCLF8464049",
+				"onu-service-profile": "default",
+				"uni-service-configuration": {
+					"uni-id": "LAN1",
+					"service-profile": "default"
+				}
+			}
+		}
+	}
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Search {ont-initials}s
+The {inp-initials} can search {ont-initials} intents using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All created {ont-initials}s are listed in this section. For default, any filter is applied:
++
+image::ONTsSection.png[align="center"]
+
+. Click the filter button displayed on left of the screen.
++
+image::gridFilter.png[align="center"]
+
+. The filter options are shown:
++
+image::ONTsSection_filterONT.png[align="center"]
+
+. Enter all filters. Click the *Apply filter* button.
++
+image::ONTsSection_applyFilter.png[align="center"]
+
+=== Using the REST Proxy
+To search {ont-initials} intents using the {app-short-name} IBN proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/operations/ibn:search-intents
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example:: If an {inp-initials} wants to search all the intents of type {ont-initials} it
+must sent a POST request to the url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/operations/ibn:search-intents including
+the following body:
+
+[source, json]
+----
+{
+    "ibn:search-intents": {
+        "search-from": "ES",
+        "filter": {
+            "intent-type-list": {
+                "intent-type": "ont"
+            },
+            "predicate": "MATCHES"
+        }
+    }
+}
+----
+[IMPORTANT]
+====
+All listed intents will contain in the target the suffix "\__{vno-initials}". Example: "target": "FX-41.L1.P1-1__LRM"
+====
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Edit {ont-initials}
+
+The {inp-initials} can edit an {ont-initials} intent using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+To edit an {ont-initials} using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+. Click the *Edit* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_editButton.png[align="center"]
+
+. A popup with all data to modify is opened:
++
+image::ONTsSection_editPopup.png[align="center"]
+
+. Edit the desired values:
++
+[NOTE]
+====
+The information to fill is divided in two tabs: *BASIC OPTIONS* and *ADVANCED OPTIONS*.
+In this example only the BASIC OPTIONS is shown
+====
++
+The *version* and *target* fields can not be modified, and these values are shown in the popup title between parenthesis.
+
+- *Required network state:* It is the network's state. Can be selected between: Active, Suspended or Not present.
+- *Fiber Name*: It is the PON port.
+- *PON Type*: It is the PON port type. Example: gpon.
+- *ONT Type*: It is the ONT model.
+- *Expected Serial Number*: It is the ONT serial number.
+- *ONT Service Profile*: It is the service profile for the ONT.
+- *UNI Service Configuration*: An UNI service profile must be added.
+
+. Click the *SAVE* button.
+
+=== Using the REST Proxy
+To edit {ont-initials} intents using the {app-short-name} IBN proxy, a PATCH request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=<TARGET>,<INTENT-TYPE>?altiplano-triggerSyncUponSuccess=true
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example:: If an {inp-initials} wants to edit the fiber name of an {ont-initials}, a PATCH request must be sent to the URL:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=L1.P1.ONT1__LRM,ont?altiplano-triggerSyncUponSuccess=true
+including the body:
+
+[source, json]
+----
+{
+    "ibn:intent": {
+        "intent-specific-data": {
+            "ont:ont": {
+                "fiber-name": "DemoFX.LT1.PON2"
+            }
+        }
+    }
+}
+----
+
+For example:: If an {inp-initials} wants to edit the onu service profile of an {ont-initials}, a PATCH request must be sent to the URL:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=L1.P1.ONT1__LRM,ont?altiplano-triggerSyncUponSuccess=true
+including the body:
+
+[source, json]
+----
+{
+    "ibn:intent": {
+        "intent-specific-data": {
+            "ont:ont": {
+                "onu-service-profile": "default"
+            }
+        }
+    }
+}
+----
+
+[IMPORTANT]
+====
+As shown in the examples, when the INP is editing an ONT for a specific {vno-initials} the intent target in the url must
+contain the identifier of the {vno-initials}
+====
+
+== Delete {ont-initials}
+
+The {inp-initials} can delete an {ont-initials} intent using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+To delete an {ont-initials} using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+. Click the *Delete* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_deleteButton.png[align="center"]
+
+=== Using the REST Proxy
+
+To delete an {ont-initials} intent from network and controller using the {app-short-name} IBN proxy a POST request must be sent to the URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/operations/ibn:delete-intent-from-network-and-controller
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example:: If an {inp-initials} wants to delete an {ont-initials} that belongs to an {vno-initials},
+a POST request must be sent to the URL:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/operations/ibn:delete-intent-from-network-and-controller
+including the body:
+
+[source, json]
+----
+{
+    "ibn:delete-intent-from-network-and-controller": {
+        "target":"FX-41.L1.P1-1__LRM",
+        "intent-type":"ont"
+    }
+}
+----
+
+[IMPORTANT]
+====
+As shown in the example, when the INP is deleting an ONT for a specific {vno-initials} the intent target
+in the body must contain the identifier of the {vno-initials}
+====
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Launch actions over {ont-initials}
+The {inp-initials} can launch actions over an {ont-initials} intent using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+To launch actions over an {ont-initials} using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+. Click the *Launch actions* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_launchActionsButton.png[align="center"]
+
+. A popup with all allowed actions is opened:
++
+image::ONTsSection_launchActionsPopup.png[align="center"]
+
+. Click over the desired action to launch.
+
+. A confirmation popup is opened:
++
+image::ONTsSection_launchActionConfirmation.png[align="center"]
+
+. Click the *LAUNCH* button.
+
+=== Using the REST Proxy
+
+To launch an action over an {ont-initials} intent using the {app-short-name} IBN proxy a POST request must be sent to the URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=<TARGET>,<INTENT-TYPE>?/intent-specific-data/ont-action:<ACTION>
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example - Example 1:: If an {inp-initials} wants to launch the reset-ont action over an {ont-initials} intent of type ont that belongs to an {vno-initials}, the {vno-initials} identifier must be passed as suffix in the target:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont?/intent-specific-data/ont-action:reset-ont
+
+For example - Example 2:: If an {inp-initials} wants to launch the turn-on-ont-laser action over an {ont-initials} intent of type ont that belongs to an {vno-initials}, the {vno-initials} identifier must be passed as suffix in the target:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont?/intent-specific-data/ont-action:turn-on-ont-laser
+
+For example - Example 3:: If an {inp-initials} wants to launch the turn-off-ont-laser action over an {ont-initials} intent of type ont that belongs to an {vno-initials}, the {vno-initials} identifier must be passed as suffix in the target:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont?/intent-specific-data/ont-action:turn-off-ont-laser
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Suspend/Activate {ont-initials}
+The {inp-initials} can suspend or activate an {ont-initials} intent using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy directly.
+
+=== Using the {app-short-name} WebUI
+
+To suspend or activate an {ont-initials} using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+==== To suspend an {ont-initials}
+
+. Click the *Suspend* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_suspendButton.png[align="center"]
+
+. A confirmation popup is opened.
++
+image::ONTsSection_suspedConfirmationPopup.png[align="center"]
+
+. Click the *SUSPEND* button.
+
+==== To activate an {ont-initials}
+
+. If the ONT is suspended, the *Activate* icon is shown. Click the *Activate* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_activateButton.png[align="center"]
+
+=== Using the REST Proxy
+
+To suspend or activate an intent using the {app-short-name} IBN proxy a PATCH request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=<TARGET>,<INTENT-TYPE>?altiplano-triggerSyncUponSuccess=true
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example:: If an {inp-initials} wants to suspend an {ont-initials} intent that belongs to an {vno-initials},
+the {vno-initials} identifier must be passed as suffix in the target as shown in the next url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont?altiplano-triggerSyncUponSuccess=true
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "ibn:intent": {
+        "required-network-state":"suspend"
+    }
+}
+----
+
+For example:: If an {inp-initials} wants to activate an {ont-initials} intent that belongs to an {vno-initials},
+the {vno-initials} identifier must be passed as suffix in the target as shown in the next url:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont?altiplano-triggerSyncUponSuccess=true
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "ibn:intent": {
+        "required-network-state":"active"
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Synchronize {ont-initials}
+The {inp-initials} can synchronize an {ont-initials} intent using the {app-short-name} WebUI or the
+{app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+To synchronize an {ont-initials} using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+. Click the *Synchronize* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_syncButton.png[align="center"]
+
+=== Using the REST Proxy
+
+To synchronize an intent using the {app-short-name} IBN proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=<TARGET>,<INTENT-TYPE>/synchronize
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example:: If an {inp-initials} wants to synchronize an {ont-initials} intent that belongs to an {vno-initials},
+the {vno-initials} identifier must be passed as suffix in the target as shown in the next URL:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont/synchronize
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+== Audit {ont-initials}
+The {inp-initials} can audit an {ont-initials} intent using the {app-short-name} WebUI or the {app-short-name} IBN REST Proxy.
+
+=== Using the {app-short-name} WebUI
+
+To audit an {ont-initials} using the WebUI, execute the following steps:
+
+. Click the "{ont-initials}s" option on the menu bar displayed on top of the screen.
++
+image::ONTs_menu.png[align="center"]
+
+. All ONTs will be listed:
++
+image::ONTsSection.png[align="center"]
+
+. Click the *Audit* icon in "{ont-initials}" identifier row.
++
+image::ONTsSection_auditButton.png[align="center"]
+
+=== Using the REST Proxy
+
+To audit an intent using the {app-short-name} IBN proxy a POST request must be sent the following URL:
+https://{altiplano-host}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=<TARGET>,<INTENT-TYPE>/audit
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano IBN but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {wnp-ibn-context} proxy context.
+====
+
+For example:: If an {inp-initials} wants to audit an {ont-initials} intent that belongs to an {vno-initials},
+the {vno-initials} identifier must be passed as suffix in the target as shown in the following URL:
+https://{ip-host-example}/{wnp-ibn-context}/rest/restconf/data/ibn:ibn/intent=FX-41.L1.P1-1__LRM,ont/audit
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+include::ROOT:go-back-component.adoc[Back]

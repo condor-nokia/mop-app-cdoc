@@ -1,0 +1,2448 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to configure an {vno-initials}
+
+== Introduction
+
+This section provides the steps needed to configure an {vno-initials} to the {app-short-name}.
+
+{app-short-name} offers a REST Interface and a WebUI for the {inp-initials} in order to configure the application.
+
+All the configurations done through the REST API are available through the {app-short-name} WebUI.
+
+[NOTE]
+====
+Before configuring an {vno-initials} you must be authenticated to the {app-short-name} as {inp-initials} user.
+Refer to xref:User_Guide:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section for more details.
+//TODO: AGREGAR SECCION DE KEYCLOAK DONDE CREAR EL USUARIO?
+====
+
+== Using the {app-short-name} WebUI
+
+[id=webui-add-isp]
+=== Add an {vno-initials}
+This section describes how to add a new {vno-initials} to the application.
+
+{app-short-name} can apply different configurations and rules for each {vno-initials}.
+These {vno-initials}s must be added to the {app-short-name} using the following steps:
+
+To add a new {vno-initials} using the WebUI, execute the following steps:
+
+. Click the "{vno-initials}s" option on the menu bar displayed on top of the screen.
++
+image::VNOs_menu.png[align="center"]
+
+. The "{vno-initials}s" are listed:
++
+image::VNOsSection.png[align="center"]
+
+. Click the *Add new {vno-initials}* button.
++
+image::VNOsSection_newButton.png[align="center"]
+
+. Enter the required data in the popup window.
++
+image::VNOsSection_createVNO.png[align="left"]
+
+. Enter both required values:
+- *{vno-initials} Name:* It is the name that is only used as description.
+- *Identifier:* It is the prefix/suffix that is used by {app-short-name} to mark the intents (Must be unique in the {app-short-name}).
+
+. Click the *SAVE* button. The {vno-initials} is created with the inherited globally configuration.
+
+. The next steps, *Basic configuration* and *Advanced configuration* are optional, can be skipped and configure both sections in other moment.
+Refer to <<modify_VNO,Modify an {vno-initials} Configuration>> section to configure rules.
+
+==== Adding {vno-initials} users
+After adding the {vno-initials} to the {app-short-name}, an {vno-initials} user must be created on Altiplano keycloak.
+Refer to xref:How_to_manage_WNP_access.adoc#_create_an_isp_user[Create an {vno-initials} User] section to
+follow the steps requirement to add a new user.
+
+[id=webui-delete-isp]
+=== Delete an {vno-initials}
+This section describes how to delete a new {vno-initials} to the application.
+
+The {vno-initials}s must be deleted from the {app-short-name} using the following steps:
+
+To delete an {vno-initials} using the WebUI, execute the following steps:
+
+. Click the "{vno-initials}s" option on the menu bar displayed on top of the screen.
++
+image::VNOs_menu.png[align="center"]
+
+. All {vno-initials}s are listed:
++
+image::VNOsSection.png[align="center"]
+
+. Click the *Delete* icon in "{vno-initials}" identifier row.
++
+image::VNOsSection_deleteButton.png[align="center"]
+
+=== Modify an {vno-initials} Configuration
+[[modify_VNO]]
+This section describes how to modify the {vno-initials}'s rules to the application.
+
+To modify the {vno-initials}'s rules using the WebUI, execute the following steps:
+
+. Click the "{vno-initials}s" option on the menu bar displayed on top of the screen.
++
+image::VNOsSectionModifyVNO.png[align="center"]
+
+. Click the *Edit* icon in "{vno-initials}" identifier row.
++
+image::VNOsSection_modifyButton.png[align="center"]
+
+==== Basic configuration
+
+image::vnoRulesConfigurationSection_basicConfig.png[align="left"]
+
+===== How to configure ONU Activation Option
+
+This section describes how to configure the ONU Activation Option to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_onu_activation[ONU Activation] section.
+
+. To configure the ONU activation select an option.
++
+image::ONUActivationSelect.png[align="left"]
+
+. Select an ONU activation option
++
+image::vnoONUActivationSelectOptions.png[align="left"]
+
+. After selecting the desired ONU Activation option, click *SAVE* button.
+
+===== How to configure VLAN Restrictions
+
+This section describes how to configure the VLAN Restrictions for the service (*l2-user*) to an {vno-initials}.
+
+To configure VLAN Restrictions follow the next steps:
+
+. Go to VLAN Restrictions section
++
+image::vnoVLANRestrictionsConfig.png[align="left"]
+
+. Click the *Add VLAN Restrictions* button
++
+image::vnoVLANRestrictionsAdd.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::VLANRestrictionsAdd.png[align="left"]
++
+*From* and *To* must be numeric values.
+
+. Click the *ADD* button.
+
+. After adding the VLAN restrictions, click *SAVE* button.
+
+====== Hide globally Allowed VLAN Restrictions
+
+The globally Allowed VLAN Restrictions can be hidden to an {vno-initials}.
+
+. Click the *Hide globally allowed VLANs* button
++
+image::vnoVLANRestrictionsHideGlobally.png[align="left"]
+
+===== How to configure Allowed ONT Models
+
+This section describes how to configure the ONT Models to an {vno-initials}.
+
+To configure allowed ONT models follow the next steps:
+
+. Go to Allowed ONT Models section
++
+image::VNOONTModelsConfig.png[align="left"]
+
+. Click the *Add Allowed ONT Models* button
++
+image::VNOONTModelsConfigAdd.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::ONTModelsAdd.png[align="left"]
+
+. Click the *ADD* button.
+
+. After adding the ONT models, click *SAVE* button.
+
+====== Hide globally Allowed ONT Models
+
+The globally ONT Models can be hidden to an {vno-initials}.
+
+. Click the *Hide globally allowed ONT Models* button
++
+image::vnoONTModelsHideGlobally.png[align="left"]
+
+===== How to configure Allowed Services
+
+This section describes how to configure the Allowed Services to an {vno-initials}.
+
+To configure the allowed services follow the next steps:
+
+. Go to Allowed Services section
++
+image::VNOAllowedServicesConfig.png[align="left"]
+
+. Click the *Add Allowed services* button
++
+image::VNOAllowedServicesAdd.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::AllowedServicesAdd.png[align="left"]
+
+. Click the *ADD* button.
+
+. After adding the Allowed services, click *SAVE* button.
+
+====== Hide globally Allowed Services
+
+The globally allowed services can be hidden to an {vno-initials}.
+
+. Click the *Hide globally allowed services* button
++
+image::vnoAllowedServicesHideGlobally.png[align="left"]
+
+==== Advanced configuration
+
+image::vnoRulesConfigurationSection_advancedConfig.png[align="left"]
+
+===== How to configure Allowed Intent Types
+
+This section describes how to configure Allowed Intent Types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_allowed_intent_types[Allowed Intent Types] section.
+
+. Go to allowed intent types section
++
+image::vnoAdvancedAllowedIntentTypesConfig.png[align="left"]
++
+[NOTE]
+====
+image::inheritedIntentTypeRow.png[align="left"]
+When an intent type is inherited from {global-identifier}, this icon is shown. So four action buttons are available to can configure:
+*Set intent type allowed action*, *Set default version*, *Set intent input injection* and *Set intent type restrictions*.
+
+image::ownIntentTypeRow.png[align="left"]
+When an intent type is own of an {vno-initials}, five action buttons are available to can configure:
+*Set intent type allowed action*, *Set default version*, *Set intent input injection*, *Set intent type restrictions* and *Delete*.
+====
+
+. Click the *Add Allowed Intent Types* button
++
+image::AdvancedAllowedIntentTypeAddBtn.png[align="center"]
+
+. Enter the required data in the popup window.
++
+image::AdvancedAllowedIntentTypeAdd.png[align="left"]
+
+. After selecting an intent type and a version, click the *ADD* button.
+
+. After adding all the intent types with its versions, click *SAVE* button.
+
+====== How to set Intent Type Allowed Actions
+
+This section describes how to configure Intent Type Allowed Actions to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_intent_type_allowed_actions[Intent Type Allowed Actions] section.
+
+Allowed actions for each intent type can be configured.
+
+. To configure Intent Type Allowed Actions, click the *Set intent type allowed action* button on the row of the desired intent type.
++
+image::vnoAdvancedAllowedIntentTypesSetIntentTypeAllowedAction.png[align="left"]
+
+. A popup with all allowed actions (Globally inherited) configured by default is opened:
++
+image::vnoAdvancedAllowedIntentTypesSetIntentTypeAllowedActionPopup.png[align="left"]
+
+. To add an action, click the *Add allowed action* button.
++
+image::vnoAdvancedAllowedIntentTypesSetIntentTypeAllowedActionAddActions.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::vnoAdvancedAllowedIntentTypesSetIntentTypeAllowedActionAddPopupAction.png[align="left"]
+
+. Click *ADD* button.
+
+. After adding all actions, click *SAVE* button.
+
+[discrete]
+===== Hide globally Allowed Intent Actions
+
+The globally allowed intent type actions can be hidden to an {vno-initials}.
+
+. Click the *Hide globally allowed intent actions* button
++
+image::vnoAllowedActionsHideGlobally.png[align="left"]
+
+====== How to set Default Versions
+
+This section describes how to configure Default Versions to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_default_versions[Default Versions] section.
+
+In this section a default version for each intent type can be set.
+
+. To set an Intent Type Default Version, click the *Set default version* button.
++
+image::vnoAdvancedAllowedIntentTypesSetDefaultVersion.png[align="left"]
+
+. Select the desired default version
++
+image::vnoAdvancedAllowedIntentTypesSetDefaultVersionPopup.png[align="left"]
++
+[NOTE]
+====
+When the intent type is inherited from {global-identifier}, to set the Default Version is shown the *Globally Inherited Version* too.
+
+When the intent type is own only the available versions are shown to select one.
+====
+
+. Click *SAVE* button.
+
+====== How to set Intent Type Restrictions
+
+This section describes how to configure Data Constraints to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_data_constraints[Data Constraints] section.
+
+In this section many restrictions for each intent type can be configured.
+
+. To set the restrictions, click the *Set intent type restrictions* button.
++
+image::vnoAdvancedAllowedIntentTypesSetIntentTypeRestriction.png[align="left"]
+
+. To add a restriction, click the *Add restriction* button.
++
+image::vnoAdvancedAllowedIntentTypesSetRestrictions.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::AdvancedAllowedIntentTypesSetRestrictionsPopupAdd.png[align="left"]
+
+. Click *SAVE* button.
+
+. After adding all restrictions, click *SAVE* button.
+
+[discrete]
+===== Hide globally Restrictions
+
+The globally restrictions can be hidden to an {vno-initials}.
+
+. Click the *Hide globally restrictions* button
++
+image::vnoRestrictionsHideGlobally.png[align="left"]
+
+====== How to set Intent Input Injections
+
+This section describes how to configure the Intent Input Injections to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_intent_input_injections[Intent Input Injections] section.
+
+In this section many intent input injections for each intent type can be configured.
+
+. To set the intent input injections, click the *Set intent input injection* button.
++
+image::vnoAdvancedAllowedIntentTypesSetIntentInputInjections.png[align="left"]
+
+. To add an intent input injection, click the *Add input injection* button.
++
+image::vnoAdvancedAllowedIntentTypesSetIntentInputInjection.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::AdvancedAllowedIntentTypesSetIntentInputInjectionsPopupAdd.png[align="left"]
+
+. Click *SAVE* button.
+
+. After adding all input injections, click *SAVE* button.
+
+====== How to delete Intent Type and Version
+
+In this section an own intent type with its version can be deleted.
+
+. To delete an own intent type with its version, click the *Delete* button.
++
+image::AdvancedAllowedIntentTypesDeleteDeleteIntentTypeWithVersion.png[align="left"]
+
+. Select the version to delete.
++
+image::AdvancedAllowedIntentTypesDeleteDeleteIntentTypeWithVersionPopup.png[align="left"]
+
+. Click *SAVE* button.
+
+===== How to configure Readable Intent Types
+
+This section describes how to configure the Readable Intent Types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_readable_intent_types[Readable Intent Types] section.
+
+. Go to readable intent types section
++
+image::vnoAdvancedReadableIntentTypesConfig.png[align="left"]
++
+[NOTE]
+====
+image::inheritedReadableIntentTypeRow.png[align="left"]
+When a readable intent type is inherited from {global-identifier}, this icon is shown. So one action button is available:
+*Set allowed intent attributes*.
+
+image::ownReadableIntentTypeRow.png[align="left"]
+When a readable intent type is owned by a {vno-initials}, two action buttons are available:
+*Set allowed intent attributes* and *Delete*.
+====
+
+. Click the *Add Readable Intent Types* button
++
+image::AdvancedReadableIntentTypeAddBtn.png[align="center"]
+
+. Enter the required data in the popup window.
++
+image::AdvancedReadableIntentTypeAdd.png[align="left"]
+
+. After selecting an intent type, click the *ADD* button.
+
+. After adding all the intent types, click *SAVE* button.
+
+====== How to configure Allowed Intent Attributes
+
+This section describes how to configure the Allowed Intent Attributes for the readable intent types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_allowed_intent_attributes[Allowed Intent Attributes] section.
+
+To configure the allowed intent attributes for a specific readable intent type follow the next steps:
+
+. Click the *Set Allowed Intent Attributes* button
++
+image::vnoAdvancedReadableIntentTypeConfigureAllowedAttributes.png[align="left"]
+
+. Add or delete the desired attributes of the intent to the allowed list.
++
+image::AdvancedReadableIntentTypeConfigureAllowedAttributesAdd.png[align="left"]
+
+. After adding all the attributes, click *SAVE* button.
+
+====== How to delete Readable Intent Types
+
+This section describes how to delete Readable Intent Types to a {vno-initials}s.
+
+To delete a readable intent type follow the next steps:
+
+. Click the *Delete* button.
++
+image::AdvancedReadableIntentTypeDelete.png[align="left"]
+
+. Click *SAVE* button.
+
+===== How to configure Assigned Network Resources
+
+This section describes how to configure Assigned Network Resources to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_assigned_network_resources[Assigned Network Resources] section.
+
+. Go to "Assigned Network Resources" section
++
+image::vnoAdvancedNetworkAssignedResourcesConfig.png[align="left"]
+
+. If you want to enable the feature, select "Enabled" value in the selector:
++
+image::vnoAdvancedNetworkAssignedResourcesConfigEnabledOption.png[align="left"]
+
+. Go to *Open 'Assigned Resources' settings.* button
++
+image::vnoAdvancedNetworkAssignedResourcesOpenConfig.png[align="left"]
+
+. A popup with all data to management resources is opened:
++
+image::vnoAdvancedNetworkAssignedResourcesManagement.png[align="left"]
+
+. For assigning network resources, there are two options:
+
+.. Add resources +
+... Select *Add Resource* button:
++
+image::vnoAdvancedNetworkAssignedResourcesAddResourceBtn.png[align="left"]
+
+... Enter the required data in the popup window.
++
+image::vnoAdvancedNetworkAssignedResourcesAddResourcePopup.png[align="left"]
+
+... Select the type between "Device", "Fiber" and "Matching-Pon-Pattern" and enter Id and Alias.
+
+... After selecting all fields depending on selected Type, click the *ADD* button.
+
+.. Upload File +
+... Select the json file with the resources to assign using the *Upload file* button:
++
+For detail of JSON file format, refer to xref:appendices/features.adoc#assigned_network_resources_file_format[JSON configuration file format] section.
++
+image::vnoAdvancedNetworkAssignedResourcesConfigUploadFileButton.png[align="left"]
+
+... If the json file is correctly formatted a green check icon is
+shown at top. Then click the *APPLY* button:
++
+image::vnoAdvancedNetworkAssignedResourcesConfigApplySelectedJsonFile.png[align="left"]
+
+... Review the operation results to check that all your assignments
+were correctly done and click *CLOSE* button:
++
+image::vnoAdvancedNetworkAssignedResourcesConfigResults.png[align="left"]
+
+... Click the *SAVE* button of the general {vno-initials} configuration window.
+
+===== How to configure Software Management Configuration
+
+This section describes how configure the Software Management to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_software_management[Software Management] section.
+
+. Go to "Software Management Configuration" section
++
+image::vnoAdvancedConfigSoftManagement.png[align="left"]
+
+. If you want to enable the feature, select "Enabled" value in the selector:
++
+image::vnoAdvancedSoftManagementConfigEnabledOption.png[align="left"]
+
+. Go to *Open 'Software Management' settings.* button
++
+image::vnoAdvancedSoftManagementOpenConfig.png[align="left"]
+
+. A new tab opens the Software Management feature, where you can view all campaigns created by the different {vno-initials}s in a calendar:
++
+image::vnoAdvancedSoftManagement.png[align="left"]
+
+===== How to configure Live Collections Configuration
+
+This section describes how to configure the Live Collections to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_live_collections[Live Collections Control] section.
+
+. Go to "Live Collections Configuration" section
++
+image::vnoAdvancedLiveCollectionsConfig.png[align="left"]
+
+. If you want to enable the feature, select "Enabled" value in the selector:
++
+image::vnoAdvancedLiveCollectionsConfigEnabledOption.png[align="left"]
+
+. Enter the required data for the *Period*, *Duration* and *Max Simultaneous Collections*.
+
+. Click the *SAVE* button of the general {vno-initials} configuration window.
+
+===== How to configure Alarms
+
+This section describes how to configure Alarms features to an {vno-initials}.
+
+====== How to configure SNMP Trap Destinations
+
+This section describes how to configure SNMP Trap Destinations to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_snmp_trap_destinations[SNMP Trap Destinations] section.
+
+To configure a SNMP Trap Destinations follow the next steps:
+
+. Go to SNMP trap destinations section
++
+image::vnoAdvancedSNMPTrapDestinations.png[align="left"]
+
+. Click the *Add SNMP trap destinations* button
++
+image::vnoAdvancedAddSNMPTrapDestinationBtn.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::vnoAdvancedSNMPTrapDestinationsPopup.png[align="left"]
+
+. After selecting all fields depending on selected snmp version, click the *ADD* button.
+
+. After adding all the SNMP Trap Destinations, click *SAVE* button.
+
+====== How to delete SNMP Trap Destination
+
+In this section a SNMP Trap Destination can be deleted.
+
+. To delete a SNMP trap destination, click the *Delete* button.
++
+image::vnoAdvancedSNMPTraDestinationDelete.png[align="left"]
+
+====== How to configure Blocked Alarm Types
+
+This section describes how to configure Blocked Alarm Types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_blocked_alarm_types[Blocked Alarm Types] section.
+
+. To configure Blocked alarm types
++
+image::vnoAdvancedBlockedAlarmTypesConfig.png[align="left"]
+
+. Click the *Add Blocked Alarm Types* button
++
+image::vnoAdvancedAddBlockedAlarmTypesConfigBtn.png[align="left"]
+
+. Enter the required data in the popup window.
++
+image::AdvancedBlockedAlarmTypesPopup.png[align="left"]
+
+. After selecting an alarm type, click the *ADD* button.
+
+. After adding all the alarm types, click *SAVE* button.
+
+====== Hide globally Allowed Alarm Types
+
+The globally Allowed Alarm Types can be hidden to an {vno-initials}.
+
+. Click the *Hide globally blocked intent types* button
++
+image::vnoBlockedAlarmTypeHideGlobally.png[align="left"]
+
+===== How to delete Alarm Type
+
+In this section an Alarm Type can be deleted.
+
+. To delete an alarm type, click the *Delete* button.
++
+image::vnoAdvancedBlockedAlarmTypesDelete.png[align="left"]
+
+== Using the REST API
+
+[id=restapi-add-isp]
+=== Add an {vno-initials}
+
+To add a new {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/vno[https://{altiplano-host}/{wnp-ac-context}/vno,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+	"identifier": "{Identifier}",
+	"name": "{Name}"
+}
+----
+- *identifier:* It is the prefix/suffix that is used by {app-short-name} to mark the intents (Must be unique in the {app-short-name}).
+- *name:* It is the name that is only used as description.
+
+For example:: If you want to create a new {vno-initials} called *{vno-name-example}* with the *{vno-identifier-example}* identifier you must send the following JSON body: https://{ip-host-example}/{wnp-ac-context}/vno
++
+[source, json]
+----
+{
+	"identifier": "LRM",
+	"name": "Laser Max"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Adding {vno-initials} users
+After adding the {vno-initials} to the {app-short-name}, an {vno-initials} user must be created on Altiplano keycloak.
+Refer to xref:How_to_manage_WNP_access.adoc#_create_an_isp_user[Create an {vno-initials} User] section to
+follow the steps requirement to add a new user.
+
+[id=restapi-delete-isp]
+=== Delete an {vno-initials}
+
+To delete an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/vno/<{VNO-INITIALS}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/vno/<{VNO-INITIALS}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/vno/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure ONU Activation Option to {vno-initials}
+
+This section describes how to configure the ONU Activation Option to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_onu_activation[ONU Activation] section.
+
+[NOTE]
+====
+The ONU activation option configured to a specific {vno-initials} overrides the option configured globally.
+To configure a global ONU activation option, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_how_to_configure_onu_activation_option[Configure ONU Activation Option to All the {vno-initials}s] section.
+====
+
+==== Update configuration
+To configure the ONU Control option to an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+.  Send a PUT request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/ont-control/<{vno-initials}_IDENTIFIER>?type=<OPTION>[https://{altiplano-host}/{wnp-ac-context}/ont-control/<{vno-initials}_IDENTIFIER>?type=<OPTION>, window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *type*: It is the option to configure.
+
+Query Parameters::
++
+* *type*: It is the option to configure. Possible values are: "None", "INP-Installed_INP-Create", "VNO-Installed_INP-Create", "VNO-Installed_VNO-Create" or "Inherited".
++
+====
+These values match to those in the WebUI as described:
+
+- *None*: Is the same in the WebUI.
+- *INP-Installed_INP-Create*: In the WebUI matches with *By INP*.
+- *VNO-Installed_INP-Create*: In the WebUI matches with *By ISP on INP Provided ONT*.
+- *VNO-Installed_VNO-Create*: In the WebUI matches with *By ISP*.
+- *Inherited*: Is the same in the WebUI.
+====
+
++
+Body::
+The request body must be empty.
+
+For example:: To set the "Inherited" option to an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}* a PUT request must be sent to the following URL:
+https://{ip-host-example}/wnp-ac/ont-control/{vno-identifier-example}?type=Inherited
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the ONU Control option of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/ont-control/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/ont-control/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
+
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/ont-control/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Allowed Intent Types to {vno-initials}
+
+This section describes how to configure Allowed Intent Types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_allowed_intent_types[Allowed Intent Types] section.
+
+[NOTE]
+====
+The allowed intent types list configured to a specific {vno-initials} is joined with the list configured globally.
+To configure global allow list, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_allowed_intent_types[Configure Allowed Intent Types to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure the allowed intent types to an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/blacklist[https://{altiplano-host}/{wnp-ac-context}/blacklist,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+	"identifier": "{Identifier}",
+	"intentType": "{IntentTypeName}",
+	"intentTypeVersion": "{IntentTypeVersion}"
+}
+----
+- *identifier:* If it is not passed the Intent type is added to the Deny/Allow List to Global list for all the {vno-initials}s.
+- *intentType:* The string that identifies the intent type in the Altiplano. For example: ont, device-fx, fiber, etc.
+- *intentTypeVersion:* The number of the version that must be added to the list. Also can assign the string “All” to add the intent type with all the versions available to {app-short-name}.
+
+For example:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and you want to allow this {vno-initials} to send intent types of type *ont* of any version, then the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/blacklist
+
+[source, json]
+----
+{
+	"identifier": "LRM",
+	"intentType": "ont",
+	"intentTypeVersion": "All"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the allowed intent types of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/blacklist/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/blacklist/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/blacklist/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete an allowed intent type of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/blacklist/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&intentTypeVersion=<INTENT_TYPE_VERSION>[https://{altiplano-host}/{wnp-ac-context}/blacklist/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&intentTypeVersion=<INTENT_TYPE_VERSION>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *intentType*: It is the allowed intent type to delete.
+* *intentTypeVersion*: It is the allowed intent type's version to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/blacklist/{vno-identifier-example}?intentType=ont&intentTypeVersion=All
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Intent Type Allowed Actions to {vno-initials}
+
+This section describes how to configure Intent Type Allowed Actions to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_intent_type_allowed_actions[Intent Type Allowed Actions] section.
+
+[NOTE]
+====
+The intent type allowed actions list configured to a specific {vno-initials} are joined with the intent type allowed actions list configured globally.
+To configure global allowed actions list, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_intent_type_allowed_actions[Configure Intent Type Allowed Actions to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure the intent type allowed actions to an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/blacklist[https://{altiplano-host}/{wnp-ac-context}/allowed-action,window=_blank]
++
+Body::
++
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+	"identifier": "{Identifier}",
+	"intentType": "{IntentTypeName}",
+	"action": "{ActionName}"
+}
+----
+- *identifier:* The string that identifies the {vno-initials}. If it is not passed the allowed action is added to the Global for all the {vno-initials}s.
+- *intentType:* The string that identifies the intent type in the Altiplano. For example: ont, device-fx, fiber, etc.
+- *action:* The string that identifies the action in the Altiplano. For example: hardware-reset-ont-to-default-configuration, reset-statistics, reset-ont, etc. Also, the word "All" can be used to allow all actions.
+
+For example:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and you want to add an allowed action for the intent type *ont* of this {vno-initials}, the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/allowed-action
+
+[source, json]
+----
+{
+	"identifier": "LRM",
+	"intentType": "ont",
+	"action": "reset-ont"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the intent type allowed actions of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/allowed-action/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/allowed-action/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/allowed-action/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete an intent type allowed action of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/allowed-action/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&action=<ACTION_NAME>[https://{altiplano-host}/{wnp-ac-context}/allowed-action/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&action=<ACTION_NAME>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *intentType*: It is the action's intent type to delete.
+* *action*: It is the action's name to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/allowed-action/{vno-identifier-example}?intentType=ont&action=reset-ont
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Default Versions to {vno-initials}
+
+This section describes how to configure Default Versions to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_default_versions[Default Versions] section.
+
+[NOTE]
+====
+The default versions configured to a specific {vno-initials} are joined with the default versions configured globally.
+If both a global default version and an {vno-initials} default version are configured for the same intent type and the same attribute, the {vno-initials} default version will be applied
+
+To configure global allow list, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_default_versions[Configure Default Versions to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure the default versions to an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/intent-type-default-version[https://{altiplano-host}/{wnp-ac-context}/intent-type-default-version,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+	"intentType": "{IntentType}",
+	"intentTypeVersion": "{IntentTypeVersion}",
+	"identifier": "{Identifier}"
+}
+----
+- *intentType:* The string that identifies the intent type in the {main-base-app}. For example: ont, device-fx, fiber, etc.
+- *intentTypeVersion:* The number of the default version that must be configured for the intent type.
+- *identifier:* The string that identifies the {vno-initials}. If it is not passed the intent type default version is added to the Global for all the {vno-initials}s.
+
+For example:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and if you want to add a default version for the intent type *ont* of this {vno-initials}, the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/intent-type-default-version
+
+
+[source, json]
+----
+{
+	"identifier": "LRM",
+	"intentType": "ont",
+	"intentTypeVersion": "6"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the default versions of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/intent-type-default-version/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/intent-type-default-version/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/intent-type-default-version/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete a default version of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/intent-type-default-version/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>[https://{altiplano-host}/{wnp-ac-context}/intent-type-default-version/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *intentType*: It is the default version's intent type to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/intent-type-default-version/{vno-identifier-example}?intentType=ont
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Data Constraints to {vno-initials}
+This section describes how to configure Data Constraints to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_data_constraints[Data Constraints] section.
+
+[NOTE]
+====
+The data constraints configured to a specific {vno-initials} are joined with the data constraints configured globally.
+When a data constraint is configured for the same intent type, the same intent type version, the same field and the same data type (intent attribute) in both global and {vno-initials}, the data constraint configured in the {vno-initials} will be applied.
+
+To configure global data constrains, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_data_constraints[Configure Data Constraints to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure data constraints to an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/data-constraint[https://{altiplano-host}/{wnp-ac-context}/data-constraint,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "identifier": "{Identifier}",
+    "intentType": "{IntentType}",
+    "intentTypeVersion": "{IntentTypeVersion}",
+    "field": "{Field}",
+    "dataType": "{DataType}",
+    "value": "{Value}"
+}
+----
+- *identifier*: The string that identifies the {vno-initials}. If it is not passed the data constraint is added to the Global for all the {vno-initials}s.
+- *intentType*: It is the string that identifies the intent type in the {main-base-app}. For examples: ont, device-fx, fiber, etc.
+- *intentTypeVersion* : It is the version of the intent type for the new data constraint. If "All" is selected then the data constraint will be applied to any version of the intent type.
+- *field*: It is the intent attribute for the new data constraint.
+- *dataType*: It is the data type of the new data constraint. For example: string, number, range, list or regexp.
+- *value*: Specific value for the new data constraint.
+
+
+For example - Example 1:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and if you want to add a data constraint to allow "G-010G-A" and "G-010F-B" values on ont-type attribute for the intent type *ont*, the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/data-constraint/
+
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "intentType": "ont",
+    "intentTypeVersion": "All",
+    "field": "ont-type",
+    "dataType": "ProfilesList",
+    "value": [
+        {
+            "profileName": "G-010G-A",
+            "profileType": "ont-type",
+            "profileSubType": "All",
+            "profileVersion": "1"
+        },
+        {
+            "profileName": "G-010F-B",
+            "profileType": "ont-type",
+            "profileSubType": "All",
+            "profileVersion": "1"
+        }
+    ]
+}
+----
+
+For example - Example 2:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+andif you want to add a data constraint to allow a value between *10* and *20* in *c-vlan-id* attribute for the intent type *l2-user* the follow body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/data-constraint/
+
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "intentType": "l2-user",
+    "intentTypeVersion": "All",
+    "field": "c-vlan-id",
+    "dataType": "Range",
+    "value": {
+        "start": "10",
+        "end": "20"
+    }
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the data constraints of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/data-constraint/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/data-constraint/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/data-constraint/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete a data constraint of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/data-constraint/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&fieldIdentifier=<FIELD_IDENTIFIER>&intentTypeVersion=<INTENT_TYPE_VERSION>[https://{altiplano-host}/{wnp-ac-context}/data-constraint/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&fieldIdentifier=<FIELD_IDENTIFIER>&intentTypeVersion=<INTENT_TYPE_VERSION>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *intentType*: It is the data constraint's intent type to delete.
+* *fieldIdentifier*: It is the data constraint's field identifier to delete.
+* *intentTypeVersion*: It is the data constraint's intent type version to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/data-constraint/{vno-identifier-example}?intentType=ont&fieldIdentifier=c-vlan-id&intentTypeVersion=All
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Intent Input Injections to {vno-initials}
+
+This section describes how to configure the Intent Input Injections to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_intent_input_injections[Intent Input Injections] section.
+
+[NOTE]
+====
+The intent input injections configured to a specific {vno-initials} are joined with the intent input injections configured globally.
+When an intent input injection is configured for the same intent type, the same intent type version and the same field in both global and {vno-initials}, the intent input injection configured in the {vno-initials} will be applied.
+
+To configure global intent input injections, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_intent_input_injections[Configure Intent Input Injections to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure intent input injections to an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/intent-input-injection[https://{altiplano-host}/{wnp-ac-context}/intent-input-injection,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "identifier": "Identifier}",
+    "intentType": "{IntentType}",
+    "intentTypeVersion": "{IntentTypeVersion}",
+    "field": "{Field}",
+    "value": "{Value}",
+    "overrideWithConfiguredValue": "{OverrideWithConfiguredValue}",
+    "hideToVno": "{HideToVno}"
+}
+----
+- *identifier*: The string that identifies the {vno-initials}. If it is not passed the intent input injection is added to the Global for all the {vno-initials}s.
+- *intentType*: It is the string that identifies the intent type in the {main-base-app}. For examples, ont, device-fx, fiber, etc.
+- *intentTypeVersion* : It is the version of the intent type. If "All" is selected then the intent input injection will be applied to any version of the intent type.
+- *field*: It is the intent attribute.
+- *value*: It is the value to configure. It can be a simple value, a predefined function or a JSON value. The predefined functions in this version are: {intent_input_injection_functions}.
+- *overrideWithConfiguredValue (optional)*: If true the value sent by the {vno-initials} in the field will be overridden with the configured one. The default value is “false”.
+- *hideToVno (optional)*: If true {app-short-name} will remove the field from the yang model so the {vno-initials} will not see it. The default value is “false”. The intent field is also removed from the search and get intent operations.
+
+For example - Example 1:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and if you want to add an intent input injection to set "model1" value on attribute *ont-type* for the intent type *ont* for its all versions and hide the field, then the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/intent-input-injection/
+
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "intentType": "ont",
+    "intentTypeVersion": "All",
+    "field": "ont-type",
+    "value": "model1",
+    "hideToVno": true
+}
+----
+
+For example - Example 2:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and if you want to add an intent input injection to set JSON value on attribute *uni-service-configuration* for the intent type *ont* for its all versions, then the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/intent-input-injection/
+
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "intentType": "ont",
+    "intentTypeVersion": "All",
+    "field": "uni-service-configuration",
+    "value": "[{\"uni-id\":\"VEIP\",\"service-profile\":\"default\",\"uni-description\":\"\"},{\"uni-id\":\"LAN1\",\"service-profile\":\"default\",\"uni-description\":\"\"}]",
+    "overrideWithConfiguredValue": true
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the intent input injections of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/intent-input-injection/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/intent-input-injection/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
+
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/intent-input-injection/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete an intent input injection of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/intent-input-injection/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&fieldIdentifier=<FIELD_IDENTIFIER>&intentTypeVersion=<INTENT_TYPE_VERSION>[https://{altiplano-host}/{wnp-ac-context}/intent-input-injection/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>&fieldIdentifier=<FIELD_IDENTIFIER>&intentTypeVersion=<INTENT_TYPE_VERSION>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *intentType*: It is the intent input injection's intent type to delete.
+* *fieldIdentifier*: It is the intent input injection's field identifier to delete.
+* *intentTypeVersion*: It is the intent input injection's intent type version to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/intent-input-injection/{vno-identifier-example}?intentType=ont&fieldIdentifier=ont-type&intentTypeVersion=All
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Readable Intent Types to {vno-initials}
+
+This section describes how to configure the Readable Intent Types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_readable_intent_types[Readable Intent Types] section.
+
+[NOTE]
+====
+The intent types configured to a specific {vno-initials} are joined with the intent types configured globally.
+To configure a global readable intent type, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_readable_intent_types[Configure Readable Intent Types to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure readable intent types to an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/readable-intent-type[https://{altiplano-host}/{wnp-ac-context}/readable-intent-type,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "identifier": "{VnoIdentifier}",
+    "intentType": "{IntentType}"
+}
+----
+- *identifier*: The string that identifies the {vno-initials}. If it is not passed the readable intent type is added to the global list that applies to all the {vno-initials}s.
+- *intentType*: It is the string that identifies the intent type in the {main-base-app}. For examples, device-fx, fiber, l2-infra, device-mf, etc.
+
+For example:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and if you want to add the "l2-infra" as readable intent type, the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/readable-intent-type
+
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "intentType": "l2-infra"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the readable intent types of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/readable-intent-type/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/readable-intent-type/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/readable-intent-type/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete a readable intent type of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/readable-intent-type/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>[https://{altiplano-host}/{wnp-ac-context}/readable-intent-type/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *intentType*: It is the readable intent type to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/readable-intent-type/{vno-identifier-example}?intentType=l2-infra
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Configure Allowed Intent Attributes to {vno-initials}
+
+This section describes how to configure the Allowed Intent Attributes for the readable intent types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_allowed_intent_attributes[Allowed Intent Attributes] section.
+
+==== Add configuration
+To configure allowed intent attributes to a readable intent type to a specific {vno-initials}
+using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/allowed-intent-attributes[https://{altiplano-host}/{wnp-ac-context}/allowed-intent-attributes,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "identifier": "{VnoIdentifier}",
+    "intentType": "{IntentType}",
+    "allowedAttributes": [
+        "{AllowedAttributes}"
+    ]
+}
+----
+- *identifier*: The string that identifies the {vno-initials}. If it is not passed the allowed intent attributes are added to the global list that applies to all the {vno-initials}s.
+- *intentType*: It is the string that identifies the intent type in the {main-base-app}. For examples, device-fx, fiber, l2-infra, device-mf, etc.
+- *allowedAttributes*: It is the list of attributes to be allowed to read from IndexSearch by the {vno-initials}s for the intent type in the {main-base-app}. For examples, target, configuration, nested-lists, etc.
+
+For example:: If you want to add the "target" and "configuration" attributes as allowed for "l2-infra" readable intent type to all the {vno-initials}s, the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/allowed-intent-attributes
++
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "intentType": "l2-infra",
+    "allowedAttributes": [
+        "target",
+        "configuration"
+    ]
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the readable intent type's allowed intent attributes of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/allowed-intent-attributes/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/allowed-intent-attributes/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/allowed-intent-attributes/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete the allowed intent type attributes associated to a readable intent type of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/allowed-intent-attributes/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>[https://{altiplano-host}/{wnp-ac-context}/allowed-intent-attributes/<{vno-initials}_IDENTIFIER>?intentType=<INTENT_TYPE>,window=_blank]
++
+Query Parameters::
++
+* *intentType*: It is the readable intent type associated to the attributes to delete.
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/allowed-intent-attributes/{vno-identifier-example}?intentType=l2-infra
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Assigned Network Resources to {vno-initials}
+This section describes how to configure Assigned Network Resources to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_assigned_network_resources[Assigned Network Resources] section.
+
+==== Update configuration
+To enable/disable/inherit network assigned resources to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+.  Send a PUT request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/config/<{vno-initials}_IDENTIFIER>/?configType=<CONFIG_TYPE>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/config/<{vno-initials}_IDENTIFIER>/?configType=<CONFIG_TYPE>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *configType*: It is the string that identifies the enable or disable options. Possible values are: "Enabled", "Disabled" or "Inherited".
++
+Body::
+The request body must be empty.
++
+For example:: To enable the feature the "Enabled" type must be sent: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/config/{vno-identifier-example}/?configType=Enabled
+
+==== Assign Network Resources - Add resources
+To add new assigned network resources to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+. Send a POST request with the resources to assign to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "assigned-network-resources": [
+        {
+            "device-id": "{DeviceId}",
+            "alias": "{DeviceAlias}"
+        },
+        {
+            "fiber-id": "{FiberId}",
+            "alias": "{FiberAlias}"
+        },
+        {
+            "pon-id-matching-pattern": "{PonIdMatchingPattern}",
+            "pon-id-matching-alias": "{PonIdMatchingPatternAlias}"
+        }
+    ]
+}
+----
+* *device-id*: The target of the device intent (olt) to assign.
+* *fiber-id*: The target of the fiber intent to assign.
+* *alias*:  The assigned alias to the device or fiber.
+* *pon-id-matching-pattern*: Pon id (Regular expression) used to assign multiple fibers at once.
+* *pon-id-matching-alias*: The assigned pon id alias (Regular expression).
++
+Must provide at least one of these identifiers (*device-id*, *fiber-id* or *pon-id-matching-pattern*) along with the alias you want to add.
+
+For example:: If you want to assign a device, two fibers and configure a pon-id-matching by regular expression of all PON ports located in slots between 3 and 6 of the device "LS-MF1", the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/{vno-identifier-example}
++
+[source, json]
+----
+{
+    "assigned-network-resources": [
+        {
+            "device-id": "LS-MF1",
+            "alias": "OLT1"
+        },
+        {
+            "fiber-id": "LS-MF1-1-1",
+            "alias": "OLT1.Fiber1"
+        },
+        {
+            "fiber-id": "LS-MF2-1-2",
+            "alias": "OLT2.Fiber2"
+        },
+        {
+            "pon-id-matching-pattern": "LS-MF1.LT[3-6].PON\\d+",
+            "pon-id-matching-alias": "<DEVICE_ALIAS>-<LT_NUMBER>.<PON_NUMBER>New_Pon_Alias"
+        }
+    ]
+}
+----
+
+==== Desassign Network Resources - Delete resources
+To delete assigned network resources to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+. Send a DELETE request with the resources to deassign to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "assigned-network-resources": [
+        {
+            "device-id": "{DeviceId}"
+        },
+        {
+            "fiber-id": "{FiberId}"
+        },
+        {
+            "pon-id-matching-pattern": "{PonIdMatchingPattern}"
+        }
+    ]
+}
+----
+* *device-id*: The target of the device intent (olt) to desassign.
+* *fiber-id*: The target of the fiber intent to desassign.
+* *pon-id-matching-pattern*: Pon id (Regular expression) used to desassign multiple fibers at once.
++
+Must provide at least one of these identifiers (*device-id*, *fiber-id* or *pon-id-matching-pattern*) along with the alias you want to delete.
+
+For example:: If you want to deassign a specific fiber and many fiber by regular expression of all PON ports 1 and 2 located in slots between 3 and 6 of the device "LS-MF1", the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/{vno-identifier-example}
++
+[source, json]
+----
+{
+    "assigned-network-resources": [
+        {
+            "fiber-id": "LS-MF1-1-1"
+        },
+        {
+            "pon-id-matching-pattern": "LS-MF1.LT[3-6].PON[1-2]"
+        }
+    ]
+}
+----
+
+==== Assign Network Resources - Batch Update
+To override the assigned network resources to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+. Send a POST request to upload the json file with the resources to assign to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+* *json-file*: It is a JSON file. The request must include the header "multipart/form-data" and json-file as the form-data
+param with the path to the json file.
+For detail of JSON file format, refer to xref:appendices/features.adoc#assigned_network_resources_file_format[JSON configuration file format] section.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/{vno-identifier-example}
+
+==== Desassign Network Resources - Batch Update
+To delete all assigned network resources to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+. Send a POST request to upload the json file to desassign all assigned resources to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+* *json-file*: It is a JSON file with the empty assigned-network-resources array. The request must include the header "multipart/form-data" and json-file as the form-data
+param with the path to the json file.
+For detail of JSON file format, refer to xref:appendices/features.adoc#desassign_all_assigned_network_resources_file_format[JSON configuration file format to delete all assigned network resources] section.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the network assigned resources of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/config/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/config/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/config/{vno-identifier-example}
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Configure Aliases for Assigned Resources to {vno-initials}
+
+This section describes how to set Aliases for Assigned Resources to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_aliases_for_assigned_resources[Aliases for Assigned Resources] section.
+
+==== Add configuration
+To configure aliases for the devices, fibers and pon-patterns previously assigned to an {vno-initials}
+using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/aliases/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/aliases/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "vno-aliases": [
+        {
+            "device-id": "{DeviceId}",
+            "alias": "{DeviceIdAlias}"
+        },
+        {
+            "fiber-id": "{FiberId}",
+            "alias": "{FiberIdAlias}"
+        },
+        {
+            "pon-id-matching-pattern": "{PonIdMatchingPattern}",
+            "pon-id-matching-alias": "{PonIdMatchingAlias}"
+        }
+    ]
+}
+----
+* *device-id*: The target of the device intent (olt) to assign the alias.
+* *fiber-id*: The target of the fiber intent to assign the alias.
+* *alias*:  The alias to be assigned to the device or fiber.
+* *pon-id-matching-pattern*: It supports the assignment using the pon id syntax of the fiber intent.
+This allows the use of regular expressions to assign multiple fibers at once. +
+<REGULAR_EXPRESSION> must be formed as <DEVICE_TARGET>.<LT_BOARD>.<PON_NUMBER>. The regexp only accepts physical identifiers, does not accept alias as identifiers.
+* *pon-id-matching-alias*: It is the attribute that defines the format to dynamically build aliases used by the {vno-initials} for the pon-id-matching-pattern matched elements. +
+<REGULAR_EXPRESSION> must be formed as:
+** <DEVICE_TARGET> Refers to the OLT target (optional)
+** <DEVICE_ALIAS> Refers to the OLT alias previously assigned. If no alias is assigned an error will be informed and the alias won’t be applied. (optional)
+** <LT_NUMBER> Refers to the LT Board number (mandatory)
+** <PON_NUMBER> Refers to the PON Port number (mandatory)
+
++
+Must provide at least one of these identifiers (*device-id*, *fiber-id* or *pon-id-matching-pattern*) along with the alias you want to assign. +
+
+For example - Example 1:: If you want to configure aliases for two assigned device intents and three assigned fiber intents, the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/aliases/{vno-identifier-example}
++
+[source, json]
+----
+{
+    "vno-aliases": [
+        {
+            "device-id": "LS-MF1",
+            "alias": "OLT1"
+        },
+        {
+            "fiber-id": "LS-MF1-1-1",
+            "alias": "OLT1.Fiber1"
+        },
+        {
+            "device-id": "LS-MF2",
+            "alias": "OLT2"
+        },
+        {
+            "fiber-id": "LS-MF2-1-1",
+            "alias": "OLT2.Fiber1"
+        },
+        {
+            "fiber-id": "LS-MF2-1-2",
+            "alias": "OLT2.Fiber2"
+        }
+    ]
+}
+----
+
+For example - Example 2:: If you want to configure aliases using a regular expression for all PON ports located in slots 1 and 2 of the device "LS-MF1", the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/assigned-resources/aliases/{vno-identifier-example}
++
+[source, json]
+----
+{
+  "vno-aliases": [
+    {
+      "pon-id-matching-pattern": "LS-MF1.LT[1-2].PON\\d+",
+      "pon-id-matching-alias": "<DEVICE_ALIAS>-<LT_NUMBER>.<PON_NUMBER>New_Pon_Alias"
+    }
+  ]
+}
+----
+
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get aliases of the devices, fibers or pon-patterns previously assigned of an {vno-initials}
+using the {app-short-name} REST API, the {vno-initials} must execute the following step:
+
+.  Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/aliases/<{vno-initials}_IDENTIFIER>?page=<PAGE_NUMBER>&size=<PAGE_SIZE>&include-undefined=<INCLUDE_UNDEFINED>&target=<TARGET>&alias=<ALIAS>&type=<TYPE>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/aliases/<{vno-initials}_IDENTIFIER>?page=<PAGE_NUMBER>&size=<PAGE_SIZE>&include-undefined=<INCLUDE_UNDEFINED>&target=<TARGET>&alias=<ALIAS>&type=<TYPE>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
++
+Query Parameters::
++
+* *page (optional)*: It is the integer that indicates the page number. The default is 1.
+* *size (optional)*: It is the integer that indicates the page size. The default is 20.
+* *include-undefined (optional)*: It is the boolean that indicates if the intents without assigned alias will obtain too. The default is true.
+* *target (optional)*: It is the string that identify to the target.
+* *alias (optional)*: It is the boolean that identify to the alias.
+* *type (optional)*: It is the string that indicates an intent type. Possible values are: "device", "fiber" or "pon-pattern".
+
++
+For example - Example 1:: If you want to get aliases of the devices for the {vno-initials} called *{vno-name-example}*:
+https://{ip-host-example}/{wnp-ac-context}/assigned-resources/aliases/{vno-identifier-example}?type=device
++
+For example - Example 2:: If you want to get aliases for the {vno-initials} called *{vno-name-example}* filtering by alias "OLT2.Fiber1":
+https://{ip-host-example}/{wnp-ac-context}/assigned-resources/aliases/{vno-identifier-example}?alias=OLT2.Fiber1
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete aliases of the devices, fibers or pon-patterns of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/assigned-resources/aliases/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/assigned-resources/aliases/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "vno-aliases": [
+        {
+            "device-id": "{DeviceId}",
+            "alias": "{DeviceIdAlias}"
+        },
+        {
+            "fiber-id": "{FiberId}",
+            "alias": "{FiberIdAlias}"
+        },
+        {
+            "pon-id-matching-pattern": "{PonIdMatchingPattern}",
+            "pon-id-matching-alias": "{PonIdMatchingAlias}"
+        }
+    ]
+}
+----
+* *device-id*: The target of the device intent (olt) associated to the assigned alias.
+* *fiber-id*: The target of the fiber intent associated to the assigned alias.
+* *alias*:  The assigned alias to the device or fiber.
+* *pon-id-matching-pattern*: Pon id used to assign multiple fibers at once.
+* *pon-id-matching-alias*: The assigned pon id alias.
++
+Must provide at least one of these identifiers (*device-id*, *fiber-id* or *pon-id-matching-pattern*) along with the alias you want to delete.
++
+For example - Example 1:: If you want to delete assigned aliases of a device intent and two fiber intents, the following body must be sent:
+https://{ip-host-example}/{wnp-ac-context}/assigned-resources/aliases/{vno-identifier-example}
++
+[source, json]
+----
+{
+    "vno-aliases": [
+        {
+            "device-id": "LS-MF1",
+            "alias": "OLT1"
+        },
+        {
+            "fiber-id": "LS-MF1-1-1",
+            "alias": "OLT1.Fiber1"
+        },
+        {
+            "fiber-id": "LS-MF2-1-2",
+            "alias": "OLT2.Fiber2"
+        }
+    ]
+}
+----
+
++
+For example - Example 2:: If you want to delete assigned aliases configured by regular expression of all PON ports located in slots 1 and 2 of the device "LS-MF1", the following body must be sent:
+https://{ip-host-example}/{wnp-ac-context}/assigned-resources/aliases/{vno-identifier-example}
++
+[source, json]
+----
+{
+  "vno-aliases": [
+    {
+      "pon-id-matching-pattern": "LS-MF1.LT[1-2].PON\\d+",
+      "pon-id-matching-alias": "<DEVICE_ALIAS>-<LT_NUMBER>.<PON_NUMBER>New_Pon_Alias"
+    }
+  ]
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Software Management Configuration to {vno-initials}
+This section describes how to configure Software Management Configuration to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_software_management[Software Management] section.
+
+==== Update configuration
+To enable/disable/inherit software management configuration to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+.  Send a PUT request  to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/software-management/config-mode/<{vno-initials}_IDENTIFIER>/?configMode=<CONFIG_MODE>[https://{altiplano-host}/{wnp-ac-context}/software-management/config-mode/<{vno-initials}_IDENTIFIER>/?configMode=<CONFIG_MODE>,window=_blank]
+
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *configMode*: It is the string that identifies the enable or disable options. Possible values are: "Enabled", "Disabled" or "Inherited".
++
+Body::
+The request body must be empty.
++
+For example:: To enable the feature for the {vno-initials} called *{vno-name-example}*, the "Enabled" type must be sent: https://{ip-host-example}/{wnp-ac-context}/software-management/config-mode/{vno-identifier-example}/?configMode=Enabled
+
+==== Get configuration
+To get the software management configuration of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to get configuration mode of an {vno-initials} to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/software-management/config-mode/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/software-management/config-mode/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/software-management/config-mode/{vno-identifier-example}
+
+. Send a GET request to get software management configuration of an {vno-initials} to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/software-management/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/software-management/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/software-management/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Live Collections Configuration to {vno-initials}
+This section describes how to configure Live Collections Configuration to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_live_collections[Live Collections] section.
+
+==== Update configuration
+To enable/disable/inherit live collections configuration to an {vno-initials}
+using the {app-short-name} REST API, execute the following steps:
+
+.  Send a PUT request  to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/live-collection-control/config-mode/<{vno-initials}_IDENTIFIER>/?configMode=<CONFIG_MODE>[https://{altiplano-host}/{wnp-ac-context}/live-collection-control/config-mode/<{vno-initials}_IDENTIFIER>/?configMode=<CONFIG_MODE>,window=_blank]
+
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *configMode*: It is the string that identifies the enable or disable options. Possible values are: "Enabled", "Disabled" or "Inherited".
++
+Body::
+The request body must be empty.
++
+For example:: To enable the feature for the {vno-initials} called *{vno-name-example}*, the "Enabled" type must be sent: https://{ip-host-example}/{wnp-ac-context}/live-collection-control/config-mode/{vno-identifier-example}/?configMode=Enabled
+
+.  Send a PUT request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/live-collection-control/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/live-collection-control/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
++
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "maxNumberOfSimultaneousCollections": "{MaxNumberOfSimultaneousCollections}",
+    "durationPerCollection": "{DurationPerCollection}",
+    "periodPerCollection": "{PeriodPerCollection}"
+}
+----
+- *maxNumberOfSimultaneousCollections*: It is the number of simultaneous collections that {app-short-name} will control when the {vno-initials} executes the live collections. To set an unlimited simultaneous number of live collections the “-1” value must be sent.
+- *durationPerCollection*: It is the duration to be used when the {vno-initials} starts a live collection. {app-short-name} will inject this value when the {vno-initials} executes the live collection. Only the ISO8601 format is supported.
+- *periodPerCollection*: It is the period to be setted per collection. {app-short-name} will inject this value when the {vno-initials} executes the live collection. Only the ISO8601 format is supported.
++
+For example:: If you want to configure live collections control for the {vno-initials} called *{vno-name-example}* with "20" maxNumberOfSimultaneousCollections, "10 minutes" durationPerCollection and "5 seconds" periodPerCollection, the following body must be sent:
+https://{ip-host-example}/{wnp-ac-context}/live-collection-control/{vno-identifier-example}
++
+[source, json]
+----
+{
+    "maxNumberOfSimultaneousCollections": "20",
+    "durationPerCollection": "PT10M",
+    "periodPerCollection": "PT5S"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the live collections configuration of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to get configuration mode of an {vno-initials} to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/live-collection-control/config-mode/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/live-collection-control/config-mode/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/live-collection-control/config-mode/{vno-identifier-example}
+
+. Send a GET request to get live collections configuration of an {vno-initials} to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/live-collection-control/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/live-collection-control/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/live-collection-control/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure SNMP Trap Destinations to {vno-initials}
+This section describes how to configure SNMP Trap Destinations to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_snmp_trap_destinations[SNMP Trap Destinations] section.
+
+[NOTE]
+====
+This feature is only available to be configured per {vno-initials} so it cannot be configured globally.
+====
+
+==== Add configuration
+To configure SNMP Trap Destinations to an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations[https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations,window=_blank]
++
+Body::
++
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "identifier": "{Identifier}",
+    "snmpDestinations": [
+        {
+            "version": "{SnmpVersion2}",
+            "ip": "{SnmpIp2}",
+            "port": "{SnmpPort2}",
+            "communityString": "{SnmpCommunityString2}"
+        },
+        {
+            "version": "{SnmpVersionBase3}",
+            "ip": "{SnmpIpBase3}",
+            "port": "{SnmpPortBase3}",
+            "securityName": "{SnmpSecurityNameBase3}"
+        },
+        {
+            "version": "{SnmpVersionAuthNoPriv3}",
+            "ip": "{SnmpIpAuthNoPriv3}",
+            "port": "{SnmpPortAuthNoPriv3}",
+            "securityName": "{SnmpSecurityNameAuthNoPriv3}",
+            "authProtocol": "{SnmpAuthProtocolAuthNoPriv3}",
+            "authPassphrase": "{SnmpAuthPassphraseAuthNoPriv3}"
+        },
+        {
+            "version": "{SnmpVersionAuthPriv3}",
+            "ip": "{SnmpIpAuthPriv3}",
+            "port": "{SnmpPortAuthPriv3}",
+            "securityName": "{SnmpSecurityNameAuthPriv3}",
+            "authProtocol": "{SnmpAuthProtocolAuthPriv3}",
+            "authPassphrase": "{SnmpAuthPassphraseAuthPriv3}",
+            "privProtocol": "{SnmpPrivProtocolAuthPriv3}",
+            "privPassphrase": "{SnmpPrivPassphraseAuthPriv3}"
+        }
+    ]
+}
+----
++
+* *identifier*: The string that identifies the {vno-initials}.
+* *snmpDestinations*: It is the snmp destinations list. This list can contain SNMP destinations of different SNMP versions.
+
+- *version* : It is the version of SNMP. Depending on SNMP Version, extra data is necessary to configure the destination.
+- *ip* : It is the IP of SNMP Trap Destination.
+- *port* : It is the port of SNMP Trap Destination.
+- *securityName* (required for the SNMP Version V3): It is the security name of SNMP Trap Destination.
+- *authProtocol* (required for the SNMP Version V3 with authentication): It is the V3 authentication protocol, it is the cryptographic algorithm that will be used to create a hash of the SNMP message. Can be configured the next protocols: {snmpv3_auth_protocols}.
+- *authPassphrase* (required for the SNMP Version V3 with authentication): It is the V3 authentication passphrasse, it is the secret key used in conjunction with the authProtocol to generate the SNMP message's hash.
+- *privProtocol* (required for the SNMP Version V3 with authentication and encryption): It is the V3 privacy protocol, it is the encryption algorithm used to protect the actual content of the SNMP message. Can be configured the next protocols: {snmpv3_priv_protocols}.
+- *privPassphrase* (required for the SNMP Version V3 with authentication and encryption): It is the V3 privacy passphrasse, it is the secret key used in conjunction with the privProtocol to encrypt and decrypt the SNMP message.
+
+For example - Example 1:: If you want to configure an SNMP trap destination with "v2c" version to an {vno-initials}, the following body must be sent:
+https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/
++
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "snmpDestinations": [
+        {
+            "version": "v2c",
+            "ip": "192.168.200.30",
+            "port": "5052",
+            "communityString": "public"
+        }
+    ]
+}
+----
+
+For example - Example 2:: If you want to configure an SNMP trap destination with "v3" version without authentication to an {vno-initials}, the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/
++
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "snmpDestinations": [
+        {
+            "version": "v3",
+            "ip": "192.168.200.30",
+            "port": "5053",
+            "securityName": "admin"
+        }
+    ]
+}
+----
++
+For example - Example 3:: If you want to configure an SNMP trap destination with "v3" version with authentication to an {vno-initials}, the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/
++
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "snmpDestinations": [
+        {
+            "version": "v3",
+            "ip": "192.168.200.30",
+            "port": "5053",
+            "securityName": "admin",
+            "authProtocol": "sha",
+            "authPassphrase": "shaPass"
+        }
+    ]
+}
+----
++
+For example - Example 4:: If you want to configure an SNMP trap destination with "v3" version with authentication and encryption to an {vno-initials}, the following body must be sent: https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/
++
+[source, json]
+----
+{
+    "identifier": "LRM",
+    "snmpDestinations": [
+        {
+            "version": "v3",
+            "ip": "192.168.200.30",
+            "port": "5053",
+            "securityName": "admin",
+            "authProtocol": "md5",
+            "authPassphrase": "md5Pass",
+            "privProtocol": "aes-128",
+            "privPassphrase": "privPass"
+        }
+    ]
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the SNMP Trap Destinations of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete an SNMP Trap Destination of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+There are two options:
+
+. Send a DELETE request for deleting an SNMP Trap destination of "v3" version to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations/<{vno-initials}_IDENTIFIER>?ip=<SNMP_IP>&port=<SNMP_PORT>&version=<V3_SNMP_VERSION>&securityName=<SECURITY_NAME>[https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations/<{vno-initials}_IDENTIFIER>?ip=<SNMP_IP>&port=<SNMP_PORT>&version=<SNMP_VERSION>&securityName=<SECURITY_NAME>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *ip*: It is the SNMP trap destination's IP to delete.
+* *port*: It is the SNMP trap destination's port to delete.
+* *version*: It is the SNMP trap destination's version to delete.
+* *securityName*: It is the SNMP trap destination's security name to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/{vno-identifier-example}?ip=192.168.200.30&port=5053&version=v3&securityName=admin
+
+. Send a DELETE request for deleting an SNMP Trap destination of "v2c" version to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations/<{vno-initials}_IDENTIFIER>?ip=<SNMP_IP>&port=<SNMP_PORT>&version=<V2C_SNMP_VERSION>&communityString=<COMMUNITY_STRING>[https://{altiplano-host}/{wnp-ac-context}/snmp-alarm-destinations/<{vno-initials}_IDENTIFIER>?ip=<SNMP_IP>&port=<SNMP_PORT>&version=<SNMP_VERSION>&communityString=<COMMUNITY_STRING>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *ip*: It is the SNMP trap destination's IP to delete.
+* *port*: It is the SNMP trap destination's port to delete.
+* *version*: It is the SNMP trap destination's version to delete.
+* *communityString*: It is the SNMP trap destination's community string to delete.
++
+Body::
+The request body must be empty.
++
+For example:: https://{ip-host-example}/{wnp-ac-context}/snmp-alarm-destinations/{vno-identifier-example}?ip=192.168.200.30&port=5053&version=v2c&communityString=public
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+=== Configure Blocked Alarm Types to {vno-initials}
+This section describes how to configure Blocked Alarm Types to an {vno-initials}.
+
+For more detail of this feature, refer to xref:appendices/features.adoc#_blocked_alarm_types[Blocked Alarm Types] section.
+
+[NOTE]
+====
+The blocked alarm types configured to a specific {vno-initials} are joined with the blocked alarm types configured globally.
+To configure a global blocked alarm type, refer to xref:User_Guide:How_to_configure_global_rules.adoc#_configure_blocked_alarm_types[Configure Blocked Alarm Types to All the {vno-initials}s] section.
+====
+
+==== Add configuration
+To configure blocked alarm types to an {vno-initials} using the {app-short-name} REST API, execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/alarm-config[https://{altiplano-host}/{wnp-ac-context}/alarm-config,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "alarmType": "{AlarmType}",
+    "identifier": "{Identifier}"
+}
+----
+- *alarmType*: It is the string that identifies the alarm type in the {main-base-app}. For examples, device-unreachable, backup-failure, device-configuration-error, onu-disabled, etc.
+- *identifier*: The string that identifies the {vno-initials}. If it is not passed the blocked alarm type is added to the Global for all the {vno-initials}s.
++
+For example:: If you have an {vno-initials} called *{vno-name-example}* that is identified with the prefix/suffix *{vno-identifier-example}*
+and if you want to block the "device-unreachable" alarm type, then the following body must be sent:
+
+URL: https://{ip-host-example}/{wnp-ac-context}/alarm-config/
+
+[source, json]
+----
+{
+    "alarmType": "device-unreachable",
+    "identifier": "LRM"
+}
+----
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Get configuration
+To get the blocked alarm types of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/alarm-config/<{vno-initials}_IDENTIFIER>[https://{altiplano-host}/{wnp-ac-context}/alarm-config/<{vno-initials}_IDENTIFIER>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/alarm-config/{vno-identifier-example}
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Delete configuration
+To delete a blocked alarm type of an {vno-initials} using the {app-short-name} REST API you must execute the following step:
+
+. Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/alarm-config/<{vno-initials}_IDENTIFIER>?alarmType=<ALARM_TYPE>[https://{altiplano-host}/{wnp-ac-context}/alarm-config/<{vno-initials}_IDENTIFIER>?alarmType=<ALARM_TYPE>,window=_blank]
++
+Path Variable::
++
+* *{vno-initials}_IDENTIFIER*: It is the string that identifies the {vno-initials}.
++
+Query Parameters::
++
+* *alarmType*: It is the alarm type to delete which that will no longer be blocked.
++
+Body::
+The request body must be empty.
+
+For example:: https://{ip-host-example}/{wnp-ac-context}/alarm-config/{vno-identifier-example}?alarmType=device-unreachable
+
+[NOTE]
+====
+The access token of the {inp-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+include::ROOT:go-back-component.adoc[Back]

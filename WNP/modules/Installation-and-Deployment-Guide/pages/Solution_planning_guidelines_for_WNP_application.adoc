@@ -1,0 +1,130 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Solution Planning Guidelines for {app-short-name} Application
+
+== What is in this documentation?
+
+This section describes how to plan the deployment of the Nokia Altipano Wholesale Network Portal on top of Altiplano Access Controller.
+It also provides CPU, memory, and hard disk recommendations including dimensioning guidelines.
+
+This document is intended for network engineers, planners, and IT staff who are familiar with the functionality of the Nokia Altipano Wholesale Network Portal and Altiplano Access Controller product and need to plan the deployment of a Wholesale Network Portal on top of the Altiplano Access Controller.
+
+== Solution Deployment Overview
+
+As Wholesale Network Portal App operates on top of the Altiplano Access Controller, this section will provide details that are specific to the Wholesale Network Portal Application that is required over and above the requirements for Altiplano Access Controller. For more details on Access Controller Solution Deployment, refer to the section "Altiplano Solution Deployment Overview" in the _Solution Planning Guide for Nokia Altiplano Access Controller and FastMile Controller_.
+
+=== Compatibility
+
+[width="99%",cols="49%,50%,options="header"]
+|===
+| *WNP* | *Altiplano*
+| {release-number} | {altiplano-release-number}
+|===
+
+== Operating System Specifications
+
+Server and Client Software Requirements for Wholesale Network Portal are the same as that of the Altiplano Access Controller.
+
+=== Server Software Requirements
+
+Wholesale Network Portal Application can be installed on any server with major Linux distribution supporting Container runtime and Kubernetes nodes including RHEL (x86_64 platform only).
+It is a microservices-based application that can be installed on the Kubernetes environment as a single-node or multi-node cluster setup. The server should also have container runtime and Helm installed in it.
+
+For the exact versions of Kubernetes, Helm, and Container runtime supported currently by Altiplano, refer to the "Getting started with Installation" section of the _Installation and Deployment Guide for Nokia Altiplano Access Controller and FastMile Controller_.
+
+=== Client Software Requirements
+
+Wholesale Network Portal Application has a separate UI and REST APIs. It also acts as proxy for IBN, Alarms and metrics modules that are part of the Altiplano Access Controller.
+The client host requires any recent versions of the browser - Firefox or Chrome or Microsoft Edge to access the WebUI client of the Wholesale Network Portal.
+
+== CPU, Memory, and Hard disk Recommendations for {app-short-name} Deployment
+
+Refer to the _Solution Planning Guide for Nokia Altiplano Access Controller and FastMile Controller_ for the dimensioning guidelines pertaining to Access Controller and its associated micro-services.
+
+The below tables provides *only* the additional CPU, memory, and disk requirement for micro-services relevant to {app-short-name} deployment.
+Only the LS Fiber Non-Slicing over AAC variant was dimensioned.
+The ISAM (AMS) variant is not included in this version.
+
+[IMPORTANT]
+====
+For the demo setup, reduce the wnp-kafka-broker replicas from 3 to 1 in the values.yml file of the WNP chart to optimize resource usage.
+Refer to xref:Installation-and-Deployment-Guide:How_to_install_and_configure_WNP_application.adoc#_configuring_helm_chart[Configuring Helm chart] section for more details.
+====
+
+[NOTE]
+====
+The resource tables below do not include the additional resources required to perform an application upgrade.
+====
+
+=== Up to 100K Subscribers
+The hardware requirements for {app-full-name} demo installation are:
+[width="99%",cols="35%,15%,15%,15%,options="header"]
+|===
+| *Service* | *vCPU* | *Memory (GB)* | *Disk (GB)*
+| REST API + UIs | 1 | 1,5 | 10
+| REST IBN Proxy | 1 | 1 | 10
+| Alarms/PM REST Proxy | 1 | 1 GB | 10
+| Alarms Kafka Filtering Module | 1 | 1  | 10
+| PM Kafka Filtering Module | 1,5 | 2 | 10
+| Kafka Events Module | 1 | 1 | 10
+| Alarms/PM Kafka Brokers for ISPs | 1 | 2 | 10
+| *TOTAL* | *7,5* | *9,5* | *70*
+|===
+
+=== Up to 1M Subscribers
+The hardware requirements for {app-full-name} full installation  that supports 1M subscribers are:
+[width="99%",cols="35%,15%,15%,15%,options="header"]
+|===
+| *Service* | *vCPU* | *Memory (GB)* | *Disk (GB)*
+| REST API + UIs | 1,5 | 2 | 10
+| REST IBN Proxy | 2 | 1,5 | 10
+| Alarms/PM REST Proxy | 2 | 1,5 | 10
+| Alarms Kafka Filtering Module | 1,25 | 1  | 10
+| PM Kafka Filtering Module | 2,5 | 3 | 10
+| Kafka Events Module | 1,25 | 1 | 10
+| Alarms/PM Kafka Brokers for ISPs | 2,25 | 6 | 10
+| *TOTAL* | *12,75* | *16* | *70*
+|===
+
+=== Up to 2M Subscribers
+The hardware requirements for {app-full-name} full installation that supports 2M subscribers are:
+[width="99%",cols="35%,15%,15%,15%,options="header"]
+|===
+| *Service* | *vCPU* | *Memory (GB)* | *Disk (GB)*
+| REST API + UIs | 2 | 2 | 10
+| REST IBN Proxy | 2,5 | 2,5 | 10
+| Alarms/PM REST Proxy | 2,5 | 2 | 10
+| Alarms Kafka Filtering Module | 1,25 | 1  | 10
+| PM Kafka Filtering Module | 3 | 4  | 10
+| Kafka Events Module | 1,25 | 1  | 10
+| Alarms/PM Kafka Brokers for ISPs | 2,25 | 6  | 10
+| *TOTAL* | *14,75* | *18,5* | *70*
+|===
+
+[IMPORTANT]
+====
+For 2M subscribers Altiplano's IPFIX-XPON topic partitions must be increased to 3.
+Also, the variable KAFKA_PM_CONCURRENCY_LISTENER must be setted to 3 in the values.yaml file of the {app-short-name} chart.
+Refer to xref:Installation-and-Deployment-Guide:How_to_install_and_configure_WNP_application.adoc#_configuring_helm_chart[Configuring Helm chart] section for more details.
+====
+
+== Hard disk recommendations
+
+The hard disk size recommendation accounts for the following key parameters:
+
+[width="100%",cols="53%,47%",options="header",]
+|===
+| *Parameters* |*Value*
+|device-config-backup |7 days
+|Opensearch logstash |15 days
+|Opensearch alarms-history |90 days
+|Opensearch health-alarms |90 days
+|Opensearch inventory (if using assigned resources also include {{vno-initials}} "intents" index |30 days
+|Opensearch user-activity-log |30 days
+|Opensearch syslog |15 days
+|OpenTSDB |7 days
+|PTS Data |15 days
+|Kafka Topics |7 days (PM topics: 2 hours)
+|===
+
+include::ROOT:go-back-component.adoc[Back]

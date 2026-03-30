@@ -1,0 +1,47 @@
+
+:release-month: November
+:release-year: 2025
+:release-number: 25.9
+:prerelease-tag:
+:altiplano-release-number: 24.6, 24.12, 25.6
+:screenshot-altiplano-release-number: 24.6
+:chart-version: 25.9
+:helm-chart-name: altiplano-wnp
+:issue-number: 3
+:part-number: 3JL-08010-DCAA-PCZZA
+:app-full-name: Wholesale Network Portal
+:app-short-name: WNP
+:main-base-app: Altiplano
+:vno-initials: ISP
+:inp-initials: INP
+:ip-host-example: 3.110.77.81
+:keycloak-wnp-inp-group: “wnp_inp”
+:keycloak-wnp-user-attribute: "wnp_vno_id"
+:wnp-web-context: wnp-webapp
+:wnp-ac-context: wnp-ac
+:wnp-ibn-context: wnp-ibn
+:wnp-pm-context: wnp-opentsdb
+:wnp-alarm-context:  wnp-indexsearch
+:wnp-sm-context: wnp-sm
+:altiplano-host: ALTIPLANO_SERVER
+:global-identifier: GLOBAL
+:vno-name-example: Laser Max
+:vno-identifier-example: LRM
+:vno-username-example: lasermax
+:vno-password-example: lasermax_admin_password
+:wnp-kakfa-broker: wnp-kakfa-broker
+
+//Installation and Deployment:inp-user: "inp_admin"
+:inp-password: "inp_admin_password"
+:wnp-dbhost: "altiplano-mariadb"
+:wnp-dbname: “app_wnp”
+:wnp-dbuser: "app_wnp"
+:wnp-dbpassword: "appWnp@1234"
+:helm-version: 3.6.1
+
+//User Guide
+:ont-initials: ONT
+:snmpv3_auth_protocols: md5;sha;hmac-128-sha-224;hmac-192-sha-256;hmac-256-sha-384;hmac-384-sha-512
+:snmpv3_priv_protocols: des;aes-128;aes-192;aes-256;aes-192-with-3-des-key-extension;aes-256-with-3-des-key-extension
+:intent_input_injection_functions: {\{ADD_ISP_IDENTIFIER}}; {\{ADD_OLT_ALIAS}}; {\{ADD_FIBER_ALIAS}}
+

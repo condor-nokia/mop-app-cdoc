@@ -1,0 +1,20 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Wholesale Network Portal Release {release-number}{prerelease-tag}
+
+[discrete]
+==== _Altiplano Applications_
+
+[discrete]
+==== Installation, Deployment and User Guide
+
+[discrete]
+==== {part-number}
+
+[discrete]
+==== Issue {issue-number}
+
+[discrete]
+==== {release-month} {release-year}
+
+image::cover.jpg[align="center"]

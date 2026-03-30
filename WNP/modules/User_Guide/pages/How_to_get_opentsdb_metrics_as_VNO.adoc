@@ -1,0 +1,1317 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to retrieve metrics as {vno-initials}
+
+== Introduction
+
+This section describes how to use the {app-short-name} metrics proxy as an {vno-initials}.
+
+When {app-short-name} is installed over Altiplano, the {vno-initials} can retrieve all the metrics
+through the WebUI and the application proxy(using openTSDB REST queries).
+
+When the {vno-initials} wants to execute REST queries to openTSDB, instead of using the Altiplano's URL:
+https://{altiplano-host}/altiplano-opentsdb/
+it must point to {app-short-name} proxy URL:
+https://{altiplano-host}/{wnp-pm-context}/
+
+{app-short-name} can return the metrics that belongs to the
+elements of the {vno-initials} that is executing the request.
+
+[NOTE]
+====
+Before using {app-short-name} as an {vno-initials} you must be authenticated as {vno-initials} user.
+Refer to xref:User_Guide:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section to know the steps needed.
+====
+
+== Retrieve metrics
+The {vno-initials} can retrieve metrics from OpenTSDB
+using the {app-short-name} WebUI or the {app-short-name} OpenTSDB REST Proxy.
+
+As in Altiplano solution, {app-short-name} offers metrics per board connected to a specific OLT.
+The user must first select one or more object types and one or more metric names from the configured
+in Altiplano's collection models.
+
+=== Common metrics and object types
+
+The most common statistics that can be retrieved by the {vno-initials} from {app-short-name} are those related to the
+ONTs and its configured interfaces (VEIP, LAN1, LAN2, etc). Most of them are listed in the following table and can be used
+as reference to create the queries to execute through the REST Proxy or select the information in the WebUI to show the
+information as graphical charts.
+
+[width="99%",cols="50%,50%,options="header"]
+|===
+| *Object type* | *Metric Names*
+| ietf-hardware-mounted:hardware-state/component | adminState, operState, bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/nokia-hardware-transceivers-dbm-mounted:rx-power-dbm,
+bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/nokia-hardware-transceivers-dbm-mounted:tx-power-dbm, bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/tx-bias
+bbf-hardware-transceivers-mounted:transceiver-link/diagnostics/laser-temperature, bbf-hardware-transceivers-mounted:transceiver/diagnostics/temperature
+bbf-hardware-transceivers-mounted:transceiver/diagnostics/supply-voltage
+| ietf-interfaces-mounted:interfaces-state/interface | adminState, operState
+| ietf-interfaces:interfaces-state/interface | adminState, operState, statistics/in-octets,
+statistics/in-discards, statistics/out-octets, statistics/out-discards, statistics/bbf-interfaces-statistics-management:in-pkts,
+statistics/bbf-interfaces-statistics-management:out-pkts, statistics/nokia-sdan-additional-statistics:in-dropped-bytes,
+statistics/nokia-sdan-additional-statistics:out-dropped-bytes, bbf-xponvani:v-ani/onu-present-on-this-olt/onu-fiber-distance,
+statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-bad-packets-from-client, statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-bad-packets-from-server,
+statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-packets-from-client, statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-packets-from-server,
+statistics/bbf-l2-dhcpv4-relay:dhcpv4/out-packets-to-client, statistics/bbf-l2-dhcpv4-relay:dhcpv4/out-packets-to-server,
+statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-inserted-packets-to-server, statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-removed-packets-to-client,
+statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-not-inserted-to-server, statistics/bbf-ldra:dhcpv6-ldra/in-bad-packets-from-client,
+statistics/bbf-ldra:dhcpv6-ldra/in-bad-packets-from-server, statistics/bbf-ldra:dhcpv6-ldra/option-17-inserted-packets-to-server,
+statistics/bbf-ldra:dhcpv6-ldra/option-17-removed-packets-to-client, statistics/bbf-ldra:dhcpv6-ldra/option-18-inserted-packets-to-server,
+statistics/bbf-ldra:dhcpv6-ldra/option-18-removed-packets-to-client, statistics/bbf-ldra:dhcpv6-ldra/option-37-inserted-packets-to-server,
+statistics/bbf-ldra:dhcpv6-ldra/option-37-removed-packets-to-client, statistics/bbf-ldra:dhcpv6-ldra/outgoing-mtu-exceeded-packets-from-client,
+statistics/bbf-pppoe-intermediate-agent:pppoe/in-error-packets-from-client, statistics/bbf-pppoe-intermediate-agent:pppoe/in-packets-from-client,
+statistics/bbf-pppoe-intermediate-agent:pppoe/out-packets-to-server, statistics/bbf-pppoe-intermediate-agent:pppoe/outgoing-mtu-exceeded-packets-from-client,
+statistics/bbf-pppoe-intermediate-agent:pppoe/vendor-specific-tag-inserted-packets-to-server
+|===
+
+[NOTE]
+====
+The data added in the table above depends on the collection models and devices configured on Altiplano.
+To retrieve all the available devices, object types and counter names (metrics) refer to xref:_examples_using_the_opentsdb_rest_proxy[] section.
+====
+
+=== Using the {app-short-name} WebUI
+
+To view the metrics using the WebUI, execute the following steps:
+
+. Click the "Metrics" option on the menu bar displayed on top of the screen.
++
+image::vno_portal/Metrics_menu.png[align="center"]
+
+. All Metrics will be listed:
++
+image::vno_portal/MetricsSection.png[align="center"]
+
+. Complete all the filter inputs and click the *Apply filter* button.
++
+image::vno_portal/AlarmsAndMetricsSection_applyFilter.png[align="center"]
+
+. The metrics will be shown as in the following example:
++
+image::vno_portal/MetricsSection_foundMetrics.png[align="center"]
+
+=== Using the REST Proxy
+To retrieve metrics using the {app-short-name} openTSDB proxy a POST or GET request must be sent to the URL:
+https://{altiplano-host}/{wnp-pm-context}/api/query
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano OpenTSDB but the difference is that instead of pointing to
+altiplano-opentsdb context the URL points to {app-short-name} proxy context (*{wnp-pm-context}*).
+====
+
+To retrieve the information using a POST HTTP method, the request must be sent to the url:
+https://{altiplano-host}/{wnp-pm-context}/api/query
+including a body like the following one:
+[source, json]
+----
+{
+    "start": "<START_DATE>",
+    "end": "<END_DATE>",
+    "queries": [
+        {
+            "metric": "<METRIC_NAME>.<DEVICE_NAME>",
+            "aggregator": "<OPENTSDB_AGGREGATOR>",
+            "tags": {
+                "relativeObjectID": "<RELATIVE_OBJECT_ID>",
+                "objectType": "<OBJECT_TYPE>"
+            }
+        }
+    ]
+}
+----
+
+To retrieve the information using an HTTP GET method, the request must be sent including the query in the same URL as shown below:
+https://{altiplano-host}/{wnp-pm-context}/api/query?start=<START_DATE>&end=<END_DATE>&m=<OPENTSDB_AGGREGATOR>:<METRIC_NAME>.<DEVICE_NAME>.<BOARD>{relativeObjectID=<RELATIVE_OBJECT_ID>,objectType=<OBJECT_TYPE>}
+
+
+The information inside the query is described in the next lines:
+
+* *START DATE:* This parameter defines the beginning of the time range.
+It indicates the earliest point in time from which you want to start fetching the data.
+The time can be in various formats such as:
+
+** A specific date/time (e.g., "2025/01/01 00:00:00").
+** A relative time like "1d-ago" (1 day ago), "1h-ago" (1 hour ago), etc.
+** A unix timestamp (e.g., 1609459200).
+
+    Example: If you set start = "2025/01/01 00:00:00", the query will retrieve data starting from January 1st, 2025 at midnight.
+
+* *END_DATE (optional):* This parameter defines the end of the time range.
+It marks the latest point in time up to which data should be returned.
+The format is similar to start. If it is not sent, then the end value will be the actual date.
+The time can be in various formats such as:
+
+** A specific date/time (e.g., "2025/01/31 23:59:59").
+** A relative time like "now" (current time), "1h-ago", etc.
+** A unix timestamp (e.g., 1609545600).
+
+    Example: If you set end = "2025/01/31 23:59:59", the query will fetch data up until January 31st, 2025 at 11:59:59 PM.
+
+* *METRIC_NAME:* it corresponds to the counter name that has been defined in the collection model.
+See xref:_common_metrics_and_object_types[] section to have a reference of the common metric names.
+The whole list of counters supported by an specific device can be queried using an HTTP GET METHOD.
+See xref:_retrieve_counters_for_a_specific_device_and_object_type[] section.
+Also {main-base-app} docs can be accessed to get more information.
+
+* *DEVICE_NAME:* It is the target of the intent that was used to configure the OLT plus the board where it is connected. For example: Condor-LS.LT1
+The available device names can be retrieved using the REST API offered by {app-short-name}.
+See xref:_retrieve_available_device_names[] section for more details.
+
+* *BOARD:* The board identifier where the elements are connected (Example: LT1)
+
+* *OPENTSDB_AGGREGATOR:* Allows you to group and summarize time series data to facilitate
+analysis and derive useful insights from large datasets. This can be done using aggregation functions
+like average, maximum, minimum, sum, etc. Consult openTSDB official docs for more information.
+
+* *OBJECT_TYPE (optional):* It corresponds to the objectType that has been defined in the collection model.
+See xref:_common_metrics_and_object_types[] section to have a reference of the common object types.
+The whole list of available object types for an specific device can be retrieved using the REST API offered by {app-short-name}.
+See xref:_retrieve_available_device_names[] section for more details.
+Also {main-base-app} docs can be accessed to get more information.
+A wildcard (\*) can be used in this field as value to retrieve the elements for all the object types
+without specifying a specific one. If this tag is not included in the query, the results are the same
+as if the (\*) is sent.
+
+* *RELATIVE_OBJECT_ID (optional):* This tag can be used to filter the metrics for a desired relative
+object id. For example if we need only the metrics for the ont  with target L1.P1.NOK1 then the value
+"anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1" can be included in this tag.
+A wildcard (\*) can be used in this field as value to retrieve the elements for all the relative object ids
+without specifying a specific one. If this tag is not included in the query, the results are the same
+as if the (*) is sent.
+
+==== Retrieve available device names
+The device names can be retrieved by the ISP sending an HTTP GET Request to the following url:
+https://{altiplano-host}/{wnp-ac-context}/common-data/device-names
+
+Response example:
+[source, json]
+----
+[
+    "Condor-LS",
+    "Condor-LS.IHUB",
+    "Condor-LS.LT1",
+    "Condor-LS.LT2"
+]
+----
+
+==== Retrieve object types for a specific device
+The available object types for en specific device can be retrieved by the ISP sending an HTTP GET Request to the following url:
+https://{altiplano-host}/{wnp-ac-context}/common-data/object-types/<DEVICE_NAME>
+
+For example using the "Condor-LS.LT1" device name retrieved from the previous query, the related object types
+can be retrieved sending an HTTP GET request to the following URL:
+https://{ip-host-example}/{wnp-ac-context}/common-data/object-types/Condor-LS.LT1
+
+Response example:
+[source, json]
+----
+[
+    {
+        "objectTypeGuiName": "accounting-server",
+        "objectType": "ietf-system:system-state/nokia-radius:radius-statistics/accounting-server"
+    },
+    {
+        "objectTypeGuiName": "authentication-server",
+        "objectType": "ietf-system:system-state/nokia-radius:radius-statistics/authentication-server"
+    },
+    {
+        "objectTypeGuiName": "bbf-interfaces-performance-management-mounted:performance/intervals-15min/history",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-interfaces-performance-management-mounted:performance/intervals-15min/history"
+    },
+    {
+        "objectTypeGuiName": "bbf-interfaces-performance-management:performance/intervals-15min/history",
+        "objectType": "ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/intervals-15min/history"
+    },
+    {
+        "objectTypeGuiName": "bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport/bbf-xpongemtcont-gemport-performance-management-mounted:performance/intervals-15min/history"
+    },
+    {
+        "objectTypeGuiName": "call-history",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/bbf-sip-voip-mounted:phys-voice-itf/pptp-pots-uni/statistics/call-history"
+    },
+    {
+        "objectTypeGuiName": "data/history",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history"
+    },
+    {
+        "objectTypeGuiName": "dba-congestion-monitoring/history",
+        "objectType": "ietf-interfaces:interfaces-state/interface/bbf-interfaces-performance-management:performance/nokia-sdan-dba-congestion-monitoring:shorter-monitoring-period/dba-congestion-monitoring/history"
+    },
+    {
+        "objectTypeGuiName": "ethernet-mounted:Ethernet",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface/ethernet-mounted:Ethernet"
+    },
+    {
+        "objectTypeGuiName": "gemport",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-xpongemtcont-mounted:xpongemtcont-state/gemports/gemport"
+    },
+    {
+        "objectTypeGuiName": "ietf-hardware-mounted:hardware-state/component",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component"
+    },
+    {
+        "objectTypeGuiName": "ietf-hardware:hardware-state/component",
+        "objectType": "ietf-hardware:hardware-state/component"
+    },
+    {
+        "objectTypeGuiName": "ietf-interfaces-mounted:interfaces-state/interface",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-interfaces-mounted:interfaces-state/interface"
+    },
+    {
+        "objectTypeGuiName": "ietf-interfaces:interfaces-state/interface",
+        "objectType": "ietf-interfaces:interfaces-state/interface"
+    },
+    {
+        "objectTypeGuiName": "ietf-interfaces:interfaces/interface",
+        "objectType": "ietf-interfaces:interfaces/interface"
+    },
+    {
+        "objectTypeGuiName": "in",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/in"
+    },
+    {
+        "objectTypeGuiName": "multicast-interface-to-host",
+        "objectType": "bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-interface-to-host"
+    },
+    {
+        "objectTypeGuiName": "multicast-network-interface",
+        "objectType": "bbf-mgmd:multicast-state/mgmd/multicast-vpn/multicast-network-interface"
+    },
+    {
+        "objectTypeGuiName": "multicast-vpn",
+        "objectType": "bbf-mgmd:multicast-state/mgmd/multicast-vpn"
+    },
+    {
+        "objectTypeGuiName": "nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface",
+        "objectType": "ietf-interfaces:interfaces-state/nokia-ipv4-address-spoofing-prevention:ipv4-security-statistics/interface"
+    },
+    {
+        "objectTypeGuiName": "nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface",
+        "objectType": "ietf-interfaces:interfaces-state/nokia-ipv6-address-spoofing-prevention:ipv6-security-statistics/interface"
+    },
+    {
+        "objectTypeGuiName": "nokia-qos-queue-monitoring-extension:scheduler-node/queue",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue"
+    },
+    {
+        "objectTypeGuiName": "nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/nokia-qos-queue-monitoring-extension:scheduler-node/queue/performance"
+    },
+    {
+        "objectTypeGuiName": "nokia-qos-queue-monitoring:tm-root/queue",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue"
+    },
+    {
+        "objectTypeGuiName": "nokia-qos-queue-monitoring:tm-root/queue/performance",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-qos-queue-monitoring:tm-root/queue/performance"
+    },
+    {
+        "objectTypeGuiName": "nokia-sdan-hws-xcvr-diagnostics-aug:rssi-onu",
+        "objectType": "ietf-hardware:hardware-state/component/bbf-hardware-transceivers:transceiver-link/diagnostics/nokia-sdan-hws-xcvr-diagnostics-aug:rssi-onu"
+    },
+    {
+        "objectTypeGuiName": "nokia-voice-performance-management-mounted:performance/intervals-15min/history",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking/nokia-voice-performance-management-mounted:performance/intervals-15min/history"
+    },
+    {
+        "objectTypeGuiName": "onu",
+        "objectType": "ietf-interfaces:interfaces-state/interface/bbf-xpon:channel-termination/bbf-xpon-onu-state:onus-present-on-local-channel-termination/onu"
+    },
+    {
+        "objectTypeGuiName": "out",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-interface-speed-monitoring:speed-monitoring/data/history/top-utilized-child-interfaces/out"
+    },
+    {
+        "objectTypeGuiName": "pbit",
+        "objectType": "ietf-interfaces:interfaces-state/interface/nokia-sdan-pbit-statistics:pbit-statistics/pbit"
+    },
+    {
+        "objectTypeGuiName": "pots-interworking",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/bbf-sip-voip-mounted:pots-interworking-nodes-state/pots-interworking"
+    },
+    {
+        "objectTypeGuiName": "revision",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component/bbf-software-image-management-one-dot-one-mounted:software/software/revisions/revision"
+    },
+    {
+        "objectTypeGuiName": "software",
+        "objectType": "bbf-fiber-onu-emulated-mount:onus/onu/root/ietf-hardware-mounted:hardware-state/component/bbf-software-image-management-one-dot-one-mounted:software/software"
+    },
+    {
+        "objectTypeGuiName": "volume-resource-list",
+        "objectType": "ietf-hardware:hardware-state/component/nokia-hardware-disk-resource:volume-resource-data/volume-resource-list"
+    }
+]
+----
+
+
+==== Retrieve counters for a specific device and object type
+The available counters for a specific device and object type can be retrieved by the ISP sending an
+HTTP GET Request to the following url:
+https://{altiplano-host}/{wnp-ac-context}/common-data/counters?device=<DEVICE_NAME>&objectType=<OBJECT_TYPE>
+
+For example using the "Condor-LS.LT1" device name, the {vno-initials}
+can retrieve the existent counters for the "ietf-interfaces:interfaces-state/interface" object type
+sending an HTTP GET request to the following URL:
+https://{ip-host-example}/{wnp-ac-context}/common-data/counters?device=Condor-LS.LT1&objectType=ietf-interfaces:interfaces-state/interface
+
+Response example:
+[source, json]
+----
+[
+    {
+        "counterName": "KPI_ont-uni-outbound-utilization",
+        "counterGuiName": "Outbound ONT UNI Utilization"
+    },
+    {
+        "counterName": "KPI_ont-uni-inbound-utilization",
+        "counterGuiName": "Inbound ONT UNI Utilization"
+    },
+    {
+        "isAdmin": "Y",
+        "counterName": "admin-status",
+        "counterGuiName": "Administrative State"
+    },
+    {
+        "counterName": "oper-status",
+        "counterGuiName": "Operational State",
+        "isOper": "Y"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-bad-packets-from-client",
+        "counterGuiName": "Inbound Bad Packets From Client - DHCPv4"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-bad-packets-from-server",
+        "counterGuiName": "Inbound Bad Packets From Server - DHCPv4"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-packets-from-client",
+        "counterGuiName": "Inbound Valid Packets From Client"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/in-packets-from-server",
+        "counterGuiName": "Inbound Valid Packets From Server"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/out-packets-to-server",
+        "counterGuiName": "Outbound Valid Packets to Server"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/out-packets-to-client",
+        "counterGuiName": "Outbound Valid Packets to Client"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-inserted-packets-to-server",
+        "counterGuiName": "Option 82 Packets to Server"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-removed-packets-to-client",
+        "counterGuiName": "Option 82 Removed Packets to Client"
+    },
+    {
+        "counterName": "statistics/bbf-l2-dhcpv4-relay:dhcpv4/option-82-not-inserted-to-server",
+        "counterGuiName": "MTU Exceeded"
+    },
+    {
+        "counterName": "statistics/bbf-pppoe-intermediate-agent:pppoe/in-error-packets-from-client",
+        "counterGuiName": "Inbound Error Packets"
+    },
+    {
+        "counterName": "statistics/bbf-pppoe-intermediate-agent:pppoe/in-packets-from-client",
+        "counterGuiName": "Inbound Valid Packets"
+    },
+    {
+        "counterName": "statistics/bbf-pppoe-intermediate-agent:pppoe/out-packets-to-server",
+        "counterGuiName": "Outbound Valid Packets"
+    },
+    {
+        "counterName": "statistics/bbf-pppoe-intermediate-agent:pppoe/vendor-specific-tag-inserted-packets-to-server",
+        "counterGuiName": "Packets with Vendor Specific Tag"
+    },
+    {
+        "counterName": "statistics/bbf-pppoe-intermediate-agent:pppoe/outgoing-mtu-exceeded-packets-from-client",
+        "counterGuiName": "MTU Exceeded Packets"
+    },
+    {
+        "counterName": "statistics/in-octets",
+        "counterGuiName": "Inbound Octets"
+    },
+    {
+        "counterName": "statistics/out-octets",
+        "counterGuiName": "Outbound Octets"
+    },
+    {
+        "counterName": "statistics/in-discards",
+        "counterGuiName": "Inbound Discards"
+    },
+    {
+        "counterName": "statistics/out-discards",
+        "counterGuiName": "Outbound Discards"
+    },
+    {
+        "counterName": "statistics/in-unicast-pkts",
+        "counterGuiName": "Inbound Unicast Packets"
+    },
+    {
+        "counterName": "statistics/in-broadcast-pkts",
+        "counterGuiName": "Inbound Broadcast Packets"
+    },
+    {
+        "counterName": "statistics/in-multicast-pkts",
+        "counterGuiName": "Inbound Multicast Packets"
+    },
+    {
+        "counterName": "statistics/out-unicast-pkts",
+        "counterGuiName": "Outbound Unicast Packets"
+    },
+    {
+        "counterName": "statistics/out-broadcast-pkts",
+        "counterGuiName": "Outbound Broadcast Packets"
+    },
+    {
+        "counterName": "statistics/out-multicast-pkts",
+        "counterGuiName": "Outbound Multicast Packets"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-ethernet-interface-statistics:ethernet/in-pkts-errors-fcs",
+        "counterGuiName": "Inbound FCS Error"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-ethernet-interface-statistics:ethernet/in-illegalsize-pkts",
+        "counterGuiName": "Inbound Illegal Size"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/in-bad-packets-from-client",
+        "counterGuiName": "Inbound Bad Packets From Client - DHCPv6"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/in-bad-packets-from-server",
+        "counterGuiName": "Inbound Bad Packets From Server - DHCPv6"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/option-17-inserted-packets-to-server",
+        "counterGuiName": "Option 17 Inserted Packets To Server"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/option-17-removed-packets-to-client",
+        "counterGuiName": "Option 17 Removed Received Packets To Client"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/option-18-inserted-packets-to-server",
+        "counterGuiName": "Option 18 Inserted Packets To Server"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/option-18-removed-packets-to-client",
+        "counterGuiName": "Option 18 Removed Packets To Client"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/option-37-inserted-packets-to-server",
+        "counterGuiName": "Option 37 Inserted Packets To Server"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/option-37-removed-packets-to-client",
+        "counterGuiName": "Option 37 Removed Packets To Client"
+    },
+    {
+        "counterName": "statistics/bbf-ldra:dhcpv6-ldra/outgoing-mtu-exceeded-packets-from-client",
+        "counterGuiName": "Outgoing MTU Exceeded"
+    },
+    {
+        "counterName": "statistics/nokia-interfaces-statistics:in-dropped-bytes",
+        "counterGuiName": "Total Inbound Dropped - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-interfaces-statistics:out-dropped-bytes",
+        "counterGuiName": "Total Outbound Dropped - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-bytes",
+        "counterGuiName": "Outbound Broadcast GEM Port - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-packets",
+        "counterGuiName": "Outbound Broadcast GEM Port - Packets"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-dropped-bytes",
+        "counterGuiName": "Outbound Broadcast GEM Port Drop - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-incidental-broadcast-gem-port-dropped-packets",
+        "counterGuiName": "Outbound Broadcast GEM Port Drop - Packets"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-bytes",
+        "counterGuiName": "Outbound Multicast GEM Port - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-packets",
+        "counterGuiName": "Outbound Multicast GEM Port - Packets"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-dropped-bytes",
+        "counterGuiName": "Outbound Multicast GEM Port Drop - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-multicast-gem-port-dropped-packets",
+        "counterGuiName": "Outbound Multicast GEM Port Drop - Packets"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-bytes",
+        "counterGuiName": "Outbound Unicast GEM Port - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-packets",
+        "counterGuiName": "Outbound Unicast GEM Port - Packets"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-dropped-bytes",
+        "counterGuiName": "Outbound Unicast GEM Port Drop - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-xpon-statistics:xpon/out-unicast-gem-port-dropped-packets",
+        "counterGuiName": "Outbound Unicast GEM Port Drop - Packets"
+    },
+    {
+        "counterName": "statistics/bbf-interfaces-statistics-management:in-pkts",
+        "counterGuiName": "Inbound Packets"
+    },
+    {
+        "counterName": "statistics/bbf-interfaces-statistics-management:out-pkts",
+        "counterGuiName": "Outbound Packets"
+    },
+    {
+        "counterName": "bbf-xpon:channel-pair/nokia-xponinfra-cac:us-l2-capacity",
+        "counterGuiName": "Channel Pair L2 Capacity - Outbound"
+    },
+    {
+        "counterName": "bbf-xpon:channel-pair/nokia-xponinfra-cac:ds-l2-capacity",
+        "counterGuiName": "Channel Pair L2 Capacity - Inbound"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/router-solicitation/discard-packets",
+        "counterGuiName": "Upstream - Router Solicitation Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/router-advertisement/discard-packets",
+        "counterGuiName": "Upstream - Router Advertisement Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/neighbour-advertisement/discard-packets",
+        "counterGuiName": "Upstream - Neighbour Advertisement Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/neighbour-solicitation/discard-packets",
+        "counterGuiName": "Upstream - Neighbour Solicitation Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/router-redirect/discard-packets",
+        "counterGuiName": "Upstream - Router Redirect Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/multicast-listener-query/discard-packets",
+        "counterGuiName": "Upstream - Multicast Listener Query Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/error-message/discard-packets",
+        "counterGuiName": "Upstream - Error Message Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/informational-message/discard-packets",
+        "counterGuiName": "Upstream - Informational Message Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/upstream/invalid-message/discard-packets",
+        "counterGuiName": "Upstream - Invalid Message Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/router-solicitation/discard-packets",
+        "counterGuiName": "Downstream - Router Solicitation Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/router-advertisement/discard-packets",
+        "counterGuiName": "Downstream - Router Advertisement Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/neighbour-advertisement/discard-packets",
+        "counterGuiName": "Downstream - Neighbour Advertisement Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/neighbour-solicitation/discard-packets",
+        "counterGuiName": "Downstream - Neighbour Solicitation Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/router-redirect/discard-packets",
+        "counterGuiName": "Downstream - Router Redirect Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/multicast-listener-query/discard-packets",
+        "counterGuiName": "Downstream - Multicast Listener Query Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/error-message/discard-packets",
+        "counterGuiName": "Downstream - Error Message Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/informational-message/discard-packets",
+        "counterGuiName": "Downstream - Informational Message Discard Packets"
+    },
+    {
+        "counterName": "statistics/bbf-icmpv6:icmpv6-stats/downstream/invalid-message/discard-packets",
+        "counterGuiName": "Downstream - Invalid Message Discard Packets"
+    },
+    {
+        "counterName": "statistics/discontinuity-time",
+        "counterGuiName": "Discontinuity Time"
+    },
+    {
+        "counterName": "bbf-xponvani:v-ani/onu-id",
+        "counterGuiName": "ONU ID"
+    },
+    {
+        "counterName": "bbf-xponvani:v-ani/onu-presence-state",
+        "counterGuiName": "Presence State"
+    },
+    {
+        "counterName": "bbf-xponvani:v-ani/onu-present-on-this-olt/detected-serial-number",
+        "counterGuiName": "Serial Number"
+    },
+    {
+        "counterName": "bbf-xponvani:v-ani/onu-present-on-this-olt/detected-registration-id",
+        "counterGuiName": "Registration ID"
+    },
+    {
+        "counterName": "bbf-xponvani:v-ani/onu-present-on-this-olt/bbf-xponvani-onu-authentication:detected-loid",
+        "counterGuiName": "LOID"
+    },
+    {
+        "counterName": "bbf-xponvani:v-ani/onu-present-on-this-olt/onu-fiber-distance",
+        "counterGuiName": "Fiber Distance"
+    },
+    {
+        "counterName": "last-change",
+        "counterGuiName": "Last Change"
+    },
+    {
+        "counterName": "type",
+        "counterGuiName": "Type"
+    },
+    {
+        "counterName": "higher-layer-if",
+        "counterGuiName": "Higher Layer If"
+    },
+    {
+        "counterName": "lower-layer-if",
+        "counterGuiName": "Lower Layer If"
+    },
+    {
+        "counterName": "bbf-interfaces-performance-management:performance/intervals-15min/current/bbf-xpon-performance-management:xpon/phy/in-bip-protected-words",
+        "counterGuiName": "Inbound BIP-32 Protection Words - Current 15min"
+    },
+    {
+        "counterName": "bbf-interfaces-performance-management:performance/intervals-15min/current/bbf-xpon-performance-management:xpon/phy/in-bip-errors",
+        "counterGuiName": "Inbound BIP-32 Errors - Current 15min"
+    },
+    {
+        "counterName": "bbf-interfaces-performance-management:performance/intervals-15min/current/bbf-xpon-performance-management:xpon/ploam/downstream-messages/total",
+        "counterGuiName": "Downstream - XPON PLOAM Total Messages - Current 15min"
+    },
+    {
+        "counterName": "bbf-interfaces-performance-management:performance/intervals-15min/current/bbf-xpon-performance-management:xpon/ploam/upstream-messages/total",
+        "counterGuiName": "Upstream - XPON PLOAM Total Messages - Current 15min"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-additional-statistics:in-dropped-bytes",
+        "counterGuiName": "Total Inbound Dropped - Bytes"
+    },
+    {
+        "counterName": "statistics/nokia-sdan-additional-statistics:out-dropped-bytes",
+        "counterGuiName": "Total Outbound Dropped - Bytes"
+    }
+]
+----
+
+The data that the {vno-initials} will need is usually related to the ONTs and UNI configurations, so the device names that must be
+used are the ones that represents a board in a device. In the response example above, the Condor-LS.LT1 and Condor-LS.LT2 are the available
+boards where the ONTs are connected so one of them must be included in the openTSDB query.
+
+[NOTE]
+====
+As the data is retrieved from {main-base-app}'s openTSDB through {app-short-name} proxy, the special chars in the queries must be
+replaced as suggested in Altiplano's docs:
+
+*"#" (numeral symbol)*: "\__h_"
+
+*":" (colon)*: "\__c_"
+
+*" " (space)*: "\__s_"
+
+*"=" (equal sign)*: "\__e_"
+
+====
+
+
+==== Examples using the openTSDB REST Proxy
+
+In this section, some examples to retrieve metrics as an {vno-initials} can be found.
+The examples shown are retrieved for a lighstpan device configured on Altiplano with "Condor-LS" as
+device-fx intent target, using the board LT1.
+Also, the examples are extracted from an {main-base-app} and {app-short-name} installed
+in a server with public ip: {ip-host-example} .
+
+The idea is only to show examples of few metrics since then,
+to consult the others, the {vno-initials} simply have to modify the object type, metric name and filters to the desired one.
+
+[NOTE]
+====
+Previous to retrieve data using the following examples, Altiplano's PM Collection models must be properly
+enabled and configured.
+====
+
+===== Retrieving adminState counter data
+
+If the {vno-initials} wants to retrieve the "adminState" data for
+the ONT with target L1.P1.NOK1, during the last hour, it must send POST request to the URL:
+https://{ip-host-example}/{wnp-pm-context}/api/query
+including the following body:
+[source, json]
+----
+{
+    "start": "1h-ago",
+    "queries": [
+        {
+            "metric": "adminState.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        }
+    ]
+}
+----
+
+Also, an HTTP GET request can be sent including the same query directly in the url as shown below:
+https://{ip-host-example}/{wnp-pm-context}/api/query?start=1h-ago&m=sum:adminState.Condor-LS.LT1{relativeObjectID=anv\__c_ietf-interfaces__c_interfaces-state/interface\__e_L1.P1.NOK1,objectType=ietf-interfaces__c_interfaces-state/interface}
+
+Response example:
+[source, json]
+----
+[
+    {
+        "metric": "adminState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990000": 0,
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0
+        }
+    }
+]
+----
+
+If the {vno-initials} wants to retrieve the "adminState" data for
+all the configured ONTs and UNIs during the last hour, it must send POST request to the URL:
+https://{ip-host-example}/{wnp-pm-context}/api/query
+including the following body:
+[source, json]
+----
+{
+    "start": "1h-ago",
+    "queries": [
+        {
+            "metric": "adminState.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "*",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        }
+    ]
+}
+----
+
+Also, an HTTP GET request can be sent including the same query directly in the url as shown below:
+https://{ip-host-example}/{wnp-pm-context}/api/query?start=1h-ago&m=sum:adminState.Condor-LS.LT1{relativeObjectID=*,objectType=ietf-interfaces__c_interfaces-state/interface}
+
+Response example:
+[source, json]
+----
+[
+    {
+        "metric": "adminState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "adminState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_VEIP",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "adminState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_LAN1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "adminState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_LAN1_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "adminState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_VEIP_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    }
+]
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+[IMPORTANT]
+====
+The {vno-initials} identifier must not be included in the target because the {app-short-name} proxy is in charge
+of adding it making a transparent scheme for the {vno-initials}.
+====
+
+===== Retrieving operState counter data
+If the {vno-initials} wants to retrieve the "operState" data for
+the ONT with target L1.P1.NOK1, during the last hour, it must send POST request to the URL:
+https://{ip-host-example}/{wnp-pm-context}/api/query
+including the following body:
+[source, json]
+----
+{
+    "start": "1h-ago",
+    "queries": [
+        {
+            "metric": "operState.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        }
+    ]
+}
+----
+
+Also, an HTTP GET request can be sent including the same query directly in the url as shown below:
+https://{ip-host-example}/{wnp-pm-context}/api/query?start=1h-ago&m=sum:operState.Condor-LS.LT1{relativeObjectID=anv\__c_ietf-interfaces__c_interfaces-state/interface\__e_L1.P1.NOK1,objectType=ietf-interfaces__c_interfaces-state/interface}
+
+
+Response example:
+[source, json]
+----
+[
+    {
+        "metric": "operState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    }
+]
+----
+
+If the {vno-initials} wants to retrieve the "operState" data for
+all the ONTs and configured UNIs during the last hour, it must send POST request to the URL:
+https://{ip-host-example}/{wnp-pm-context}/api/query
+including the following body:
+[source, json]
+----
+{
+    "start": "1h-ago",
+    "queries": [
+        {
+            "metric": "operState.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "*",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        }
+    ]
+}
+----
+
+Also, an HTTP GET request can be sent including the same query directly in the url as shown below:
+https://{ip-host-example}/{wnp-pm-context}/api/query?start=1h-ago&m=sum:operState.Condor-LS.LT1{relativeObjectID=*,objectType=ietf-interfaces__c_interfaces-state/interface}
+
+
+Response example:
+[source, json]
+----
+[
+    {
+        "metric": "operState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "operState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_VEIP",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "operState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_LAN1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "operState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_LAN1_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    },
+    {
+        "metric": "operState.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_VEIP_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737990900": 0,
+            "1737991800": 0,
+            "1737992700": 0,
+            "1737993600": 0
+        }
+    }
+]
+----
+
+===== Retrieving octets counter data
+
+If the {vno-initials} wants to retrieve the "in/out-octets" statistics for
+the ONT with target L1.P1.NOK1, in the last 3 days, it must send POST request to the URL:
+https://{ip-host-example}/{wnp-pm-context}/api/query
+including the following body:
+[source, json]
+----
+{
+    "start": "3d-ago",
+    "queries": [
+        {
+            "metric": "statistics/in-octets.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        },
+        {
+            "metric": "statistics/out-octets.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        }
+    ]
+}
+----
+
+Also, an HTTP GET request can be sent including the same query directly in the url as shown below:
+https://{ip-host-example}/{wnp-pm-context}/api/query?start=3d-ago&m=sum:statistics/in-octets.Condor-LS.LT1{relativeObjectID=anv\__c_ietf-interfaces__c_interfaces-state/interface\__e_L1.P1.NOK1,objectType=ietf-interfaces__c_interfaces-state/interface}&m=sum:statistics/out-octets.Condor-LS.LT1{relativeObjectID=anv\__c_ietf-interfaces__c_interfaces-state/interface\__e_L1.P1.NOK1,objectType=ietf-interfaces__c_interfaces-state/interface}
+
+
+Response example:
+[source, json]
+----
+[
+    {
+        "metric": "statistics/in-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737761354": 1477776,
+            "1737761414": 1477776,
+            "1737761474": 1477776,
+            "1737761534": 1477776,
+            "1737761594": 1477776,
+            "1737761654": 1477776,
+            "1737761714": 1477776,
+            "1737761774": 1477776,
+            "1737761834": 1477776,
+            "1737761894": 1477776,
+            "1737761954": 1477776,
+            "1737762014": 1477776,
+            "1737762074": 1477776,
+            "1737762134": 1477776,
+            "1737762194": 1477776,
+            "1737762254": 1477776
+        }
+    },
+    {
+        "metric": "statistics/out-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_L1.P1.NOK1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737761354": 938623,
+            "1737761414": 938623,
+            "1737761474": 938623,
+            "1737761534": 938623,
+            "1737761594": 938623,
+            "1737761654": 938623,
+            "1737761714": 938623,
+            "1737761774": 938623,
+            "1737761834": 938623,
+            "1737761894": 938623,
+            "1737761954": 938623,
+            "1737762014": 938623,
+            "1737762074": 938623,
+            "1737762134": 938623,
+            "1737762194": 938623,
+            "1737762254": 938623
+        }
+    }
+]
+----
+
+If the {vno-initials} wants to retrieve the "in/out-octets" statistics for all the interfaces
+configured on ONT with target L1.P1.NOK1, in the last 15 minutes, it must send POST request to the URL:
+https://{ip-host-example}/{wnp-pm-context}/api/query
+including the following body:
+[source, json]
+----
+{
+    "start": "15m-ago",
+    "queries": [
+        {
+            "metric": "statistics/in-octets.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "*",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        },
+        {
+            "metric": "statistics/out-octets.Condor-LS.LT1",
+            "aggregator": "sum",
+            "tags": {
+                "relativeObjectID": "*",
+                "objectType": "ietf-interfaces__c_interfaces-state/interface"
+            }
+        }
+    ]
+}
+----
+
+Also, an HTTP GET request can be sent including the same query directly in the url as shown below:
+https://{ip-host-example}/{wnp-pm-context}/api/query?start=15m-ago&m=sum:statistics/in-octets.Condor-LS.LT1{relativeObjectID=\*,objectType=ietf-interfaces\__c_interfaces-state/interface}&m=sum:statistics/out-octets.Condor-LS.LT1{relativeObjectID=*,objectType=ietf-interfaces__c_interfaces-state/interface}
+
+
+Response example:
+[source, json]
+----
+[
+    {
+        "metric": "statistics/in-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_VEIP",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 1477776
+        }
+    },
+    {
+        "metric": "statistics/in-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_LAN1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 0
+        }
+    },
+    {
+        "metric": "statistics/in-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_LAN1_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 0
+        }
+    },
+    {
+        "metric": "statistics/in-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_VEIP_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 1477776
+        }
+    },
+    {
+        "metric": "statistics/out-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_VEIP",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 938623
+        }
+    },
+    {
+        "metric": "statistics/out-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VENET_L1.P1.NOK1_LAN1",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 0
+        }
+    },
+    {
+        "metric": "statistics/out-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_LAN1_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 0
+        }
+    },
+    {
+        "metric": "statistics/out-octets.Condor-LS.LT1",
+        "tags": {
+            "relativeObjectID": "anv__c_ietf-interfaces__c_interfaces-state/interface__e_VSI_L1.P1.NOK1_VEIP_HSI",
+            "objectType": "ietf-interfaces__c_interfaces-state/interface"
+        },
+        "aggregateTags": [],
+        "dps": {
+            "1737994500": 938623
+        }
+    }
+]
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+[IMPORTANT]
+====
+The {vno-initials} identifier must not be included in the target because the {app-short-name} proxy is in charge
+of adding it making a transparent scheme for the {vno-initials}.
+====
+
+include::ROOT:go-back-component.adoc[Back]

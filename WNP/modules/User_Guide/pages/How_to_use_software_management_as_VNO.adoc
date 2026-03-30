@@ -1,0 +1,825 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= How to use software management as {vno-initials}
+
+== Introduction
+
+This section describes how to use the {app-short-name} SW Management proxy as an {vno-initials}.
+
+When {app-short-name} is installed over Altiplano, the {vno-initials} must execute all the requests through the application proxy.
+Instead of using the Altiplano's Software Management URL:
+https://{altiplano-host}/nokia-altiplano-ac/
+
+The {vno-initials}s must point to {app-short-name} IBN proxy URL:
+https://{altiplano-host}/{wnp-sm-context}/
+
+//Refer to xref:User_Guide:How_to_use_WNP_as_INP.adoc[How to Use {app-short-name} as {inp-initials}] section to know how to define rules globally and per {vno-initials}.
+
+[NOTE]
+====
+Before using {app-short-name} as an {vno-initials} you must be authenticated as {vno-initials} user.
+Refer to xref:User_Guide:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access] section to know the steps needed.
+====
+
+=== Using the {app-short-name} WebUI
+
+To view software management using the WebUI, execute the following steps:
+
+. Click the "Software Management" option on the menu bar displayed on top of the screen.
++
+image::vno_portal/SoftwareManagement_menu.png[align="center"]
+
+You can navigate between the following sub-menus:
+
+==== Target Solutions
+
+To manage target solutions using the WebUI, execute the following steps:
+
+. Click "Target Solutions" on the sub-menu bar at the top of the screen.
++
+image::vno_portal/TargetSolutions_menu.png[align="center"]
+
+. All Target Solutions will be listed:
++
+image::vno_portal/TargetSolutionsSection.png[align="center"]
+
+. Click the *Create Target Solution* button.
++
+image::vno_portal/TargetSolutionsSection_newButton.png[align="center"]
+
+. Enter the required data in the popup window.
++
+image::vno_portal/TargetSolutionsSection_createTargetSolution.png[align="left"]
+
+. Enter all required values:
++
+- *Target Solution Name:* It is the target solution name.
+- *Target Release Name:* It is the target release name.
+- *Vendor Specific Release 1:* It is the vendor specific release 1.
+- *Vendor Specific Release 2:* It is the vendor specific release 2.
+- *Fiber Name*: It is the PON port.
+- *Software Mapping*: If mapping item are added, another values by each mapping are required:
+** *Main Software*: It is the ONT type.
+** *Vendor Specific Release 1*: It is the vendor specific release 1.
+** *Vendor Specific Release 2*: It is the vendor specific release 2.
+
+. Click the *SAVE* button.
+
+==== Campaigns
+
+To manage campaigns using the WebUI, execute the following steps:
+
+. Click "Campaigns" on the sub-menu bar at the top of the screen.
++
+image::vno_portal/Campaigns_menu.png[align="center"]
+
+. All Campaigns will be listed:
++
+image::vno_portal/CampaignsSection.png[align="center"]
+
+. Click the *Create Campaign* button.
++
+image::vno_portal/CampaignsSection_newButton.png[align="center"]
+
+. Enter the required data in the popup window.
++
+image::vno_portal/CampaignsSection_createCampaign.png[align="left"]
+
+. Enter all required values:
++
+- *Campaign Name:* It is the campaign name.
+- *Description:* It is the campaign's description.
+- *Target Solution:* It is the target solution name.
+- *Start Time:* It is the campaign's start time. Defines the beginning of the campaign’s execution window.
+- *End Time*: It is the campaign's end time. Defines the expiration of the campaign’s execution window.
+
+. Click the *SAVE* button.
+
+=== Using the REST Proxy
+
+==== Target Solutions
+
+===== Create Target Solution
+To create a target solution using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+	"name": "{TargetSolutionName}",
+	"target-solution-info": "{TargetSolutionInfo}"
+}
+----
+- *name:* The string that identifies the target solution name.
+- *target-solution-info:* A serialized JSON string containing the configuration details of the software solution. It specifies the software versions and device models.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to create a target solution, a POST request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/target-solutions
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "TS_ontSoftwareR24.01",
+    "target-solution-info": "[{\"target-release\":{\"display\":\"R24.01.00\",\"swFileFullPath\":\"R24.01.00\"},\"target-onu-software-mapping\":[{\"index\":1,\"target-release\":{\"display\":\"R24.01.00\",\"swFileFullPath\":\"R24.01.00\"},\"target-vendor-specific-release-1\":{\"display\":\"test-vendor-specific-release-1\",\"swFileFullPath\":\"test-vendor-specific-release-1\"},\"target-vendor-specific-release-2\":{\"display\":\"test-vendor-specific-release-2\",\"swFileFullPath\":\"test-vendor-specific-release-2\"},\"scope-criteria\":[]}],\"target-vendor-specific-release-1\":{\"display\":\"test-vendor-specific-release-1\",\"swFileFullPath\":\"test-vendor-specific-release-1\"},\"target-vendor-specific-release-2\":{\"display\":\"test-vendor-specific-release-2\",\"swFileFullPath\":\"test-vendor-specific-release-2\"}}]"
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Edit Target Solution
+To edit a target solution using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a PATCH request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions/<TARGET_SOLUTION_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions/<TARGET_SOLUTION_NAME>,window=_blank]
++
+Path Variable::
++
+* *TARGET_SOLUTION_NAME*: It is the string that identifies the target solution.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+	"name": "{TargetSolutionName}",
+	"target-solution-info": "{TargetSolutionInfo}"
+}
+----
+- *name:* The string that identifies the target solution name. Although this field is included in the request body, it is immutable. The proxy will ignore any changes to this value.
+- *target-solution-info:* A serialized JSON string containing the configuration details of the software solution. It specifies the software versions and device models.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to edit a target solution, a PATCH request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/target-solutions/TS_ontSoftwareR24.01
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "TS_ontSoftwareR24.01",
+    "target-solution-info": "[{\"target-release\":{\"display\":\"R24.01.03\",\"swFileFullPath\":\"R24.01.03\"},\"target-onu-software-mapping\":[{\"index\":1,\"target-release\":{\"display\":\"R24.01.03\",\"swFileFullPath\":\"R24.01.03\"},\"target-vendor-specific-release-1\":{\"display\":\"test-vendor-specific-release-1\",\"swFileFullPath\":\"test-vendor-specific-release-1\"},\"target-vendor-specific-release-2\":{\"display\":\"test-vendor-specific-release-2\",\"swFileFullPath\":\"test-vendor-specific-release-2\"}}],\"target-vendor-specific-release-1\":{\"display\":\"test-vendor-specific-release-1\",\"swFileFullPath\":\"test-vendor-specific-release-1\"},\"target-vendor-specific-release-2\":{\"display\":\"test-vendor-specific-release-2\",\"swFileFullPath\":\"test-vendor-specific-release-2\"}}]"
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Get Target Solution
+To get a target solution using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions/<TARGET_SOLUTION_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions/<TARGET_SOLUTION_NAME>,window=_blank]
++
+Path Variable::
++
+* *TARGET_SOLUTION_NAME*: It is the string that identifies the target solution.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to get a target solution, a GET request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/target-solutions/TS_ontSoftwareR24.01.00
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Delete Target Solution
+To delete a target solution using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions/<TARGET_SOLUTION_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/target-solutions/<TARGET_SOLUTION_NAME>,window=_blank]
++
+Path Variable::
++
+* *TARGET_SOLUTION_NAME*: It is the string that identifies the target solution.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to delete a target solution, a DELETE request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/target-solutions/TS_ontSoftwareR24.01.00
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Campaigns
+
+===== Create Campaign
+
+To create a campaign using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns,window=_blank]
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "name": "{CampaignName}",
+    "description": "{CampaignDescription}",
+    "target-solution": "{TargetSolutionName}",
+    "start-time": "{CampaignStartTime}",
+    "end-time": "{CampaignEndTime}"
+}
+----
+- *name:* The string that identifies the campaign name.
+- *description (optional):* It is the description of the campaign.
+- *target-solution:* The string that identifies the target solution name.
+- *start-time:* Defines the beginning of the campaign's execution window. Activities can only be scheduled or triggered after this timestamp. Only the ISO8601 format is supported.
+- *end-time:* Defines the expiration of the campaign's execution window. No activities are allowed to start or continue execution beyond this point. Only the ISO8601 format is supported.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to create a campaign, a POST request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "UpdateONTsTo24.01.00",
+    "description": "new campaign",
+    "target-solution": "TS_ontSoftwareR24.01",
+    "start-time": "2026-03-21T19:20:00Z",
+    "end-time": "2026-03-22T19:20:00Z"
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Edit Campaign
+
+To edit a campaign using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a PACTH request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "name": "{CampaignName}",
+    "description": "{CampaignDescription}",
+    "target-solution": "{TargetSolutionName}",
+    "start-time": "{CampaignStartTime}",
+    "end-time": "{CampaignEndTime}"
+}
+----
+- *name:* The string that identifies the campaign name. Although this field is included in the request body, it is immutable. The proxy will ignore any changes to this value.
+- *description (optional):* It is the description of the campaign.
+- *target-solution:* The string that identifies the target solution name.
+- *start-time:* Defines the beginning of the campaign's execution window. Activities can only be scheduled or triggered after this timestamp. Only the ISO8601 format is supported.
+- *end-time:* Defines the expiration of the campaign's execution window. No activities are allowed to start or continue execution beyond this point. Only the ISO8601 format is supported.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to edit a campaign, a PATCH request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "UpdateONTsTo24.01.00",
+    "description": "new campaign's description",
+    "target-solution": "TS_ontSoftwareR22.02",
+    "start-time": "2026-03-23T15:00:00Z",
+    "end-time": "2026-03-23T221:00:00Z"
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Get Campaign
+To get a campaign using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to get a campaign, a GET request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Delete Campaign
+To delete a campaign using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to delete a campaign, a DELETE request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Duplicate Campaign
+
+To duplicate a campaign using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/software-management/duplicate-campaign/<CAMPAIGN_NAME>[https://{altiplano-host}/{wnp-ac-context}/software-management/duplicate-campaign/<CAMPAIGN_NAME>,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "name": "{NewCampaignName}",
+    "description": "{CampaignDescription}",
+    "start-time": "{CampaignStartTime}",
+    "end-time": "{CampaignEndTime}",
+    "activities-to-duplicate": [ "{ActivityName1}",  "{ActivityName2}",  "..."]
+}
+----
+- *name:* The string that identifies the campaign name.
+- *description (optional):* It is the description of the campaign.
+- *start-time:* Defines the beginning of the campaign's execution window. Activities can only be scheduled or triggered after this timestamp. Only the ISO8601 format is supported.
+- *end-time:* Defines the expiration of the campaign's execution window. No activities are allowed to start or continue execution beyond this point. Only the ISO8601 format is supported.
+- *activities-to-duplicate (optional):* A list of activity IDs from the source campaign to be replicated in the new campaign. If omitted, the new campaign will be created with no activities.
+
+[NOTE]
+====
+The {app-short-name} proxy introduces a dedicated endpoint under the *{wnp-ac-context}* context. Use the following URL: https://{altiplano-host}/{wnp-ac-context}/software-management +
+This endpoint is not offer by Altiplano Software Management.
+====
+
+For example - Example 1:: If an {vno-initials} wants to duplicate a campaign without activities, a POST request must be sent to the URL:
+https://{ip-host-example}/{wnp-ac-context}/software-management/duplicate-campaign/UpdateONTsTo24.01.00
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "new duplicated campaign based on UpdateONTsTo24.01.00",
+    "description": "duplicated campaign",
+    "start-time": "2026-04-01T13:00:00Z",
+    "end-time": "2026-04-01T15:00:00Z"
+}
+----
+
+For example - Example 2:: If an {vno-initials} wants to duplicate a campaign with some activities, a POST request must be sent to the URL:
+https://{ip-host-example}/{wnp-ac-context}/software-management/duplicate-campaign/UpdateONTsTo24.01.00
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "new duplicated campaign based on UpdateONTsTo24.01.00",
+    "description": "duplicated campaign",
+    "start-time": "2026-04-01T13:00:00Z",
+    "end-time": "2026-04-01T15:00:00Z",
+    "activities-to-duplicate": [ "downloadSoftware", "upgradeSoftware"]
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Get Reserved Slots
+To retrieve reserved slots within a specific timeframe using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-ac-context}/software-management/get-reserved-slots?from=<FROM_DATE>&to=<END_DATE>[https://{altiplano-host}/{wnp-ac-context}/software-management/get-reserved-slots?from=<FROM_DATE>&to=<END_DATE>,window=_blank]
++
+Path Variable::
++
+* *FROM_DATE*: Specifies the start date for the query range. Only the ISO8601 format is supported.
+* *END_DATE*: Specifies the end date for the query range. . Only the ISO8601 format is supported.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The {app-short-name} proxy introduces a dedicated endpoint under the *{wnp-ac-context}* context. Use the following URL: https://{altiplano-host}/{wnp-ac-context}/software-management +
+This endpoint is not offer by Altiplano Software Management.
+====
+
+For example:: If an {vno-initials} wants to retrieve reserved slots between "2025-01-01 00:00:00" and "2026-06-25 14:07:46", a GET request must be sent to the URL:
+https://{ip-host-example}/{wnp-ac-context}/software-management/get-reserved-slots?from=2025-01-01T00:00:00Z&to=2026-06-25T14:07:46Z
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+==== Activities
+
+===== Create Activity
+
+To create an activity using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a POST request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "name": "{ActivityName}",
+    "operation-timeout": "{ActivityOperationTimeout}",
+    "scheduled-start-time": "{ActivityScheduledStartTime}",
+    "reachable": "{DeviceReachable}",
+    "force-ont-software": "{ForceOntSoftware}",
+    "operation": "{OperationType}",
+    "max-no-of-error-before-pausing": "{MaxNroOfErrorBeforePausing}",
+    "ont-activation-option": "{OntActivationOption}",
+    "ont-activation-vendor-specific-release1": "{OntActivationOption}",
+    "ont-activation-vendor-specific-release2": "{OntActivationOption}",
+    "activity-devices": [
+        {
+            "fiberName": "{FiberName1}",
+            "oltDeviceId": "{OltDeviceId1}",
+            "hardware-type": "{hardwareType1}",
+            "device": "{device1}"
+        },
+        {
+            "fiberName": "{FiberName2}",
+            "oltDeviceId": "{OltDeviceId2}",
+            "hardware-type": "{hardwareType2}",
+            "device": "{device2}"
+        },
+        "..."
+      ]
+}
+----
+- *name:* The string that identifies the activity name.
+- *operation-timeout:* The maximum duration allowed for the activity to complete, expressed in minutes.
+- *scheduled-start-time (optional):* Specifies the date and time when the activity is set to begin. If omitted, the activity will trigger immediately after the campaign starts.
+- *reachable:* Defines if device must be reachable. It is a boolean value.
+- *force-ont-software (optional):* It is a boolean value. Specifies whether the ONT software version should be strictly forced based on the device intent. Its value by default is "false".
+- *operation:* Defines the operation type. Possible values are: "software-download", "software-upgrade" and "software-rollback".
+- *max-no-of-error-before-pausing:* It number indicates the maximum count of errors before pausing the activity's execution.
+- *ont-activation-option:* Possible values are: "delayed-activation" and "immediate-activation".
+- *ont-activation-vendor-specific-release1:* Possible values are: "delayed-activation" and "immediate-activation".
+- *ont-activation-vendor-specific-release2:* Possible values are: "delayed-activation" and "immediate-activation".
+- *activity-devices:* The list of ONTs on which the activity must be executed.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to create an activity, a POST request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "upgradeSoftware",
+    "operation": "software-upgrade",
+    "operation-timeout": 60,
+    "reachable": true,
+    "force-ont-software": true,
+    "max-no-of-error-before-pausing": "",
+    "ont-activation-option": "immediate-activation",
+    "ont-activation-vendor-specific-release1": "immediate-activation",
+    "ont-activation-vendor-specific-release2": "immediate-activation",
+    "activity-devices": [
+        {
+            "fiberName": "Condor-LS.L1.P1",
+            "oltDeviceId": "Condor-LS.LT1",
+            "hardware-type": "ONT",
+            "device": "L1.P1.ONT1"
+        },
+        {
+            "fiberName": "Condor-LS.L1.P1",
+            "oltDeviceId": "Condor-LS.LT1",
+            "hardware-type": "ONT",
+            "device": "L1.P1.ONT2"
+        }
+    ]
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Edit Activity
+
+To edit an activity using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a PATCH request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
++
+Body::
+The request must contain the following JSON body:
++
+[source, json]
+----
+{
+    "name": "{ActivityName}",
+    "operation-timeout": "{ActivityOperationTimeout}",
+    "scheduled-start-time": "{ActivityScheduledStartTime}",
+    "reachable": "{DeviceReachable}",
+    "force-ont-software": "{ForceOntSoftware}",
+    "operation": "{OperationType}",
+    "max-no-of-error-before-pausing": "{MaxNroOfErrorBeforePausing}",
+    "ont-activation-option": "{OntActivationOption}",
+    "ont-activation-vendor-specific-release1": "{OntActivationOption}",
+    "ont-activation-vendor-specific-release2": "{OntActivationOption}",
+    "activity-devices": [
+        {
+            "fiberName": "{FiberName1}",
+            "oltDeviceId": "{OltDeviceId1}",
+            "hardware-type": "{hardwareType1}",
+            "device": "{device1}"
+        },
+        {
+            "fiberName": "{FiberName2}",
+            "oltDeviceId": "{OltDeviceId2}",
+            "hardware-type": "{hardwareType2}",
+            "device": "{device2}"
+        },
+        "..."
+      ]
+}
+----
+- *name:* The string that identifies the activity name to edit.
+- *operation-timeout:* The maximum duration allowed for the activity to complete, expressed in minutes.
+- *scheduled-start-time (optional):* Specifies the date and time when the activity is set to begin. If omitted, the activity will trigger immediately after the campaign starts.
+- *reachable:* Defines if device must be reachable. It is a boolean value.
+- *force-ont-software (optional):* It is a boolean value. Specifies whether the ONT software version should be strictly forced based on the device intent. Its value by default is "false".
+- *operation:* Defines the operation type. Possible values are: "software-download", "software-upgrade" and "software-rollback".
+- *max-no-of-error-before-pausing:* It number indicates the maximum count of errors before pausing the activity's execution.
+- *ont-activation-option:* Possible values are: "delayed-activation" and "immediate-activation".
+- *ont-activation-vendor-specific-release1:* Possible values are: "delayed-activation" and "immediate-activation".
+- *ont-activation-vendor-specific-release2:* Possible values are: "delayed-activation" and "immediate-activation".
+- *activity-devices:* The list of ONTs on which the activity must be executed. If an empty list is provided in a PATCH request, the system will ignore the update for this field and preserve the previously configured devices.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to edit an activity updating the operation type and operation-timeout, a PATCH request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00
++
+The following request body must be sent:
++
+[source, json]
+----
+{
+    "name": "upgradeSoftware",
+    "operation": "software-download",
+    "operation-timeout": 180,
+    "reachable": true,
+    "force-ont-software": true,
+    "max-no-of-error-before-pausing": "",
+    "ont-activation-option": "immediate-activation",
+    "ont-activation-vendor-specific-release1": "immediate-activation",
+    "ont-activation-vendor-specific-release2": "immediate-activation",
+    "activity-devices": []
+}
+----
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Get Activity
+
+To get an activity using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities/<ACTIVITY_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities/<ACTIVITY_NAME>,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
+* *ACTIVITY_NAME*: It is the string that identifies the activity.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to get an activity with name "upgradeSoftware" of the campaign "UpdateONTsTo24.01.00", a GET request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00/activities/upgradeSoftware
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Delete Activity
+
+To delete an activity using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a DELETE request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities/<ACTIVITY_NAME>[https://{altiplano-host}/{wnp-sm-context}/rest/software/v1/campaigns/<CAMPAIGN_NAME>/activities/<ACTIVITY_NAME>,window=_blank]
++
+Path Variable::
++
+* *CAMPAIGN_NAME*: It is the string that identifies the campaign.
+* *ACTIVITY_NAME*: It is the string that identifies the activity.
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to delete an activity with name "upgradeSoftware" of the campaign "UpdateONTsTo24.01.00", a DELETE request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/software/v1/campaigns/UpdateONTsTo24.01.00/activities/upgradeSoftware
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Get Devices Count
+
+To get devices count using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a GET request to the following URL:
+link:https://{altiplano-host}/{wnp-sm-context}/rest/sm/campaigns/activities/devices/count[https://{altiplano-host}/{wnp-sm-context}/rest/sm/campaigns/activities/devices/count,window=_blank]
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+So in this case, {app-short-name} injects values in the body request for the Altiplano request.
+====
+
+For example:: If an {vno-initials} wants to get the devices count, a GET request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/sm/campaigns/activities/devices/count
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====
+
+===== Get Devices
+
+To get the devices using the {app-short-name} SW Management proxy you must execute the following step:
+
+.  Send a GET request to the following URL:
+//TODO: (luana) ME FALTAN DEFINIR PARAMETERS!!!
+link:https://{altiplano-host}/{wnp-sm-context}/rest/sm/campaigns/activities/devices[https://{altiplano-host}/{wnp-sm-context}/rest/sm/campaigns/activities/devices,window=_blank]
++
+Body::
+The request body must be empty.
+
+[NOTE]
+====
+The url is the same as the offered by Altiplano Software Management but the difference is that instead of pointing to
+nokia-altiplano-ac context the URL points to {app-short-name} proxy context (*{wnp-sm-context}*).
+====
+
+For example:: If an {vno-initials} wants to get the devices, a GET request must be sent to the URL:
+https://{ip-host-example}/{wnp-sm-context}/rest/sm/campaigns/activities/devices?orderBy=NAME&orderType=ASC&pageSize=500
+
+[NOTE]
+====
+The access token of the {vno-initials} user must be sent in the request as a Bearer Authorization HTTP Header.
+To retrieve a token, follow the steps in the xref:How_to_manage_WNP_access.adoc#_rest_apis_proxies_and_kafka_brokers[REST APIs, proxies and kafka brokers] section.
+====

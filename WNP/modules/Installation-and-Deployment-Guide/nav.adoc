@@ -1,0 +1,15 @@
+* xref:Legal_Notice.adoc[Legal Notice]
+
+* About This Guide
+** xref:Purpose_of_this_Guide.adoc[Purpose of This Guide]
+** xref:What_is_new_in_this_release.adoc[What's new in this release]
+** xref:Abbreviations_and_Acronyms.adoc[Abbreviations and Acronyms]
+** xref:WNP_overview.adoc[What is Wholesale Network Portal]
+
+* Installation and Configuration
+** xref:How_to_install_and_configure_WNP_application.adoc[How to Install and Configure WNP]
+** xref:Migration_upgrade_procedure.adoc[Migration/Upgrade procedure]
+** xref:Licensing_Altiplano_WNP_Application.adoc[Licensing]
+** xref:Solution_planning_guidelines_for_WNP_application.adoc[Solution Planning Guidelines]
+** xref:HA_deployment_models.adoc[HA Deployment Models]
+** xref:Troubleshooting.adoc[Troubleshooting]

@@ -1,0 +1,292 @@
+include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
+
+= Troubleshooting
+
+This section provides information related to the troubleshooting of the {app-full-name}.
+
+== Rollback previous version
+
+If there is need to rollback to previous version the following command can be used:
+
+.Usage
+[source, bash]
+----
+helm rollback RELEASE_NAME [REVISION]
+----
+
+[IMPORTANT]
+====
+This operation does not rollback the database. If you are rolling back to a {app-short-name} version with differences in the DB structure, a backup/restore process on the {app-short-name} DB might be necessary for restory full {app-short-name} funtionalities.
+====
+
+.Example, if we want to rollback after install revision 2 we can execute:
+
+[source, bash]
+----
+helm rollback wnp 1
+----
+
+== Uninstall
+
+If there is need to uninstall {app-short-name}
+execute the "undeploy-wnp.sh" script tool:
+
+.Usage
+[source, bash]
+----
+tools$ ./maintenance/undeploy-wnp.sh RELEASE_NAME --clean
+----
+
+.Example
+[source, bash]
+----
+tools$ ./maintenance/undeploy-wnp.sh wnp --clean
+----
+.Sample output of the command
+[source, bash]
+----
+Undeploying WNP chart with deployment name 'wnp':
+Deployment history will be removed!
+helm uninstall wnp --namespace default
+release "wnp" uninstalled
+----
+
+[IMPORTANT]
+====
+This operation does not delete the database.
+However, in case WNP is installed after an undeploy process, WNP will delete and recreate
+the database from scratch.
+====
+
+== Inspect logs when error occurs
+=== Inspect logs in Altiplano's Dashboards
+{app-short-name} sends the application logs to Altiplano's fluentd.
+To inspect application logs please go to Altiplano's dashboards and search for "wnp" entries:
+
+https://ALTIPLANO-SERVER/altiplano-indexsearch-dashboards
+
+=== Inspect logs in {app-short-name} pods
+By default, the application debug log is enabled for each pod.
+
+To query a specific {app-short-name} pod execute the following command:
+
+.Usage
+[source, bash]
+----
+kubectl logs pod_id
+----
+
+.Example
+[source, bash]
+----
+kubectl logs pod/altiplano-wnp-provisioning
+----
+
+=== Download logs
+
+To download the logs of the application using the tools included in the chart package,
+execute the "get logs" script tool:
+
+.Usage
+[source, bash]
+----
+tools$ ./monitoring/getLogs-wnp.sh
+----
+
+.Example
+[source, bash]
+----
+tools$ ./monitoring/getLogs-wnp.sh
+----
+
+.Sample output of the command
+[source, bash]
+----
+Getting logs for pod pod/altiplano-wnp-kafka-broker-0
+Getting logs for pod pod/altiplano-wnp-kafka-broker-1
+Getting logs for pod pod/altiplano-wnp-kafka-broker-2
+Getting logs for pod pod/altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-ktbth
+Getting logs for pod pod/altiplano-wnp-provisioning-7bf48f49b6-fwlw9
+Getting logs for pod pod/altiplano-wnp-proxy-ibn-76688cfb69-4kgbq
+Getting logs for pod pod/altiplano-wnp-proxy-pm-alarms-8499bc9dcb-lpkxn
+---
+Discarding logs older than 180 minutes
+---
+Compressing log files:
+wnp.altiplano-wnp-kafka-broker-0_202503272321/
+wnp.altiplano-wnp-kafka-broker-0_202503272321/kafka-request.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/kafkaServer-gc.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/server.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/strimzi.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/controller.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/log-cleaner.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/state-change.log
+wnp.altiplano-wnp-kafka-broker-0_202503272321/kafka-authorizer.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/
+wnp.altiplano-wnp-kafka-broker-1_202503272321/kafka-request.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/kafkaServer-gc.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/server.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/strimzi.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/controller.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/log-cleaner.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/state-change.log
+wnp.altiplano-wnp-kafka-broker-1_202503272321/kafka-authorizer.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/
+wnp.altiplano-wnp-kafka-broker-2_202503272321/kafka-request.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/kafkaServer-gc.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/server.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/strimzi.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/controller.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/log-cleaner.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/state-change.log
+wnp.altiplano-wnp-kafka-broker-2_202503272321/kafka-authorizer.log
+wnp.altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-ktbth_202503272321/
+wnp.altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-ktbth_202503272321/server.log
+wnp.altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-ktbth_202503272321/wnpKafkaMetrics.log
+wnp.altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-ktbth_202503272321/wnpKafkaAlarms.log
+wnp.altiplano-wnp-kafka-pm-and-alarms-fd64f7d48-ktbth_202503272321/audit.log
+wnp.altiplano-wnp-provisioning-7bf48f49b6-fwlw9_202503272321/
+wnp.altiplano-wnp-provisioning-7bf48f49b6-fwlw9_202503272321/server.log
+wnp.altiplano-wnp-provisioning-7bf48f49b6-fwlw9_202503272321/wnpAccessController.log
+wnp.altiplano-wnp-provisioning-7bf48f49b6-fwlw9_202503272321/audit.log
+wnp.altiplano-wnp-proxy-ibn-76688cfb69-4kgbq_202503272321/
+wnp.altiplano-wnp-proxy-ibn-76688cfb69-4kgbq_202503272321/server.log
+wnp.altiplano-wnp-proxy-ibn-76688cfb69-4kgbq_202503272321/wnpIBNProxy.log
+wnp.altiplano-wnp-proxy-ibn-76688cfb69-4kgbq_202503272321/audit.log
+wnp.altiplano-wnp-proxy-pm-alarms-8499bc9dcb-lpkxn_202503272321/
+wnp.altiplano-wnp-proxy-pm-alarms-8499bc9dcb-lpkxn_202503272321/server.log
+wnp.altiplano-wnp-proxy-pm-alarms-8499bc9dcb-lpkxn_202503272321/wnpPMProxy.log
+wnp.altiplano-wnp-proxy-pm-alarms-8499bc9dcb-lpkxn_202503272321/wnpAlarmsProxy.log
+wnp.altiplano-wnp-proxy-pm-alarms-8499bc9dcb-lpkxn_202503272321/audit.log
+wnp.currentLogLevels_202503272321.log
+---
+Removing temp files
+-------------------------
+Output file on /tmp/wnp_logs/wnp.logs_202503272321.tar.gz
+----
+
+[NOTE]
+====
+The logs are saved in a new directory named "wnp_logs" inside "/tmp" folder.
+====
+
+== Get log levels
+
+To know the log levels of the application using the tools included in the chart package,
+execute the "get log levels" script tool:
+
+.Usage
+[source, bash]
+----
+tools$ ./monitoring/getLogLevels-wnp.sh CHART_DEPLOYMENT_NAME
+----
+
+.Example
+[source, bash]
+----
+tools$ ./monitoring/getLogLevels-wnp.sh wnp
+----
+
+.Sample output of the command
+[source, bash]
+----
+OpenSearch log level: info
+kubectl log level:    debug
+----
+
+== Change log level
+
+To change the log level follow these steps:
+
+. Change in the *values.yaml* of the helm chart the log level selecting one of these options: trace, debug, info, warn, error, fatal, off.
+.. To change the Fluentd(Altiplano's dashboard) log level, modify the property *FLUENTD_LOG_LEVEL*.
+.. To change changing the Pod log level, modify the property *POD_LOG_LEVEL*.
+
+. Execute the application upgrade using the application deployment tool.
++
+.Usage
+[source, bash]
+----
+tools$  ./maintenance/deploy-wnp.sh CHART_DEPLOYMENT_NAME
+----
++
+.Example
+[source, bash]
+----
+tools$ ./maintenance/deploy-wnp.sh wnp
+----
+
+== Backup and restore DB
+=== Backup DB
+To back up WNP DB using the tools included in the chart package,
+execute the "backupDB-wnp.sh" script tool:
+
+.Usage
+[source, bash]
+----
+tools$ ./maintenance/backupDB-wnp.sh <output_file>
+----
+
+.Example
+[source, bash]
+----
+tools$ ./maintenance/backupDB-wnp.sh backup24.12-26032025.sql
+----
+
+.Sample output of the command
+[source, bash]
+----
+Please enter db password for user 'app_wnp':
+---
+Creating database backup for user 'app_wnp':
+kubectl exec pod/nokia-infra-altiplano-mariadb-mariadb-0 --namespace default -- /usr/bin/mysqldump -u app_wnp -pXXXXX --default-character-set=utf8 --routines app_wnp > /tmp/wnp_db_backups/backup24.12-26032025.sql
+Backup file created: /tmp/wnp_db_backups/backup24.12-26032025.sql
+----
+
+[NOTE]
+====
+The password for the user is the one used when creating the WNP database.
+
+The backup file is saved in a new directory named "wnp_db_backups" inside "/tmp" folder.
+====
+
+=== Restore DB
+To restore a DB using the tools included in the chart package,
+execute the "restoreDB-wnp.sh" script tool:
+
+.Usage
+[source, bash]
+----
+tools$ ./maintenance/restoreDB-wnp.sh <input_file>
+----
+
+.Example
+[source, bash]
+----
+tools$ ./maintenance/restoreDB-wnp.sh /tmp/wnp_db_backups/backup24.12-26032025.sql
+----
+
+.Sample output of the command
+[source, bash]
+----
+Please enter db password for user 'app_wnp':
+---
+Restoring database from backup for user 'app_wnp':
+kubectl cp /tmp/wnp_db_backups/backup24.12-26032025.sql default/nokia-infra-altiplano-mariadb-mariadb-0:/tmp/
+kubectl exec pod/nokia-infra-altiplano-mariadb-mariadb-0 --namespace default -- bash -c "/usr/bin/mysql -uapp_wnp -pXXXXX -e 'DROP DATABASE IF EXISTS app_wnp; CREATE DATABASE app_wnp;'"
+kubectl exec pod/nokia-infra-altiplano-mariadb-mariadb-0 -c mariadb --namespace default -- bash -c "/usr/bin/mysql -uapp_wnp -pXXXXX app_wnp < /tmp/backup24.12-26032025.sql"
+kubectl exec pod/nokia-infra-altiplano-mariadb-mariadb-0 --namespace default -- rm /tmp/backup24.12-26032025.sql
+----
+
+[NOTE]
+====
+The password for the user is the one used when creating the WNP database.
+====
+
+[IMPORTANT]
+====
+The database restore can be performed without stopping WNP. Keep in mind that the restore also results in the loss of existing VNO configurations.
+====
+
+
+include::ROOT:go-back-component.adoc[Back]
