@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/wnp-app-cdoc.iml" filepath="$PROJECT_DIR$/.idea/wnp-app-cdoc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mop-app-cdoc.iml" filepath="$PROJECT_DIR$/.idea/mop-app-cdoc.iml" />
     </modules>
   </component>
 </project>
