@@ -1,6 +1,6 @@
 include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
 
-= What is Wholesale Network Portal solution?
+= What is Multi Operator Portal solution?
 
 The {app-full-name} ({app-short-name}) operates on top of {main-base-app}, acting as a proxy for {main-base-app}’s Intent-Based Networking (IBN), alarms, and metrics interfaces.
 The purpose of the application is to allow an Internet Service Provider ({vno-initials}) to access information related only to its network elements.

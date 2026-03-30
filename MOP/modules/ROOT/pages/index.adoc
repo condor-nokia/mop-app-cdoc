@@ -1,6 +1,6 @@
 include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
 
-= Wholesale Network Portal Release {release-number}{prerelease-tag}
+= Multi Operator Portal Release {release-number}{prerelease-tag}
 
 [discrete]
 ==== _Altiplano Applications_
