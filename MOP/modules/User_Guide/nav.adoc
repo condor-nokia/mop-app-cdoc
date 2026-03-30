@@ -1,7 +1,7 @@
 //include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
 //LO COMENTO PORQUE VEO LAS PROPERTIES DESDE ACA, PERO AL GENERAR EL SITE CON ANTORA
 //DA WARNING Y NO ENCUENTRA LAS PROPERTIES AL GENERAR LA DOC!!!!
-:app-short-name: WNP
+:app-short-name: MOP
 :main-base-app: Altiplano
 :inp-initials: INP
 :vno-initials: ISP
