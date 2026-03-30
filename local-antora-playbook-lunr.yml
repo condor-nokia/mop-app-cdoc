@@ -4,15 +4,15 @@ antora:
      index_latest_only: true
      languages: [en]
 site:
-  title: Wholesale Network Portal Documentation
-  start_page: WNP:ROOT:index.adoc
+  title: Multi Operator Portal Documentation
+  start_page: MOP:ROOT:index.adoc
   url: https://www.nokia.com/
 git:
   ensure_git_suffix: false
 content:
   sources:
   - url: . 
-    start_path: WNP
+    start_path: MOP
 #    branches: HEAD # <--- para usar cambios locales
     branches: main  # <--- para usar lo subido al repo
     edit_url: false

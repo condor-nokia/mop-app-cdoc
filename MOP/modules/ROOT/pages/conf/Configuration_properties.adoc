@@ -9,8 +9,8 @@
 :helm-chart-name: altiplano-wnp
 :issue-number: 3
 :part-number: 3JL-08010-DCAA-PCZZA
-:app-full-name: Wholesale Network Portal
-:app-short-name: WNP
+:app-full-name: Multi Operator Portal
+:app-short-name: MOP
 :main-base-app: Altiplano
 :vno-initials: ISP
 :inp-initials: INP
