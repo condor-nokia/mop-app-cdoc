@@ -9,24 +9,6 @@
 
 * User Guide
 
-** xref:How_to_manage_WNP_access.adoc[How to Manage {app-short-name} access]
-
 ** xref:How_to_use_WNP_as_INP.adoc[How to Use {app-short-name} as {inp-initials}]
-*** xref:How_to_configure_global_rules.adoc[How to Configure Global rules]
-*** xref:How_to_configure_a_VNO.adoc[How to Configure an {vno-initials}]
-*** xref:How_to_manage_onts_as_INP.adoc[How to Manage {ont-initials}s]
 
 ** xref:How_to_use_WNP_as_VNO.adoc[How to Use {app-short-name} as {vno-initials}]
-*** xref:How_to_configure_intents_as_VNO.adoc[How to Configure Intents]
-*** xref:How_to_set_alias_as_VNO.adoc[How to Configure Aliases of the Assigned Network Resources]
-*** xref:How_to_get_opensearch_alarms_as_VNO.adoc[How to Retrieve Alarms]
-*** xref:How_to_acknowledge_alarms.adoc[How to Acknowledge Alarms]
-*** xref:How_to_get_opentsdb_metrics_as_VNO.adoc[How to Retrieve Metrics]
-*** xref:How_to_get_opentsdb_intent_health_as_VNO.adoc[How to Retrieve Intent Health]
-*** xref:How_to_get_opensearch_intents_as_VNO.adoc[How to Retrieve Intents from Indexsearch]
-*** xref:How_to_consume_Kafka_events_as_VNO.adoc[How to Consume Kafka Events]
-*** xref:How_to_receive_alarms_via_snmp_traps.adoc[How to Receive Alarms via SNMP Traps]
-*** xref:How_to_use_Troubleshooting_view.adoc[How to Use Troubleshooting View]
-*** xref:How_to_use_software_management_as_VNO.adoc[How to Use Software Management]
-
-** xref:How_to_navigate_between_Altiplano_and_WNP.adoc[How to Navigate between {main-base-app} and {app-short-name} Apps]
