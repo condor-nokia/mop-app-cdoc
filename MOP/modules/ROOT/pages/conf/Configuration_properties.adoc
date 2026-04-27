@@ -8,7 +8,7 @@
 :chart-version: 26.3
 :helm-chart-name: altiplano-wnp
 :issue-number: 1
-:part-number: 3JL-08010-DCAA-PCZZA
+:part-number: 3JL-08010-DDBA-PCZZA
 :app-full-name: Multi Operator Portal
 :app-short-name: MOP
 :main-base-app: Altiplano
