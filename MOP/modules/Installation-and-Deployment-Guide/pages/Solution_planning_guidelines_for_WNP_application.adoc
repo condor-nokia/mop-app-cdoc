@@ -17,7 +17,7 @@ As Wholesale Network Portal App operates on top of the Altiplano Access Controll
 
 [width="99%",cols="49%,50%,options="header"]
 |===
-| *WNP* | *Altiplano*
+| *MOP* | *Altiplano*
 | {release-number} | {altiplano-release-number}
 |===
 

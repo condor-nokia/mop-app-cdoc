@@ -1,13 +1,13 @@
 
-:release-month: November
-:release-year: 2025
-:release-number: 25.9
+:release-month: April
+:release-year: 2026
+:release-number: 26.3
 :prerelease-tag:
-:altiplano-release-number: 24.6, 24.12, 25.6
+:altiplano-release-number: 25.12 (tested with device-mf stack and Nokia's simulators)
 :screenshot-altiplano-release-number: 24.6
-:chart-version: 25.9
+:chart-version: 26.3
 :helm-chart-name: altiplano-wnp
-:issue-number: 3
+:issue-number: 1
 :part-number: 3JL-08010-DCAA-PCZZA
 :app-full-name: Multi Operator Portal
 :app-short-name: MOP

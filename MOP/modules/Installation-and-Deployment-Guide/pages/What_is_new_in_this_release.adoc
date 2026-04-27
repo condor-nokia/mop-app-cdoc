@@ -2,46 +2,33 @@ include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
 
 = What's new in Release 26.3
 
-* Introduced support for Live Collections. {app-short-name} can be configured by the {inp-initials}
-to configure period, duration and max simultaneous live collections number per {vno-initials} or globally.
-Also, the live collections can be executed by the {vno-initials} from the {wnp-ibn-context} proxy and WebUI over ONTs, Services and Troubleshooting sections.
+This is the initial release of the Multi Operator Portal, intended for the Nokia team to perform internal installation and testing.
+The application includes all WNP functionalities while also enabling the management of intent types across the entire OLT stack.
+The two key features added to this version, available for all intent types, are:
 
-* UI support for assigned resources
-WNP only supported to the {inp-initials} to assign fiber and device intents per {vno-initials} uploading a file via REST API or UI. Now this feature can be configured by UI also. +
-Also aliases could be assigned inside that file. The {vno-initials} had also allowed to change aliases of the assigned resources only by REST API. Now this alias feature is added to the UI in order to allow them to add/remove aliases of the assigned resources.
+* Support for the following intent types:
+- device-xx (Where “xx” can be “mf”, “fx”, “sf”, or “df”)
+- device-config-xx (Where “xx” can be “mf”, “fx”, “sf”, or “df”)
+- ont
+- uplink-connection
+- fiber
+- l2-infra
+- mcast-infra
+- l3-infra
+- l2-mgmt-infra
+- l2-user
+- mcast-user
+- standard-voip-sip-user
+- cfm
+- ethernet-ring-infra
+- standard-voip-sip-agent
 
-* {vno-initials} ONU Software Management
-{app-short-name} can be configured by the {inp-initials} to enable/disable the Software Management feature to {vno-initials}s.
-An {vno-initials} can manage Target Solutions and Campaigns through both the REST API or the Web UI.
-{app-short-name} automatically prevents overlapping campaigns between different {vno-initials}s.
+* Support for alarms and metrics across all OLT elements. (Through kafka, Opensearch and OpenTSDB)
 
-////
-= What's new in Release 25.9
-
-* Introduced support for Intent input injection. {app-short-name} can be configured by the {inp-initials}
-to set default values to intent fields per {vno-initials} or globally.
-Also, the intent fields can be hidden to the {vno-initials}.
-
-* The list of readable intent types can be now configured per {vno-initials} and globally.
-When a readable intent type is configured the following actions are allowed:
-** Query intents from IndexSearch inventory
-** Query intent health from Opentsdb
-
-* The readable intent types support the configuration of the allowed intent attributes per
-{vno-initials} and globally. This allows to restrict the information of the intents
-that the {vno-initials} can retrieve from IndexSearch.
-
-* New feature to assign network resources was added.
-{app-short-name} can be configured by the {inp-initials} to allow the {vno-initials}s to access only assigned devices and fibers.
-This configuration allows also to retrieve device and fiber alarms and metrics through kafka events of the assigned elements.
-
-* Aliases can be set to devices and fibers assigned as network resources per {vno-initials}.
-When the {vno-initials} has aliases defined, all the intent target occurrences are replaced
-with the configured aliases.
-
-* Introduced support to configure SNMP Trap Destinations per ISPs to receive filtered alarms via SNMP traps.
-
-* Added support to acknowledge/unacknowledge alarms using the WNP Web UI and the IBN proxy.
-////
+[IMPORTANT]
+====
+In this initial version, the application's interface remains similar to the Wholesale Network Portal.
+However, it differs by enabling the manipulation and configuration of all intents within the OLT stack via the VNO UI and the IBN proxy. Moving forward, the product will be adapted to feature a distinct look and feel if required by Nokia's specific needs.
+====
 
 include::ROOT:go-back-component.adoc[Back]

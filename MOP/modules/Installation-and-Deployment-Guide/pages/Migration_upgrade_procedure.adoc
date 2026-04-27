@@ -55,5 +55,5 @@ This feature controls whether specific resources (Devices and fibers) are asigne
 
 [NOTE]
 ====
-If the ONT/Services intent type versions are changed, WNP configuration needs to be reviewed in order to adjust the "intent type version" and "intent type default version" configuration for each ISP.
+If the intent type versions are changed, {app-short-name} configuration needs to be reviewed in order to adjust the "intent type version" and "intent type default version" configuration for each ISP.
 ====

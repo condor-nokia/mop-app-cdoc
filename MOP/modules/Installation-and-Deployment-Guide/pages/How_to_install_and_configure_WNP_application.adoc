@@ -54,7 +54,7 @@ For non-docker environment, execute the script with argument --nodocker
 *The following procedure is applicable for Kubernetes environment with containerd
 runtime.*
 
-*config.toml* (/etc/containerd/config.toml) must be configured for authentication on every Kubernetes node where you want to download the WNP image for Kubernetes environment with containerd runtime.
+*config.toml* (/etc/containerd/config.toml) must be configured for authentication on every Kubernetes node where you want to download the MOP image for Kubernetes environment with containerd runtime.
 
 For example::
 
@@ -92,7 +92,7 @@ base64.
 
 *The following procedure is applicable for Kubernetes environment with crio runtime.*
 
-*crio.conf* (/etc/crio/crio.conf) must be configured for authentication on every Kubernetes node where you want to download the WNP image for Kubernetes environment with crio runtime.
+*crio.conf* (/etc/crio/crio.conf) must be configured for authentication on every Kubernetes node where you want to download the MOP image for Kubernetes environment with crio runtime.
 
 For example::
 
@@ -292,7 +292,7 @@ In the commands used for SWDP access, enter the login details as follows:
 *The following procedure is applicable for Kubernetes environment with containerd
 runtime.*
 
-*config.toml* (/etc/containerd/config.toml) must be configured for authentication on every Kubernetes node where you want to download the WNP image for Kubernetes environment with containerd runtime.
+*config.toml* (/etc/containerd/config.toml) must be configured for authentication on every Kubernetes node where you want to download the MOP image for Kubernetes environment with containerd runtime.
 
 For example::
 . Generate SWDP Token and export SWDPTOKEN=<SUBSTITUTE TOKEN VALUE>
@@ -476,7 +476,7 @@ Chart.yaml keycloak/ templates/ tools/ values-23_12.yaml values.yaml
 
 [NOTE]
 ====
-If a customer is successfully onboarded, but unable to access the WNP software
+If a customer is successfully onboarded, but unable to access the MOP software
 correctly, it is recommended to create a support ticket to SWDP using the Support
 Portal (https://customer.nokia.com/support/s/). Make sure to verify the complete
 command before opening a support ticket to understand the issue. Add the
@@ -914,7 +914,7 @@ Before executing the installation command make sure that
 - The correct values were configured at the *values.yaml* file. To know more details about this configuration, refer to the xref:_configuring_helm_chart[Configuring Helm chart] section.
 - At least the following values have been configured:
 * *ALTIPLANO_SERVER:* {main-base-app} IP or Hostname that the {app-short-name} uses to call the Altiplano's available services. This value must be also used to access {app-short-name}
-* *ALTIPLANO_PUBLIC_IP_LIST (Optional):* List of IPs/Hostnames apart from the configured in the ALTIPLANO_SERVER variable that will be used to access WNP (For example in NAT scenarios). Refer to xref:Installation-and-Deployment-Guide:appendices/WNP_Exposed_Interfaces.adoc[{app-short-name} Exposed Interfaces] section to know how each value impact the exposed interfaces.
+* *ALTIPLANO_PUBLIC_IP_LIST (Optional):* List of IPs/Hostnames apart from the configured in the ALTIPLANO_SERVER variable that will be used to access MOP (For example in NAT scenarios). Refer to xref:Installation-and-Deployment-Guide:appendices/WNP_Exposed_Interfaces.adoc[{app-short-name} Exposed Interfaces] section to know how each value impact the exposed interfaces.
 * *KEYCLOAK_PORTAL_SECRET:* Client Secret of portal client. This value must be copied from "Credentials" section of the client "wnp_portal" in Keycloak.
 * *KEYCLOAK_PROXY_SECRET:* Client Secret of proxy client. This value must be copied from "Credentials" section of the client "wnp_proxy" in Keycloak.
 
@@ -938,7 +938,10 @@ tools$ sudo chmod 744 maintenance/*
 tools$ sudo chmod 744 monitoring/*
 ----
 +
-.. Configure the namespace in the tools.conf file (it must be the same where Altiplano is running):
+.. Configure the namespace if needed and the release name to "mop" value in the tools.conf file (it must be the same where Altiplano is running):
++
+[IMPORTANT]
+"The release_name parameter within the tools.conf file determines the installation mode for the platform. To install it in MOP mode, the parameter must be set to release_name="mop" prior to running the installation process."
 +
 [source, bash]
 ----
@@ -1028,5 +1031,27 @@ image::wnpLogin.png[align="center"]
 If you have created an INP user on {main-base-app} keycloak, then you can login to the system using username and password.
 ====
 
+
+==== MOP Mode verification step
+
+To verify that MOP mode has been correctly installed, perform the following steps:
+
+. Open a browser and go to link:https://{altiplano-host}/{wnp-web-context}[https://{altiplano-host}/{wnp-web-context},window=_blank], where {altiplano-host} must be replaced with the public IP or the hostname where {main-base-app} is installed.
+
+. If the {app-short-name} is successfully installed, the following page is displayed:
+
+image::wnpLogin.png[align="center"]
+
+. Create an ISP and a user for the ISP
+
+. Login to MOP application and check that the "Intents" menu contains the following sections that allows to manage the whole
+OLT intent stack:
+
+image::OLTStackIntentSection_ISP.png[align="center"]
+
+[NOTE]
+====
+All the supported intent types must be shown under each specific category shown under the "Intents" menu
+====
 
 include::ROOT:go-back-component.adoc[Back]

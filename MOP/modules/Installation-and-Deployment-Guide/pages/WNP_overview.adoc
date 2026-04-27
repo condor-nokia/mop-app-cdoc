@@ -11,6 +11,12 @@ A transparent suffix scheme is used for this identification. When {app-short-nam
 
 image::GeneralContextDiagram_RevA.png[align="center"]
 
+[IMPORTANT]
+====
+In this initial version, the application's interface remains similar to the Wholesale Network Portal.
+However, it differs by enabling the manipulation and configuration of all intents within the OLT stack via the VNO UI and the IBN proxy. Moving forward, the product will be adapted to feature a distinct look and feel if required by Nokia's specific needs.
+====
+
 == Solution components
 
 {app-short-name} offers a configuration interface that allows the {inp-initials} to configure the application,
@@ -65,12 +71,17 @@ For detailed information on this proxy, refer to the xref:User_Guide:How_to_get_
 For Kafka notifications, {app-short-name} subscribes to {main-base-app}’s Kafka topics, filters the metrics, and writes them to a new topic on {main-base-app} per {vno-initials}.
 The {vno-initials} then subscribes to its topic to receive the filtered metrics. See the xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}] section for more details.
 
-==== SW Management Proxy
+==== SW Management Proxy (Only for ONT level)
 
 {app-short-name} acts as a proxy that allows {vno-initials}s to act through {app-short-name} to {main-base-app}’s Software Management API.
 This proxy will inject some fixed values that won’t be allowed to be setted by the {vno-initials}s and enforces validation checks on campaigns and activities.
 These include ensuring that activity timeouts do not exceed the campaign’s time slot and preventing the creation of campaigns in slots already occupied by others {vno-initials}s.
 See the xref:User_Guide:How_to_use_software_management_as_VNO.adoc[User Guide - How to use software management as {vno-initials}] section for more details.
+
+[IMPORTANT]
+====
+In this initial version only ONT level upgrade is supported. In the next release OLT upgrade support will be added.
+====
 
 ==== Kafka Brokers with filtered events per ISP
 
@@ -105,10 +116,9 @@ The following table describes the main features provided by {app-full-name}
 |Kafka Alarms and Kafka Metrics|{app-short-name} offers secured topics by {vno-initials} to consume alarms and metrics.|xref:User_Guide:How_to_consume_Kafka_events_as_VNO.adoc[How to consume Kafka events as {vno-initials}]
 |Intent Allowed Actions|{app-short-name} can be configured by the {inp-initials} to allow actions by intent types and versions per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |Readable Intent type list|{app-short-name} can be configured by the {inp-initials} to allow the {vno-initials}s to read intents of configured intent types from IndexSearch. Also the allowed intent attributes for each readable intent type can be configured|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
-|Network Assign Resources|{app-short-name} can be configured by the {inp-initials} to allow the {vno-initials}s to access only assigned devices and fibers. This allows also to retrieve device and fiber alarms and metrics through kafka events of the assigned elements.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |Set Aliases to Assigned Resources|{app-short-name} allows the {inp-initials} and the {vno-initials}s to set aliases for device and fiber intent targets of the assigned network resources. When this configuration is applied {app-short-name} replaces all the target occurrences with the aliases set to the {vno-initials}|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |SNMP Trap Destinations|{app-short-name} can be configured by the {inp-initials} to allow to the {vno-initials}s to receive alarms via SNMP traps.|xref:User_Guide:How_to_configure_a_VNO.adoc#_configure_snmp_trap_destinations_to_isp[User Guide - How to Use {app-short-name} as {inp-initials}]
-|{vno-initials} Portal|{app-short-name} offers an {vno-initials} portal from where an {vno-initials} can manage {ont-initials}s, Services, Software Management, Alarms and Metrics. Also, a troubleshooting view is offered|xref:User_Guide:How_to_use_WNP_as_VNO.adoc[User Guide - How to Use {app-short-name} as {vno-initials}]
+|{vno-initials} Portal|{app-short-name} offers an {vno-initials} portal from where an {vno-initials} can manage the whole stack of intent types of the OLT, Software Management, Alarms and Metrics. Also, a troubleshooting view is offered|xref:User_Guide:How_to_use_WNP_as_VNO.adoc[User Guide - How to Use {app-short-name} as {vno-initials}]
 |Live Collections Control|{app-short-name} can be configured by the {inp-initials} to deny/allow the live collections execution per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |{vno-initials} ONU Software Management|{app-short-name} can be configured by the {inp-initials} to enable/disable the Software Management feature to {vno-initials}s.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |===

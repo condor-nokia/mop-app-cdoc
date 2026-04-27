@@ -38,6 +38,7 @@ The following table lists the acronyms used in this guide. Note that some of the
 |VNO |Virtual Network Provider: used with the same meaning as ISP and CSP in this context
 |WebUI |Web User Interface
 |WNP |Wholesale Network Portal
+|MOP |Multi Operator Portal
 |===
 
 include::ROOT:go-back-component.adoc[Back]
