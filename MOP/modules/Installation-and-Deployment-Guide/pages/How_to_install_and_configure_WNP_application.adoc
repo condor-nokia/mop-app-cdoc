@@ -938,10 +938,11 @@ tools$ sudo chmod 744 maintenance/*
 tools$ sudo chmod 744 monitoring/*
 ----
 +
-.. Configure the namespace if needed and the release name to "mop" value in the tools.conf file (it must be the same where Altiplano is running):
+.. Configure the namespace if needed, the "release_name" parameter to "mop" value and the "install_mop" parameter to true in the tools.conf file (it must be the same where Altiplano is running):
 +
 [IMPORTANT]
-"The release_name parameter within the tools.conf file determines the installation mode for the platform. To install it in MOP mode, the parameter must be set to release_name="mop" prior to running the installation process."
+The release_name and the install_mop parameters within the tools.conf file determines the installation mode for the platform.
+To install it in MOP mode, the release_name must be set to "mop" and install_mop to true prior to running the installation process.
 +
 [source, bash]
 ----
