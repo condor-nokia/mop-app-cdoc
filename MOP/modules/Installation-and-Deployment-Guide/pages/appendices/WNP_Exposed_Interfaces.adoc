@@ -89,7 +89,7 @@ ports will be opened and assigned:
 ** For access via IP 181.64.26.13: port 19094.
 ** For access via hostname wnp-public: port 19095.
 
-To connect to these brokers and receive notifications see the xref:User_Guide:How_to_consume_Kafka_events_as_VNO.adoc[How to Consume Kafka events as {vno-initials}] section.
+Please see the WNP documentation for more information.
 
 == Interfaces, ports and protocols used
 

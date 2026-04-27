@@ -47,6 +47,8 @@ The {vno-initials} information consists of a name and an identifier.
 This identifier is used in the transparent suffix scheme to ensure that {vno-initials}s only act on their own elements.
 
 Please see the WNP documentation for more information.
+
+
 === {app-full-name} Proxies
 
 ==== Intent Based Networking Proxy
@@ -56,6 +58,7 @@ For detailed information on this proxy, refer to the xref:User_Guide:How_to_use_
 {app-short-name} can be configured by the INP to deny or allow specific intent-type operations based on the values per intent and per {vno-initials}.
 
 Please see the WNP documentation for more information.
+
 ==== Alarms Proxy
 
 {app-short-name} acts as a proxy to the {main-base-app} OpenSearch alarms interface, filtering the alarms that the {vno-initials} is allowed to see.
