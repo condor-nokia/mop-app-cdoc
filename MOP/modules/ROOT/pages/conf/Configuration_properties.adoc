@@ -7,7 +7,7 @@
 :screenshot-altiplano-release-number: 24.6
 :chart-version: 26.3
 :helm-chart-name: altiplano-wnp
-:issue-number: DRAFT_1
+:issue-number: 1
 :part-number: 3JL-08010-DDBA-PCZZA
 :app-full-name: Multi Operator Portal
 :app-short-name: MOP
