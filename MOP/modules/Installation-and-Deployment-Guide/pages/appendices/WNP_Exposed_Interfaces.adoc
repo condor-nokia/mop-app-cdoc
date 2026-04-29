@@ -89,7 +89,7 @@ ports will be opened and assigned:
 ** For access via IP 181.64.26.13: port 19094.
 ** For access via hostname wnp-public: port 19095.
 
-Please see the WNP documentation for more information.
+Refer to the WNP documentation for more information.
 
 == Interfaces, ports and protocols used
 

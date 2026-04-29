@@ -46,8 +46,7 @@ To apply multi-tenancy features and other configurations/restrictions, the {vno-
 The {vno-initials} information consists of a name and an identifier.
 This identifier is used in the transparent suffix scheme to ensure that {vno-initials}s only act on their own elements.
 
-Please see the WNP documentation for more information.
-
+Refer to the _Nokia Altiplano Wholesale Network Portal Installation, Deployment and User Guide_ for more information.
 
 === {app-full-name} Proxies
 
@@ -57,23 +56,23 @@ Please see the WNP documentation for more information.
 For detailed information on this proxy, refer to the xref:User_Guide:How_to_use_WNP_as_VNO.adoc[User Guide - How to Use IBN as {vno-initials}] section.
 {app-short-name} can be configured by the INP to deny or allow specific intent-type operations based on the values per intent and per {vno-initials}.
 
-Please see the WNP documentation for more information.
+Refer to the WNP documentation for more information.
 
 ==== Alarms Proxy
 
 {app-short-name} acts as a proxy to the {main-base-app} OpenSearch alarms interface, filtering the alarms that the {vno-initials} is allowed to see.
 
-Please see the WNP documentation for more information.
+Refer to the WNP documentation for more information.
 
 ==== Performance Monitoring Proxy
 
 {main-base-app} offers two ways of retrieving metrics: through OpenTSDB REST queries and Kafka notifications.
 
-Please see the WNP documentation for more information.
+Refer to the WNP documentation for more information.
 
 {app-short-name} acts as a proxy for REST queries, filtering the metrics that the {vno-initials} is allowed to see.
 For Kafka notifications, {app-short-name} subscribes to {main-base-app}’s Kafka topics, filters the metrics, and writes them to a new topic on {main-base-app} per {vno-initials}.
-The {vno-initials} then subscribes to its topic to receive the filtered metrics. See the xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}] section for more details.
+The {vno-initials} then subscribes to its topic to receive the filtered metrics. Refer to the xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}] section for more details.
 
 ==== SW Management Proxy (Only for ONT level)
 
@@ -81,7 +80,7 @@ The {vno-initials} then subscribes to its topic to receive the filtered metrics.
 This proxy will inject some fixed values that won’t be allowed to be setted by the {vno-initials}s and enforces validation checks on campaigns and activities.
 These include ensuring that activity timeouts do not exceed the campaign’s time slot and preventing the creation of campaigns in slots already occupied by others {vno-initials}s.
 
-Please see the WNP documentation for more information.
+Refer to the WNP documentation for more information.
 
 [IMPORTANT]
 ====
@@ -96,13 +95,13 @@ The {vno-initials} then subscribes to its topic to receive the filtered alarms.
 For Kafka metrics notifications, {app-short-name} subscribes to {main-base-app}’s Kafka metric topics, filters the data, and writes them to a new topic on {app-short-name} Kafka per {vno-initials}.
 The {vno-initials} subscribes to its topic to receive the filtered metrics.
 
-Please see the WNP documentation for more information.
+Refer to the WNP documentation for more information.
 
 ==== {app-full-name} WebUI for {vno-initials}
 
 {main-base-app} offers a WebUI that allows the {vno-initials} to use the proxies in a graphical way.
 This WebUI acts through the defined application proxies to retrieve information only for the logged-in {vno-initials}.
-For more information on this interface, see the xref:User_Guide:How_to_use_WNP_as_VNO.adoc[How to Use {app-short-name} as {vno-initials}] section.
+For more information on this interface, refer to the xref:User_Guide:How_to_use_WNP_as_VNO.adoc[How to Use {app-short-name} as {vno-initials}] section.
 
 == Features
 
@@ -110,7 +109,7 @@ The following table describes the main features provided by {app-full-name}
 
 [width="99%",cols="30%,39%,30%,options="header"]
 |===
-|*Feature/Enhancement* |*Description* |*See Section*
+|*Feature/Enhancement* |*Description* |*Refer to section*
 |Multi tenant capabilities|{app-short-name} offers proxies for IBN, alarms and metrics from {main-base-app} adding the multi-tenant capability for all the operations.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |Intent types allow list|{app-short-name} can be configured by the {inp-initials} to deny/allow specific intent types and versions per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |ONU activations|{app-short-name} offers a way to configure a different ONU Activation options for each {vno-initials}. This feature consists of checking different actions over ONTs that must be allowed or denied per {vno-initials}. Actually 3 different options are available to be configured.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
@@ -118,10 +117,10 @@ The following table describes the main features provided by {app-full-name}
 |Intent type default version|{app-short-name} can be configured by the {inp-initials} to set intent type default version per {vno-initials} or globally. If default version was configured for an intent type, and the request arrives without intent type version, {app-short-name} adds the default version configured. |xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |Intent Input Injections|{app-short-name} can be configured by the {inp-initials} to set default values to intent fields per {vno-initials} or globally. Also, the intent fields can be hidden to the {vno-initials}. |xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |Alarm configuration|{app-short-name} can be configured by the {inp-initials} to deny/allow specific alarm types per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
-|Kafka Alarms and Kafka Metrics|{app-short-name} offers secured topics by {vno-initials} to consume alarms and metrics.|Please see the WNP documentation for more information.
+|Kafka Alarms and Kafka Metrics|{app-short-name} offers secured topics by {vno-initials} to consume alarms and metrics.|Please refer to the WNP documentation for more information.
 |Intent Allowed Actions|{app-short-name} can be configured by the {inp-initials} to allow actions by intent types and versions per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |Readable Intent type list|{app-short-name} can be configured by the {inp-initials} to allow the {vno-initials}s to read intents of configured intent types from IndexSearch. Also the allowed intent attributes for each readable intent type can be configured|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
-|SNMP Trap Destinations|{app-short-name} can be configured by the {inp-initials} to allow to the {vno-initials}s to receive alarms via SNMP traps.|Please see the WNP documentation for more information.
+|SNMP Trap Destinations|{app-short-name} can be configured by the {inp-initials} to allow to the {vno-initials}s to receive alarms via SNMP traps.|Please refer to the WNP documentation for more information.
 |{vno-initials} Portal|{app-short-name} offers an {vno-initials} portal from where an {vno-initials} can manage the whole stack of intent types of the OLT, Software Management, Alarms and Metrics. Also, a troubleshooting view is offered|xref:User_Guide:How_to_use_WNP_as_VNO.adoc[User Guide - How to Use {app-short-name} as {vno-initials}]
 |Live Collections Control|{app-short-name} can be configured by the {inp-initials} to deny/allow the live collections execution per {vno-initials} or globally.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]
 |{vno-initials} ONU Software Management|{app-short-name} can be configured by the {inp-initials} to enable/disable the Software Management feature to {vno-initials}s.|xref:User_Guide:How_to_use_WNP_as_INP.adoc[User Guide - How to Use {app-short-name} as {inp-initials}]

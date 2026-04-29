@@ -136,8 +136,8 @@ images from
 .. sudo systemctl status crio.
 ====
 
-. Add the *NOKIA software repository* to your Kubernetes host using the following command. The values of "NOKIALOGIN" and "NOKIAPWD" are automatically set when you execute the NokiaSWRepoAccessProvider binary file. Run the following command every time after you execute NokiaSWRepoAccessProvider binary file. Run the following command every time after you
-execute NokiaSWRepoAccessProvider binary file and when you want to check for updates from the Nokia software repository.
+. Add the *NOKIA software repository* to your Kubernetes host using the following command. The values of "NOKIALOGIN" and "NOKIAPWD" are automatically set when you execute the NokiaSWRepoAccessProvider binary file.
+Run the following command every time after you execute NokiaSWRepoAccessProvider binary file and when you want to check for updates from the Nokia software repository.
 +
 .Add helm repository
 [source]
@@ -145,7 +145,7 @@ execute NokiaSWRepoAccessProvider binary file and when you want to check for upd
 helm repo add NOKIA https://artifactory.net.nokia.com/artifactory/fnpc_helm_virtual --username "$NOKIALOGIN" --password "$NOKIAPWD" --pass-credentials
 ----
 +
-If you are running the above command on helm version {helm-version}, you will need to include the additional argument '--pass-credentials'. See https://github.com/helm/helm/issues/9851 for more details.
+If you are running the above command on helm version {helm-version}, you will need to include the additional argument '--pass-credentials'. Refer to https://github.com/helm/helm/issues/9851 for more details.
 "NOKIA" is added to your repositories.
 
 . Check for updates from the Nokia software repository.
@@ -1030,7 +1030,7 @@ image::wnpLogin.png[align="center"]
 
 [NOTE]
 ====
-If you have created an INP user on {main-base-app} keycloak, then you can login to the system using username and password.
+If you have created an INP user on {main-base-app} keycloak, then you can Log in to the system using username and password.
 ====
 
 
@@ -1046,8 +1046,7 @@ image::wnpLogin.png[align="center"]
 
 . Create an ISP and a user for the ISP
 
-. Login to MOP application and check that the "Intents" menu contains the following sections that allows to manage the whole
-OLT intent stack:
+. Log in to the MOP application and verify that the 'Intents' menu includes the following sections for managing the OLT intent stack:
 
 image::OLTStackIntentSection_ISP.png[align="center"]
 

@@ -3,6 +3,7 @@ include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
 = How to use {app-short-name} as {vno-initials}
 
 This is the initial release of the Multi Operator Portal, intended for the Nokia team to perform internal installation and testing.
+
 The application includes all WNP functionalities while also enabling the management of intent types across the entire OLT stack.
 The only feature that is disabled for {app-short-name} is the Assigned resources feature of WNP because in {app-short-name}
 the ISP owned the full OLT.
@@ -10,6 +11,6 @@ the ISP owned the full OLT.
 The {vno-initials} is able to use the same features as in WNP except from the assigned resources feature that is not enabled
 on this solution because the {vno-initials} is owner of the whole OLT.
 
-Please refer to Wholesale Network Portal doc to know how to use MOP application as {vno-initials}
+Refer to the _Nokia Altiplano Wholesale Network Portal Installation, Deployment and User Guide_ for instructions on using the MOP application as an ISP.
 
 include::ROOT:go-back-component.adoc[Back]

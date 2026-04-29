@@ -6,7 +6,8 @@ This section provides the steps needed to configure the application.
 
 When the {app-short-name} is installed on top of an {main-base-app} solution, the {inp-initials} user must set up the {vno-initials}s and configure the rules to define the restrictions each {vno-initials} has to interact with {main-base-app} interfaces.
 The {app-short-name} allows to configure global rules applying to all the {vno-initials}s and also rules applying only to a specific {vno-initials}.
-Please refer to Wholesale Network Portal doc to know how to configure MOP application.
+Refer to the _Nokia Altiplano Wholesale Network Portal Installation, Deployment and User Guide_ for instructions on configuring the MOP application.
+
 This is the initial release of the Multi Operator Portal, intended for the Nokia team to perform internal installation and testing.
 The application includes all WNP functionalities while also enabling the management of intent types across the entire OLT stack.
 The only feature that is disabled for {app-short-name} is the Assigned resources feature of WNP because in {app-short-name}

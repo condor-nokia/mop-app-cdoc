@@ -4,7 +4,7 @@ include::ROOT:conf/Configuration_properties.adoc[leveloffset=0]
 
 This is the initial release of the Multi Operator Portal, intended for the Nokia team to perform internal installation and testing.
 The application includes all WNP functionalities while also enabling the management of intent types across the entire OLT stack.
-The two key features added to this version, available for all intent types, are:
+This version introduces two key features, available for all intent types:
 
 * Support for the following intent types:
 - device-xx (Where “xx” can be “mf”, “fx”, “sf”, or “df”)
