@@ -57,3 +57,5 @@ Following these considerations, implementing the MOP in a georedundant environme
 .  Shutting down MOP on the passive site.
 .  Integrate the MOP pod-ctl.sh script with the stop/start parameter to Altiplano switchover mechanism.
 .  Verify that MOP persistent configurations are properly backed-up and synchronized between sites.
+
+include::ROOT:go-back-component.adoc[Back]

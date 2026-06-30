@@ -31,3 +31,5 @@ This makes it possible to sequentially upgrade AAC first, then {app-short-name},
 ====
 If the intent type versions are changed, {app-short-name} configuration needs to be reviewed in order to adjust the "intent type version" and "intent type default version" configuration for each ISP.
 ====
+
+include::ROOT:go-back-component.adoc[Back]
