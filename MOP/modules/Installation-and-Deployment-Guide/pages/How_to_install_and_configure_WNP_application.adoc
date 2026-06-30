@@ -985,7 +985,7 @@ tools$ ./monitoring/status-wnp.sh
 ----
 +
 .Sample output of the command(it must show the following pods and services in "Running" state)
-[source, bash, subs=attributes]
+[source, bash]
 ----
 Command: helm ls -a -f wnp --namespace default
 NAME	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART                         	APP VERSION
