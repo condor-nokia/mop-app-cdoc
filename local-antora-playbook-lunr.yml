@@ -3,6 +3,7 @@ antora:
    - require: '@antora/lunr-extension'
      index_latest_only: true
      languages: [en]
+   - require: '@antora/pdf-extension'
 site:
   title: Multi Operator Portal Documentation
   start_page: MOP:ROOT:index.adoc
