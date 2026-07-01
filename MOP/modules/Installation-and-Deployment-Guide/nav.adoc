@@ -13,3 +13,8 @@
 ** xref:Solution_planning_guidelines_for_WNP_application.adoc[Solution Planning Guidelines]
 ** xref:HA_deployment_models.adoc[HA Deployment Models]
 ** xref:Troubleshooting.adoc[Troubleshooting]
+
+** Appendices
+*** xref:appendices/Configuring_Database.adoc[Configuring Database]
+*** xref:appendices/Configuring_Keycloak.adoc[Configuring Keycloak]
+*** xref:appendices/WNP_Exposed_Interfaces.adoc[WNP Exposed Interfaces]
